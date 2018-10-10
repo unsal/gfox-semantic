@@ -1,0 +1,10 @@
+GFox-Semantic SETUP
+---------------------------------------------------------
+yarn add semantic-ui-react
+yarn add semantic-ui-css
+index.js > import 'semantic-ui-css/semantic.min.css'
+npm install --save redux //store için
+npm install --save react-redux //Provider ve connect func için
+npm install --save axios
+
+

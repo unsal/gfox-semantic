@@ -1,0 +1,10 @@
+.kvkk-content {
+  margin: 70px 10% 0px 10%;
+  padding: 20px;
+}
+
+.notify {
+  width: 50%;
+  height: 50%;
+  background: url("/src/img/notify.png");
+}
