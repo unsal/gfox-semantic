@@ -59,7 +59,7 @@ class DeleteBoxKurum extends Component {
         <Label key={this.props.pidm} as='a' content={this.props.name.toUpperCase()} icon='remove circle' onClick={()=>this.handleDelete(this.props.pidm)} />
 
           {this.state.error?
-                    <Message error header='Kayıt Silinemedi!' content='Silme İşleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.' />
+                    <Message error header='Kayıt Silinemedi!' content='Silme işleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.' />
                     :this.state.deleteModeON &&this.state.selectedPidm===this.props.pidm?
                         <div style={{ display: 'inline-block' }}>
                             <Icon   //Ekleme modunda kayıt butonu
