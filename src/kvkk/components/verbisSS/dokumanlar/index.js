@@ -1,19 +1,21 @@
 import React, { Component } from "react";
 import { Table, Message } from "semantic-ui-react";
-import KVKKLayout from "../../layout";
+import KVKKLayout from "../../../layout";
 
 import axios from "axios";
-import { getAPI } from "../../../config";
+import { getAPI } from "../../../../config";
 
 //Redux
 import { connect } from "react-redux";
-import { store } from "../../../reducer";
-import { updateStoreData } from "../../../reducer/actions";
+import { store } from "../../../../reducer";
+import { updateStoreData } from "../../../../reducer/actions";
 
-import AddBoxKurum from "./AddBoxKurum";
-import DeleteBoxKurum from "./DeleteBoxKurum";
+import AddBox from "./AddBox";
+import DeleteBox from "./DeleteBox";
 
-class SSKurumlar extends Component {
+import '../../../kvkk.css';
+
+class SSDokumanlar extends Component {
   state = {
     didMount: false,
     isLoading: true,
@@ -22,7 +24,7 @@ class SSKurumlar extends Component {
   };
 
   componentDidMount() {
-    const url = getAPI.getPaylasilanKurumlar;
+    const url = getAPI.getSSDokumanlar;
     axios
       .get(url)
       .then(json => {
@@ -43,24 +45,24 @@ class SSKurumlar extends Component {
   }
 
 
-  _render() {
+  render_() {
     const { data } = this.props; //data > from reducer
 
     return (
       <div className="kvkk-content">
-        <h2 className="ui header">Paylaşılan Kurumlar</h2>
+        <h2 className="ui header">KV Içeren Dokümanlar</h2>
         <Table
           sortable
           celled
           fixed
-          compact
-          size="large"
+          compact='very'
+          size="small"
           style={{ width: "100%" }}
         >
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell style={{ width: "50%" }}> Süreç Sahibi </Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "50%" }}> Paylaşılan Kurumlar </Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "30%" }}> Süreç Sahibi </Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "70%" }}> KV Dokumanlar </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -68,20 +70,19 @@ class SSKurumlar extends Component {
               <Table.Row key={key.birim_pidm}>
                 <Table.Cell style={{ verticalAlign: 'top' }}>{key.birim_name}</Table.Cell>
                 <Table.Cell>
-                     {key.kurumlar.map( ({pidm, kurum_pidm, kurum_name}) => ( //pidm -> birim_pidm, kurum_pidm satırının unique keyidir
-                        // <Label key={kurum_pidm} as='a' content={kurum_name.toUpperCase()} icon='remove' style={{margin:"1px"}} />
+                     {key.dokumanlar.map( ({pidm, dokuman_name, yayin_name}) => ( //pidm -> unique keyidir
 
-                            <DeleteBoxKurum
+                            <DeleteBox
                                 key={pidm}
-                                pidm={pidm}
-                                name={kurum_name}
+                                selectedPidm={pidm}
+                                dokuman_name={dokuman_name}
+                                yayin_name={yayin_name}
                                 store={store}
                                 data={data}
                             />
 
                         ))}
-
-                        <AddBoxKurum
+                        <AddBox
                             pidm={key.birim_pidm}
                             store={store}
                         />
@@ -102,7 +103,7 @@ class SSKurumlar extends Component {
     return (
       <KVKKLayout>
         {!isLoading && apiIsOnline?
-          this._render()
+          this.render_()
          : !isLoading&&!apiIsOnline?
           <Message error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
          : null
@@ -113,4 +114,4 @@ class SSKurumlar extends Component {
 }
 
 const mapStateToProps = state => ({ data: state.data });
-export default connect(mapStateToProps)(SSKurumlar);
+export default connect(mapStateToProps)(SSDokumanlar);

@@ -65,13 +65,13 @@ class DeleteBoxTanim extends Component {
                     <Message error header='Kayıt Silinemedi!' content='Silme İşleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.' />
                     :this.state.deleteModeON &&this.state.selectedPidm===this.props.pidm?
                         <div style={{ display: 'inline-block' }}>
-                            <Icon   //Ekleme modunda kayıt butonu
+                            <Icon   //(x)
                                 link
                                 name="remove circle"
                                 size="large"
                                 color="grey"
                                 onClick={this.handleClose}
-                            /><Icon  // listeleme modunda
+                            /><Icon  // (v)
                                 link
                                 name="check circle"
                                 size="large"

@@ -16,8 +16,7 @@ import {
   Visibility,
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-
-// import logo from './img/logo.png'
+// import logo from "./assets/img/logo2.png";
 
 // const Logo = () => <Image src={logo} size='small' />
 
@@ -25,6 +24,7 @@ import { Link } from 'react-router-dom';
 /* Heads up! HomepageHeading uses inline styling, however it's not the best practice. Use CSS or styled components for
  * such things.
  */
+
 
 
 const HomepageHeading = ({ mobile }) => (

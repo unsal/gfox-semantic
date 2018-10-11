@@ -23,7 +23,8 @@ import Sureler from './kvkk/components/verbisTanimlar/sureler';
 import Ulkeler from './kvkk/components/verbisTanimlar/ulkeler';
 
 // Süreç Sahibi
-import SSKurumlar from './kvkk/components/verbisSS/sskurumlar';
+import SSKurumlar from './kvkk/components/verbisSS/kurumlar';
+import SSDokumanlar from './kvkk/components/verbisSS/dokumanlar';
 
 import { Provider } from 'react-redux';
 import { store } from './reducer'
@@ -50,7 +51,8 @@ ReactDOM.render(
     <Route exact path='/kvkk/verbis/ulkeler' component={Ulkeler} />
 
    {/* Süreç Sahibi */}
-    <Route exact path='/kvkk/verbis/sskurumlar' component={SSKurumlar} />
+    <Route exact path='/kvkk/verbis/ss/kurumlar' component={SSKurumlar} />
+    <Route exact path='/kvkk/verbis/ss/dokumanlar' component={SSDokumanlar} />
 
  </Switch>
 </Router>

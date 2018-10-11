@@ -8,7 +8,7 @@ import {
   List,
   Segment,
 } from "semantic-ui-react";
-import logo from "../../assets/img/logo.png";
+import logo from "../../assets/img/logo2.png";
 
 
 const KVKKFooter = () => (

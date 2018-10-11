@@ -6,7 +6,7 @@ import {
   Icon,
   Dropdown
 } from "semantic-ui-react";
-import logo from "../../assets/img/logo.png";
+import logo from "../../assets/img/logo2.png";
 import notify from "../../assets/img/notify.png";
 
 import { Link } from "react-router-dom";
@@ -58,8 +58,8 @@ class KVKKHeader extends React.Component {
             {/* <Dropdown.Header>Header Item</Dropdown.Header> */}
             <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Süreç Sahibi</span>
               <Dropdown.Menu>
-                <Dropdown.Item as={Link} to='/kvkk/verbis/sskurumlar'><Icon name="user outline" /> Paylaşılan Kurumlar</Dropdown.Item>
-                <Dropdown.Item><Icon name="user outline" /> KV İçeren Dokümanlar</Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/verbis/ss/kurumlar'><Icon name="user outline" /> Paylaşılan Kurumlar</Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/verbis/ss/dokumanlar'><Icon name="user outline" /> KV Içeren Dokümanlar</Dropdown.Item>
                 <Dropdown.Item><Icon name="user outline" /> Toplama Kanalları</Dropdown.Item>
                 <Dropdown.Item><Icon name="user outline" /> Kullanılan Sistemler</Dropdown.Item>
               </Dropdown.Menu>

@@ -23,17 +23,24 @@ const server = 'http://localhost:2300';
 const tanimlar = server+'/tanimlar';
 
 export const getAPI = {
-  // Tanımlar
+  // Tanımlar ******************************************
   base: server,
   getTanimlar: tanimlar,
   addTanimlar: tanimlar+'/add',
   delTanimlar: tanimlar+'/del',
   getNextPidm: tanimlar+'/pidm',
 
-  // SS
+  // SS ******************************************
+  //Paylasilan Kurumlar
   getPaylasilanKurumlar: server+'/ss/paylasilankurumlar',
   addPaylasilanKurumlar: server+'/ss/paylasilankurumlar/add',
-  delPaylasilanKurumlar: server+'/ss/paylasilankurumlar/del'
+  delPaylasilanKurumlar: server+'/ss/paylasilankurumlar/del',
+
+  // KV Dokumanlar
+  getSSDokumanlar: server+'/ss/dokumanlar',
+  delSSDokumanlar: server+'/ss/dokumanlar/del',
+
+
 };
 
 export const getApi4=(id)=> {

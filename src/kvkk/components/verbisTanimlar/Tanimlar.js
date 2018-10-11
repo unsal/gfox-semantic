@@ -11,38 +11,43 @@ import { store } from "../../../reducer";
 import { updateStoreData } from "../../../reducer/actions";
 
 import DeleteBoxTanim from "./DeleteBoxTanim";
-// import AddBoxTanim from "./AddBoxTanim";
 import './Tanimlar.css';
+import '../../kvkk.css';
 import _ from 'lodash';
 
 class Tanimlar extends Component {
-  state = {
-    // bu ikisi
-    didMount: false,
-    isLoading:true,
 
-    apiIsOnline: false, // data load ederken
-    apiHasInsertError: false, // kayıt eklerken
-    apiInsertSuccessfull: false, // kayıt başarı ile eklendiyse
-    searchString: '', // girilen texte göre datayı filtrelemesi için gerekli alan
-    // Form Fields
-    formId: '',
-    formLocal: false,
-    formName: '',
-    formPhoneArea: '',
-    formSecure: false,
+  constructor(props) {
+    super(props);
 
-    selectedTanimPidm: 0   //Seçilmiş tanımı silmek için
-  };
+    this.state = {
+      url: getAPI.getTanimlar + "/" + this.props.id,
+      // bu ikisi
+      didMount: false,
+      isLoading:true,
 
-  loadData() {
-    const urlGET= getAPI.getTanimlar + "/" + this.props.id;
-    let data =[];
+      apiIsOnline: false, // data load ederken
+      apiHasInsertError: false, // kayıt eklerken
+      apiInsertSuccessfull: false, // kayıt başarı ile eklendiyse
+      searchString: '', // girilen texte göre datayı filtrelemesi için gerekli alan
+      // Form Fields
+      formId: '',
+      formLocal: false,
+      formName: '',
+      formPhoneArea: '',
+      formSecure: false,
+
+      selectedTanimPidm: 0   //Seçilmiş tanımı silmek için
+    };
+
+  }
+
+  refreshStoreData() {
     axios
-      .get(urlGET) //api den data yükler
+      .get(this.state.url) //api den data yükler
+      .then(this.setState({ searchString: '' }))
       .then(res => {
-        data = res.data;
-        store.dispatch(updateStoreData(data)); //store data güncelle
+        store.dispatch(updateStoreData(res.data)); //store data güncelle
         this.setState({ apiIsOnline: true, didMount: true });
       })
       .catch(err => {
@@ -53,7 +58,7 @@ class Tanimlar extends Component {
 
   componentDidMount() {
      this.setState({ formId: this.props.id})
-     this.loadData();
+     this.refreshStoreData();
   }
 
   // Herzaman iki değişken kullanmalısın yoksa hata verir
@@ -75,10 +80,10 @@ class Tanimlar extends Component {
     form.set("phone_area",this.state.formPhoneArea);
     form.set("secure",this.state.formSecure);
 
-    const urlADD= getAPI.addTanimlar;
-    axios({ method: "POST", url: urlADD, data: form })
+    const url= getAPI.addTanimlar;
+    axios({ method: "POST", url: url, data: form })
       .then(() => {
-        this.loadData();
+        this.refreshStoreData();
       })
       .then(()=> {
         // submit ettikten sonra mevcut değerleri resetlemek için
@@ -121,7 +126,7 @@ class Tanimlar extends Component {
 
   handleKeyDown = (event) => {
     if (event.keyCode===27) {
-          this.loadData();
+          this.refreshStoreData();
           console.log("Escape pressed...")
     } else if (event.keyCode===27) {
            this.handleSubmit()
@@ -130,15 +135,17 @@ class Tanimlar extends Component {
 
   handleHomeClick =(event)=>{
     event.preventDefault();
-    console.log("Home Clicked...");
+    this.refreshStoreData();
   }
 
-  AddBox =(props)=> {
+  AddForm = (props) => {
+
     const { id, inputIcon } = props;
     const isSistemler = id ==="kvsistemler";
     const isUlkeler = id === "ulkeler";
 
-    return (
+    return <Segment basic compact className="segment-form" >
+
           <Form onSubmit={this.handleSubmit}>
           <Form.Group>
                   <input type="hidden" name="id" value={id} />
@@ -219,7 +226,19 @@ class Tanimlar extends Component {
 
               </Form.Group>
               </Form>
-    )
+
+
+      {/* Kayıt sonrası uyarı Mesajı Bölümü */}
+      {this.state.apiInsertSuccessfull ?
+        <Message success content='Kayıt başarılı.' />
+        : null}
+
+      {/* Kayıt hatası alınırsa   */}
+      {this.state.apiHasInsertError ?
+        <Message error content='Hatalı işlem! Kayıt zaten mevcut olabilir. Lütfen kontrol edin.' />
+        : null}
+
+    </Segment>
   }
 
   render_() {
@@ -254,30 +273,14 @@ class Tanimlar extends Component {
       <div className="kvkk-content">
         <Header as='h2' onClick={this.handleHomeClick}>{title}</Header>
 
-        {/* Form */}
-        <Segment basic compact className="segment-form" >
-
-        <this.AddBox id={this.props.id} inputIcon={_inputIcon} recordExist={recordExist}/>
-
-        {/* Kayıt sonrası uyarı Mesajı Bölümü */}
-        {this.state.apiInsertSuccessfull?
-            <Message success header='İşlem tamam' content='Başarı ile kaydedildi' />
-        :null}
-
-        {/* Kayıt hatası alınırsa   */}
-        {this.state.apiHasInsertError?
-          <Message error header='Hata!' content='Hatalı işlem! Kayıt zaten mevcut olabilir. Lütfen kontrol edin.' />
-        :null}
-
-
-        </Segment>
+        <this.AddForm id={id} inputIcon = {_inputIcon} recordExist={recordExist} />
 
         <Table
           sortable
           celled
           fixed
-          compact
-          size="large"
+          compact='very'
+          size="small"
           style={{ width: "800px" }}
         >
           <Table.Header>

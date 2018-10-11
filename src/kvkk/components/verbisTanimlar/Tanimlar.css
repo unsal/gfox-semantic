@@ -17,16 +17,18 @@
 }
 
 .segment-form {
-  width: 800px;
+  width: 600px;
+  padding: 0px !important;
 }
+
 .message-successfull {
-  width: 785px !important;
+  width: 600px !important;
   color: #fff !important;
   background-color: #7ABE3B !important;
 }
 
 .message-error {
-  width: 785px !important;
+  width: 600px !important;
   color: #fff !important;
   background-color: #FA2C40 !important;
 }

@@ -1,4 +1,13 @@
 {
  "favorites.sortDirection": "ASC",
- "favorites.groupsFirst": true
+ "favorites.groupsFirst": true,
+ "favorites.root": [
+  {
+   "type": "Directory",
+   "name": "/Users/unsal/github/gfox/gfox-semantic/src/config",
+   "parent_id": null,
+   "workspacePath": "src/config",
+   "id": "ckxIwiWMvf6a4yYN"
+  }
+ ]
 }

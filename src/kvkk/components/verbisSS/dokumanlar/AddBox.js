@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import {Icon, Dropdown } from "semantic-ui-react";
-import {getOffset} from "../myComponents";
-import { getAPI } from "../../../config";
+import {Icon, Dropdown, Message } from "semantic-ui-react";
+import {getOffset} from "../../myComponents";
+import { getAPI } from "../../../../config";
 import axios from "axios";
-import { updateStoreData } from "../../../reducer/actions";
+import { updateStoreData } from "../../../../reducer/actions";
 
-class AddBoxKurum extends Component {
+// ADDBOX KURUM
+class AddBox extends Component {
   // props: id, pidm, name, store, data
   constructor(props) {
     super(props);
@@ -13,7 +14,7 @@ class AddBoxKurum extends Component {
      didMount: false,
      isLoading: true,
 
-     addModeON: false,
+     addMode: false,
      selectedPidm: 0, //seçili tanımı silmek için
 
      offset: [],
@@ -21,7 +22,7 @@ class AddBoxKurum extends Component {
 
      dataSelected: [],
      error: false,
-     success: false
+     success: false,
 
     };
   }
@@ -106,12 +107,12 @@ class AddBoxKurum extends Component {
   };
 
   handleAdd =(selectedPidm)=>{
-    const addModeON = !this.state.addModeON;
-    this.setState({ addModeON, selectedPidm });
+    const addMode = !this.state.addMode;
+    this.setState({ addMode, selectedPidm });
   }
 
   handleClose =()=>{
-    this.setState({ addModeON: false, selectedPidm:0 })
+    this.setState({ addMode: false, selectedPidm:0 })
   }
 
   handleOnChange = (event, data) => {
@@ -131,9 +132,10 @@ class AddBoxKurum extends Component {
                 width: "400px", //styledeki width kadar genişlik limiti olur
                 backgroundColor: '#fff',
                 zIndex: "100" //butonları öne getirsin ve arkadaki (+) ile karışmasın diye
-            }
+              }
 
     return   <div style={styleDD}>
+                <this.AddMenuButtons />
                 <Dropdown
                     fluid
                     placeholder='Kurum seçin'
@@ -141,19 +143,6 @@ class AddBoxKurum extends Component {
                     options={this.state.options}
                     onChange = {this.handleOnChange}
                 />
-                  <Icon   //Add modunda (X) kapat ikonu
-                            link
-                            name="remove circle"
-                            size="large"
-                            color="grey"
-                            onClick={this.handleClose}
-                  /><Icon  // Add modunda (V) approve ikonu
-                      link
-                      name="check circle"
-                      size="large"
-                      color="blue"
-                      onClick={this.handleSubmit}
-                  />
               </div>
   }
 
@@ -170,15 +159,10 @@ componentDidUpdate(prevProps, prevState) {
   }
 }
 
-  render() {
-    //ekleme butonunu alta atmadan sağa doğru sıralasın diye
-    const style = !this.state.addModeON?{ display: 'inline-block' }:null;
-    return (
-      <div style={style}>
+// (+)
+AddIcon =() =>{
 
-                {this.state.addModeON &&this.state.selectedPidm===this.props.pidm?
-                        <this.DropdownSelectKurumlar />
-                            :<Icon  // listeleme modunda (+) butonu
+  return <Icon  // listeleme modunda (+) butonu
                                 id={this.props.pidm}
                                 link
                                 name="add circle"
@@ -186,11 +170,46 @@ componentDidUpdate(prevProps, prevState) {
                                 color="olive"
                                 onClick={()=>this.handleAdd(this.props.pidm)}
                               />
-          }
+}
+
+ // (x) (v)
+AddMenuButtons =()=>{
+    return <div style={{ display: 'inline-block' }}>
+                      <Icon   //Add modunda (X) kapat ikonu
+                                link
+                                name="remove circle"
+                                size="large"
+                                color="grey"
+                                onClick={this.handleClose}
+                      /><Icon  // Add modunda (V) approve ikonu
+                          link
+                          name="check circle"
+                          size="large"
+                          color="blue"
+                          onClick={this.handleSubmit}
+                      />
+                      </div>
+}
+
+ErrorMessage = () => {
+  return <Message
+              error
+              header='Kayıt Eklenemedi!'
+              content='Kayıt işleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.'
+          />
+}
+
+  render() {
+    //ekleme butonunu alta atmadan sağa doğru sıralasın diye
+    return (
+      <div>
+            {this.state.error? <this.ErrorMessage />
+                :this.state.addMode&&this.state.selectedPidm===this.props.pidm?
+                        <this.DropdownSelectKurumlar />
+                            : <this.AddIcon />}
       </div>
       )
-
       }
   }
 
-export default AddBoxKurum;
+export default AddBox;
