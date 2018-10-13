@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Icon, Dropdown, Segment, Grid } from "semantic-ui-react";
 import {getOffset} from "../../myComponents";
-import { getAPI } from "../../../../config";
+import { config } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
 import MyMessage from "../../myComponents";
@@ -32,7 +32,7 @@ class AddBox extends Component {
 
   loadDokumanlarOptions =()=> {
     //Dropdown için key, text, value formatında
-    const url= getAPI.getTanimlar + "/dokumanlar";
+    const url= config.URL_GetTanimlar + "/dokumanlar";
     let options =[];
 
     axios
@@ -55,7 +55,7 @@ class AddBox extends Component {
 
   loadYayinDurumlariOptions =()=> {
     //Dropdown için key, text, value formatında
-    const url= getAPI.getTanimlar + "/yayindurumlari";
+    const url= config.URL_GetTanimlar + "/yayindurumlari";
     let options =[];
 
     axios
@@ -77,7 +77,7 @@ class AddBox extends Component {
   }
 
   refreshStoreData =() => {
-    const url = getAPI.getSSDokumanlar;
+    const url = config.URL_GetSSDokumanlar;
     const store = this.props.store;
 
     axios
@@ -97,7 +97,7 @@ class AddBox extends Component {
   // Sil onayı
   handleSubmit = (event) => {
     event.preventDefault();
-    const url= getAPI.addSSDokumanlar;
+    const url= config.URL_AddSSDokumanlar;
 
     const form = new FormData();
 
@@ -117,10 +117,8 @@ class AddBox extends Component {
 
   };
 
-  handleAdd =(selectedPidm)=>{
-    const addMode = true;
-    this.setState({ addMode, selectedPidm });
-    console.log(addMode, selectedPidm, this.state.birim_pidm)
+  handleAddMode =(selectedPidm)=>{
+    this.setState({ addMode: true, error: false, selectedPidm }); //bir önceki hatadan 2sn içnde kapanan errmessagedan dolayı error:false set edildi.
   }
 
   handleClose =()=>{
@@ -224,7 +222,7 @@ AddIcon =() =>{
                                 name="add circle"
                                 size="large"
                                 color="olive"
-                                onClick={()=>this.handleAdd(this.state.birim_pidm)}
+                                onClick={()=>this.handleAddMode(this.state.birim_pidm)}
                               />
 }
 
@@ -240,8 +238,8 @@ ErrorMessage = () => {
     return (
       <div>
             {this.state.error? <this.ErrorMessage />
-                :this.state.addMode&&this.state.selectedPidm===this.state.birim_pidm?
-                        <this.AddForm />:null}
+                :this.state.addMode? <this.AddForm />
+                :null}
 
             <this.AddIcon />
       </div>

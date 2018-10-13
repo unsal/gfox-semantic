@@ -19,35 +19,31 @@ export const tanimlarID = {
 
 
 // API URL Settings
-const server = 'http://localhost:2300';
-const tanimlar = server+'/tanimlar';
+const hostURL = 'http://localhost:2300';
 
-export const getAPI = {
+export const config = {
   // Tanımlar ******************************************
-  base: server,
-  getTanimlar: tanimlar,
-  addTanimlar: tanimlar+'/add',
-  delTanimlar: tanimlar+'/del',
-  getNextPidm: tanimlar+'/pidm',
+  URL_GetTanimlar: hostURL+'/tanimlar',
+  URL_AddTanimlar: hostURL+'/tanimlar/add',
+  URL_DelTanimlar: hostURL+'/tanimlar/del',
+
+  // ss > common > related > dropdownlar için
+  URL_GET_KURUMLAR: hostURL+'/tanimlar/kurumlar',
+  URL_GET_SISTEMLER: hostURL+'/tanimlar/kvsistemler',
+  URL_GET_KANALLAR: hostURL+'/tanimlar/kanallar',
 
   // SS ******************************************
   //Paylasilan Kurumlar
-  getPaylasilanKurumlar: server+'/ss/paylasilankurumlar',
-  addPaylasilanKurumlar: server+'/ss/paylasilankurumlar/add',
-  delPaylasilanKurumlar: server+'/ss/paylasilankurumlar/del',
+  URL_GetPaylasilanKurumlar: hostURL+'/ss/paylasilankurumlar',
+  URL_AddPaylasilanKurumlar: hostURL+'/ss/paylasilankurumlar/add',
+  URL_DelPaylasilanKurumlar: hostURL+'/ss/paylasilankurumlar/del',
 
   // KV Dokumanlar
-  getSSDokumanlar: server+'/ss/dokumanlar',
-  addSSDokumanlar: server+'/ss/dokumanlar/add',
-  delSSDokumanlar: server+'/ss/dokumanlar/del',
-
+  URL_GetSSDokumanlar: hostURL+'/ss/dokumanlar',
+  URL_AddSSDokumanlar: hostURL+'/ss/dokumanlar/add',
+  URL_DelSSDokumanlar: hostURL+'/ss/dokumanlar/del',
 
 };
 
-export const getApi4=(id)=> {
-  return (
-      tanimlar+'/'+id
-  )
-}
 
 

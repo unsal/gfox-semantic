@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Label, Icon } from "semantic-ui-react";
-import { getAPI } from "../../../config";
+import { config } from "../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../reducer/actions";
 import MyMessage from "../myComponents";
@@ -10,7 +10,7 @@ class DeleteBoxTanim extends Component {
   constructor(props) {
     super(props);
     this.state = {
-     url: getAPI.delTanimlar,
+     url: config.URL_DelTanimlar,
      error: false,
 
      deleteMode: false,

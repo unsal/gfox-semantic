@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Label, Icon, List } from "semantic-ui-react";
-import { getAPI } from "../../../../config";
+import { config } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
 
@@ -24,7 +24,7 @@ class DeleteBox extends Component {
 
     axios({
       method: "POST",
-      url: getAPI.delSSDokumanlar,
+      url: config.URL_DelSSDokumanlar,
       data: formData
       // config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
@@ -50,7 +50,7 @@ class DeleteBox extends Component {
   }
 
   refreshStoreData =() => {
-    const url = getAPI.getSSDokumanlar;
+    const url = config.URL_GetSSDokumanlar;
     const store = this.props.store;
 
     axios

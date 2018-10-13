@@ -26,6 +26,11 @@ class KVKKHeader extends React.Component {
       store.dispatch(updateStoreNewRequest(!nr));
   }
 
+  handleClickAyarlar=(event)=>{
+    event.preventDefault();
+    window.location.reload();
+  }
+
   render() {
     return (
     <Menu fixed="top" inverted>
@@ -79,7 +84,7 @@ class KVKKHeader extends React.Component {
           <Icon name="search" />
           Sorgula
         </Menu.Item>
-        <Menu.Item header as={Link} to="/">
+        <Menu.Item header onClick={this.handleClickAyarlar}>
           <Icon name="setting" />
           Ayarlar
         </Menu.Item>

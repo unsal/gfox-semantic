@@ -7,30 +7,30 @@ import MyMessage from "../../myComponents";
 
 //DELETE BOX KURUM
 class DeleteBox extends Component {
-  // props: pidm, birim_pidm, name, store, data
-  constructor(props) {
-    super(props);
-    this.state = {
-     error: false,
+state = {
 
+    //get props
+    URL_GET: this.props.URL_GET,
+    URL_DELETE: this.props.URL_DELETE,
+    selectedPidm: this.props.selectedPidm,
+    name: this.props.name,
+    store: this.props.store,
+
+     error: false,
      deleteMode: false,
-     selectedPidm: 0 //seçili tanımı silmek için
-    };
+
   }
 
-  // Sil onayı
-  approveDelete = () => {
-    // event.preventDefault();
+  handleDelete = () => {
 
     const formData = new FormData();
-    const { selectedPidm } = this.props;
-    formData.set("pidm", selectedPidm);
+    formData.set("pidm", this.state.selectedPidm);
 
     axios({
       method: "POST",
-      url: config.URL_DelPaylasilanKurumlar,
+      url: this.state.URL_DELETE,
       data: formData
-      // config: { headers: {'Content-Type': 'multipart/form-data' }}
+
     })
       .then(() => {
 
@@ -44,21 +44,19 @@ class DeleteBox extends Component {
       });
   };
 
-  handleDelete =(selectedPidm)=>{
-    // const deleteMode = !this.state.deleteMode;
-    this.setState({ deleteMode: true, error: false, selectedPidm }); //deletemodu seçilen pidm için açar
+  handleDeleteMode =()=>{
+    this.setState({ deleteMode: true, error: false }); //deletemodu seçilen pidm için açar
   }
 
   handleClose =()=>{
-    this.setState({ deleteMode: false, selectedPidm:0 })
+    this.setState({ deleteMode: false })
   }
 
   refreshStoreData =() => {
-    const url = config.URL_GetPaylasilanKurumlar;
-    const store = this.props.store;
+    const {URL_GET, store} = this.state;
 
     axios
-      .get(url)
+      .get(URL_GET)
       .then(json => {
         const data = json.data;
         store.dispatch(updateStoreData(data)); //store data güncelle
@@ -84,7 +82,7 @@ class DeleteBox extends Component {
         name="check circle"
         size="large"
         color="red"
-        onClick={this.approveDelete}
+        onClick={this.handleDelete}
       />
     </div>
   }
@@ -98,14 +96,16 @@ class DeleteBox extends Component {
   }
 
   render() {
+    const {selectedPidm,name, deleteMode} = this.state;
+
     return (
       <div style={{ margin:"2px" }}>
-        <Label key={this.props.pidm} as='a' content={this.props.name.toUpperCase()} icon='remove circle' onClick={()=>this.handleDelete(this.props.pidm)} />
+        <Label key={selectedPidm} as='a' content={name.toUpperCase()} icon='remove circle' onClick={()=>this.handleDeleteMode()} />
 
           {this.state.error?
                     <this.ErrorMessage />
-                    :this.state.deleteMode &&this.state.selectedPidm===this.props.pidm?
-                       <this.DeleteMenuButtons />:null}
+                    :deleteMode? <this.DeleteMenuButtons />
+                    :null}
 
 
       </div>

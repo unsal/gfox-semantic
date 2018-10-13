@@ -3,7 +3,7 @@ import { Table, Icon, Header, Form, Input, Checkbox, Segment, Message } from "se
 import KVKKLayout from "../../layout";
 
 import axios from "axios";
-import { getAPI } from "../../../config";
+import { config } from "../../../config";
 
 //Redux
 import { connect } from "react-redux";
@@ -20,7 +20,7 @@ import MyMessage from "../myComponents";
 class Tanimlar extends Component {
 
     state = {
-      url: getAPI.getTanimlar + "/" + this.props.id,
+      url: config.URL_GetTanimlar + "/" + this.props.id,
       // bu ikisi
       didMount: false,
       isLoading:true,
@@ -77,7 +77,7 @@ class Tanimlar extends Component {
     form.set("phone_area",this.state.formPhoneArea);
     form.set("secure",this.state.formSecure);
 
-    const url= getAPI.addTanimlar;
+    const url= config.URL_AddTanimlar;
     axios({ method: "POST", url: url, data: form })
       .then(() => {
         this.refreshStoreData();

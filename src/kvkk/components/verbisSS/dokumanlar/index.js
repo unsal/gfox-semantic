@@ -3,7 +3,7 @@ import { Table } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
 
 import axios from "axios";
-import { getAPI } from "../../../../config";
+import { config } from "../../../../config";
 
 //Redux
 import { connect } from "react-redux";
@@ -26,7 +26,7 @@ class SSDokumanlar extends Component {
   };
 
   componentDidMount() {
-    const url = getAPI.getSSDokumanlar;
+    const url = config.URL_GetSSDokumanlar;
     axios
       .get(url)
       .then(json => {
@@ -80,7 +80,6 @@ class SSDokumanlar extends Component {
                                 dokuman_name={dokuman_name}
                                 yayin_name={yayin_name}
                                 store={store}
-                                data={data}
                             />
 
                         ))}
