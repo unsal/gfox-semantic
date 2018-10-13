@@ -15,12 +15,11 @@ import './Tanimlar.css';
 import '../../kvkk.css';
 import _ from 'lodash';
 
+import MyMessage from "../myComponents";
+
 class Tanimlar extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
+    state = {
       url: getAPI.getTanimlar + "/" + this.props.id,
       // bu ikisi
       didMount: false,
@@ -28,7 +27,6 @@ class Tanimlar extends Component {
 
       apiIsOnline: false, // data load ederken
       apiHasInsertError: false, // kayıt eklerken
-      apiInsertSuccessfull: false, // kayıt başarı ile eklendiyse
       searchString: '', // girilen texte göre datayı filtrelemesi için gerekli alan
       // Form Fields
       formId: '',
@@ -40,7 +38,6 @@ class Tanimlar extends Component {
       selectedTanimPidm: 0   //Seçilmiş tanımı silmek için
     };
 
-  }
 
   refreshStoreData() {
     axios
@@ -89,12 +86,12 @@ class Tanimlar extends Component {
         // submit ettikten sonra mevcut değerleri resetlemek için
         this.setState({
           apiHasInsertError: false,
-          apiInsertSuccessfull: true,
-          formName: '', formLocal: false, formPhoneArea:'', formSecure:''});
+          formName: '', formLocal: false, formPhoneArea:'', formSecure:''
+        });
       })
       .catch(err => {
         console.log(err);
-        this.setState({apiHasInsertError: true, apiInsertSuccessfull: false})
+        this.setState({apiHasInsertError: true})
       });
   }
 
@@ -102,7 +99,6 @@ class Tanimlar extends Component {
     event.preventDefault();
     this.setState({
       searchString: event.target.value,
-      apiInsertSuccessfull: false, // zemin rengini resetlemesi için
       apiHasInsertError: false,// hatadan sonra kırmızı olan alanın tuşa basılınca normale dönmesi için
       formName: event.target.value
     });
@@ -228,14 +224,9 @@ class Tanimlar extends Component {
               </Form>
 
 
-      {/* Kayıt sonrası uyarı Mesajı Bölümü */}
-      {this.state.apiInsertSuccessfull ?
-        <Message success content='Kayıt başarılı.' />
-        : null}
-
       {/* Kayıt hatası alınırsa   */}
       {this.state.apiHasInsertError ?
-        <Message error content='Hatalı işlem! Kayıt zaten mevcut olabilir. Lütfen kontrol edin.' />
+        <MyMessage error content='Hatalı işlem! Kayıt zaten mevcut olabilir. Lütfen kontrol edin.' />
         : null}
 
     </Segment>
@@ -260,14 +251,7 @@ class Tanimlar extends Component {
     // Kayıt varsa ekleme, uyarı ver. Aşağıda HeaderCell'de
     const count = _.size(_data);
     const recordExist = (count >0) && (searchString.length >0);
-    // Kayıt yoksa Gri, varsa Kırmızı, başarı ile eklenirse yeşil olması için
-    // const _bgcolor = !recordExist?"#F0F0F0"
-    //         :this.state.apiInsertSuccessfull?"#C1EFB2"
-    //         :"#FDBCB8";
-    const _inputIcon = !recordExist?'pencil alternate'
-            :this.state.apiInsertSuccessfull?'check'
-            :'remove';
-
+    const _inputIcon = 'pencil alternate';
 
     return (
       <div className="kvkk-content">

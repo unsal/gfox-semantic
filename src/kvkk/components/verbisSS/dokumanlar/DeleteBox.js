@@ -1,29 +1,26 @@
 import React, { Component } from "react";
-import { Label, Icon, Message, List } from "semantic-ui-react";
+import { Label, Icon, List } from "semantic-ui-react";
 import { getAPI } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
 
+import MyMessage from "../../myComponents";
+
 //DELETE BOX KURUM
 class DeleteBox extends Component {
   // props: pidm, birim_pidm, name, store, data
-  constructor(props) {
-    super(props);
-    this.state = {
-     error: false,
 
-     deleteModeON: false,
-     selectedPidm: 0 //seçili tanımı silmek için
-    };
+  state = {
+     error: false,
+     deleteMode: false,
   }
 
   // Sil onayı
-  approveDelete = () => {
+  handleDelete = () => {
     // event.preventDefault();
 
     const formData = new FormData();
-    const { selectedPidm } = this.props;
-    formData.set("pidm", selectedPidm);
+    formData.set("pidm", this.props.selectedPidm);
 
     axios({
       method: "POST",
@@ -43,17 +40,17 @@ class DeleteBox extends Component {
       });
   };
 
-  handleDelete =(selectedPidm)=>{
-    const deleteModeON = !this.state.deleteModeOn;
-    this.setState({ deleteModeON, selectedPidm });
+  handleDeleteMode =(event)=>{
+    event.preventDefault();
+    this.setState({ deleteMode: true, error: false }); //deletemodu seçilen pidm için açar
   }
 
   handleClose =()=>{
-    this.setState({ deleteModeON: false, selectedPidm:0 })
+    this.setState({ deleteMode: false, selectedPidm:0 })
   }
 
   refreshStoreData =() => {
-    const url = getAPI.getPaylasilanKurumlar;
+    const url = getAPI.getSSDokumanlar;
     const store = this.props.store;
 
     axios
@@ -71,7 +68,7 @@ class DeleteBox extends Component {
 
   //(x)(v)
   DeleteMenuButtons = () => {
-    return <div style={{ display: 'inline-block' }}>
+    return <div style={{ display: 'inline-block'}}>
       <span>yukardaki dokuman silinsin mi?</span>
       <Icon   //Ekleme modunda kayıt butonu
         link
@@ -84,13 +81,13 @@ class DeleteBox extends Component {
         name="check circle"
         size="large"
         color="red"
-        onClick={this.approveDelete}
+        onClick={this.handleDelete}
       />
     </div>
   }
 
   ErrorMessage = () => {
-    return <Message
+    return <MyMessage
                 error
                 header='Kayıt Silinemedi!'
                 content='Silme işleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.'
@@ -98,25 +95,21 @@ class DeleteBox extends Component {
   }
 
   render() {
-    const {pidm, dokuman_name, yayin_name} = this.props;
+    const {dokuman_name, yayin_name} = this.props;
     return (
-      <div style={{ margin:"2px", display: 'inline-block' }}>
-        {/* <Label as='a' content={dokuman_name.toUpperCase()} icon='remove circle' onClick={()=>this.handleDelete(pidm)} />
-        <Label as='a' content={yayin_name.toUpperCase()} color="teal"/> */}
+      <div style={{ margin:"2px", display: 'block' }}>
 
-        <List size='small' celled divided selection onClick={()=>this.handleDelete(pidm)} >
+        <List size='small' celled divided selection onClick={this.handleDeleteMode} >
           <List.Item>
-            <div style = {{ display: 'inline-block'}}>
-            {dokuman_name}{" "}
-            <Label as='a' size='mini' color={yayin_name==='yayında'?'olive':'gray'} horizontal> {yayin_name} </Label>
-            </div>
+            <span style={{ float:'left'}}> {dokuman_name}</span>
+            <Label style={{ float:'right'}} as='a' size='mini' color={yayin_name==='yayında'?'teal':null} horizontal> {yayin_name} </Label>
         </List.Item>
         </List>
 
-          {this.state.error?
-                    <this.ErrorMessage />
-                    :this.state.deleteModeON &&this.state.selectedPidm===this.props.pidm?
-                       <this.DeleteMenuButtons />:null}
+          {this.state.error ? <this.ErrorMessage />
+                    :this.state.deleteMode?<this.DeleteMenuButtons />
+                    :null
+          }
 
 
       </div>

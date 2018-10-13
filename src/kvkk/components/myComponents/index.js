@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimmer, Header, Icon } from 'semantic-ui-react'
+import { Message, Segment, Icon } from 'semantic-ui-react'
 
 
 export const upperCase=string=>
@@ -32,34 +32,61 @@ export const getOffset = (element)=> {
     return _position;
   }
 
-export class ShowDimmer extends Component {
-  //props: title, message, icon
-  constructor(props) {
+
+// MyMessage
+  export class MyMessage extends Component {
+    constructor(props) {
       super(props);
-      this.state = { active: true }
+        this.state = { visible: true }
+    }
+
+    componentDidMount() {
+      setTimeout(() => {
+        this.setState({ visible: false })
+      }, 2000)
+    }
+
+    handleDismiss = () => {
+      this.setState({ visible: false })
+    }
+
+    render() {
+      if (this.state.visible) {
+        return (
+         this.props.error?
+            <Message error onDismiss={this.handleDismiss} header={this.props.header} content={this.props.content} />
+          :this.props.success?
+            <Message success onDismiss={this.handleDismiss} header={this.props.header} content={this.props.content} />
+          : <Message onDismiss={this.handleDismiss} header={this.props.header} content={this.props.content} />
+            )
+      }
+
+      return null;
+
+
+
+    }
   }
 
+// my Loader
+  export class MyLoader extends Component {
 
+    render() {
 
-//   handleOpen = () => this.setState({ active: true })
-  handleClose = () => this.setState({ active: false })
-
-  render() {
-    const { active } = this.state
-
-    return (
-      <div>
-        <Dimmer active={active} onClickOutside={this.handleClose} page>
-          <Header as='h2' icon inverted>
-            <Icon name={this.props.icon}/>
-            {this.props.title}
-            <Header.Subheader>{this.props.message}</Header.Subheader>
-          </Header>
-        </Dimmer>
-      </div>
-    )
+      return (
+        <div style={{ padding:"100px" }}>
+          <Segment basic compact>
+              <Icon loading name="circle notch" size="big"/>
+              <span>Yükleniyor...</span>
+          </Segment>
+        </div>
+      )
+    }
   }
-}
+
+  export default MyMessage;
+
+
 
 
 

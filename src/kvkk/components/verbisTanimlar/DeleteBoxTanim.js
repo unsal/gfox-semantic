@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Label, Icon, Message } from "semantic-ui-react";
+import { Label, Icon } from "semantic-ui-react";
 import { getAPI } from "../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../reducer/actions";
+import MyMessage from "../myComponents";
 
 class DeleteBoxTanim extends Component {
   // props: id, pidm, name, store, data
@@ -12,7 +13,7 @@ class DeleteBoxTanim extends Component {
      url: getAPI.delTanimlar,
      error: false,
 
-     deleteModeON: false,
+     deleteMode: false,
      selectedPidm: 0 //seçili tanımı silmek için
     };
   }
@@ -46,13 +47,13 @@ class DeleteBoxTanim extends Component {
   };
 
   handleDelete =(selectedPidm)=>{
-    const deleteModeON = !this.state.deleteModeOn;
-    this.setState({ deleteModeON, selectedPidm });
+    // const deleteMode = !this.state.deleteMode;
+    this.setState({ deleteMode: true, error: false, selectedPidm }); //deletemodu seçilen pidm için açar
   }
 
   handleClose =(event)=>{
     event.preventDefault();
-    this.setState({ deleteModeON: false, selectedPidm:0 })
+    this.setState({ deleteMode: false, selectedPidm:0 })
   }
 
   render() {
@@ -62,8 +63,8 @@ class DeleteBoxTanim extends Component {
         <Label key={this.props.pidm} as='a' content={this.props.name.toUpperCase()} icon='remove circle' onClick={()=>this.handleDelete(this.props.pidm)} />
 
           {this.state.error?
-                    <Message error header='Kayıt Silinemedi!' content='Silme İşleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.' />
-                    :this.state.deleteModeON &&this.state.selectedPidm===this.props.pidm?
+                    <MyMessage error header='Kayıt Silinemedi!' content='Silme İşleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.' />
+                    :this.state.deleteMode &&this.state.selectedPidm===this.props.pidm?
                         <div style={{ display: 'inline-block' }}>
                             <Icon   //(x)
                                 link

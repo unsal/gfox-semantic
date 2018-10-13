@@ -1,16 +1,15 @@
 import React, {Component} from "react";
-import {Icon, Dropdown, Message } from "semantic-ui-react";
+import {Icon, Dropdown, Segment, Grid } from "semantic-ui-react";
 import {getOffset} from "../../myComponents";
 import { getAPI } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
+import MyMessage from "../../myComponents";
 
-// ADDBOX KURUM
+// SS ADDBOX DOKUMAN
 class AddBox extends Component {
   // props: id, pidm, name, store, data
-  constructor(props) {
-    super(props);
-    this.state = {
+ state = {
      didMount: false,
      isLoading: true,
 
@@ -18,18 +17,22 @@ class AddBox extends Component {
      selectedPidm: 0, //seçili tanımı silmek için
 
      offset: [],
-     options: [],
+     optionsDokumanlar: [],
+     optionsYayinDurumlari: [],
 
-     dataSelected: [],
      error: false,
      success: false,
+     message: '',
 
-    };
+     birim_pidm: this.props.birim_pidm,
+     dokuman_pidm: 0,
+     yayindurumu_pidm: 0, //Dropdown'dan selecet edilecek pidm için
+
   }
 
-  loadOptions =()=> {
+  loadDokumanlarOptions =()=> {
     //Dropdown için key, text, value formatında
-    const url= getAPI.getTanimlar + "/kurumlar";
+    const url= getAPI.getTanimlar + "/dokumanlar";
     let options =[];
 
     axios
@@ -39,19 +42,42 @@ class AddBox extends Component {
         data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
       })
       .then(()=>{
-        this.setState({ options })
+        this.setState({ optionsDokumanlar: options })
       })
       .catch(err => {
-        console.log("Dropdown Kurumlar yüklenemedi!");
+        console.log("Dropdown Dokümanlar yüklenemedi!");
         console.log(err);
-        this.setState({ options: [], error:true, success:false })
+        this.setState({ optionsDokumanlar: [], error:true, success:false })
+      });
+
+      return null;
+  }
+
+  loadYayinDurumlariOptions =()=> {
+    //Dropdown için key, text, value formatında
+    const url= getAPI.getTanimlar + "/yayindurumlari";
+    let options =[];
+
+    axios
+      .get(url) //api den data yükler
+      .then(json => {
+        const data = json.data;
+        data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
+      })
+      .then(()=>{
+        this.setState({ optionsYayinDurumlari: options })
+      })
+      .catch(err => {
+        console.log("Dropdown Yayın Durumları yüklenemedi!");
+        console.log(err);
+        this.setState({ optionsYayinDurumlari: [], error:true, success:false })
       });
 
       return null;
   }
 
   refreshStoreData =() => {
-    const url = getAPI.getPaylasilanKurumlar;
+    const url = getAPI.getSSDokumanlar;
     const store = this.props.store;
 
     axios
@@ -68,62 +94,54 @@ class AddBox extends Component {
       });
   }
 
-  submit = (birim_pidm, kurum_pidm) => {
-
-    const url= getAPI.addPaylasilanKurumlar;
+  // Sil onayı
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const url= getAPI.addSSDokumanlar;
 
     const form = new FormData();
-    // Must bu set; otherwise Python gets "AttributeError: 'NoneType' object has no attribute 'upper'"
-    form.set("birim_pidm", birim_pidm);
-    form.set("kurum_pidm", kurum_pidm);
+
+    form.set("birim_pidm", this.state.birim_pidm);
+    form.set("dokuman_pidm", this.state.dokuman_pidm);
+    form.set("yayin_pidm", this.state.yayindurumu_pidm);
 
     axios({ method: "POST", url: url, data: form })
       .then(() => {
         this.refreshStoreData();
         this.setState({ error: false, success: true })
-        this.handleClose();
       })
       .catch(err => {
         console.log(err);
         this.setState({ error: true, success: false })
       });
-  }
-
-  // Sil onayı
-  handleSubmit = (event) => {
-    event.preventDefault();
-
-    const birim_pidm = this.props.pidm;
-    const dataSelected = this.state.dataSelected;
-
-    dataSelected.map(({kurum_pidm})=>(
-        this.submit(birim_pidm, kurum_pidm)
-    )
-    )
-
-    this.handleClose(event);
-    this.refreshStoreData();
 
   };
 
   handleAdd =(selectedPidm)=>{
-    const addMode = !this.state.addMode;
+    const addMode = true;
     this.setState({ addMode, selectedPidm });
+    console.log(addMode, selectedPidm, this.state.birim_pidm)
   }
 
   handleClose =()=>{
     this.setState({ addMode: false, selectedPidm:0 })
   }
 
-  handleOnChange = (event, data) => {
-    event.preventDefault();
-    const dataSelected = data.value.map(key=>({kurum_pidm: key}));
 
-    this.setState({ dataSelected});
+  handleChangeYayinDurumu = (event, data) => {
+    event.preventDefault();
+    const yayindurumu_pidm = data.value; // burdaki data dropdownun özel propertiesidir, karıştırma..
+    this.setState({ yayindurumu_pidm });
   }
 
-  DropdownSelectKurumlar = () => {
-    const offset = getOffset(this.props.pidm); //getElementOffset by id
+  handleChangeDokuman = (event, data) => {
+    event.preventDefault();
+    const dokuman_pidm = data.value;
+    this.setState({ dokuman_pidm });
+  }
+
+  AddForm = () => {
+    const offset = getOffset(this.state.birim_pidm); //getElementOffset by id
 
     // Dropdown ekleme formu cell içinde relative değil dışında absolute gözükün diye.. çünkü sığmıyordu.. cdm'e bak..
     const styleDD = { position: "absolute",
@@ -131,26 +149,64 @@ class AddBox extends Component {
                 left: offset.left,
                 width: "400px", //styledeki width kadar genişlik limiti olur
                 backgroundColor: '#fff',
-                zIndex: "100" //butonları öne getirsin ve arkadaki (+) ile karışmasın diye
+                zIndex: "100", //butonları öne getirsin ve arkadaki (+) ile karışmasın diye
+                padding: "0px", // aşağıda segment->grid content arasında boşluk bırakmaz. gridde de margin=0 yaparsan aralarda boşluk kalmaz
               }
 
-    return   <div style={styleDD}>
-                <this.AddMenuButtons />
-                <Dropdown
-                    fluid
-                    placeholder='Kurum seçin'
-                    multiple search selection
-                    options={this.state.options}
-                    onChange = {this.handleOnChange}
-                />
-              </div>
+    return   <Segment basic compact size='mini' style={styleDD}>
+                <Grid celled columns={2} style={{ margin: '0px'}}>
+
+                    {/* BUTONLAR*/}
+                    <Grid.Column width={2}>
+                        <Icon   //Add modunda (X) kapat ikonu
+                                  link
+                                  name="remove circle"
+                                  size="big"
+                                  color="grey"
+                                  onClick={this.handleClose}
+                        /><Icon  // Add modunda (V) approve ikonu
+                            link
+                            name="check circle"
+                            size="big"
+                            color="blue"
+                            onClick={this.handleSubmit}
+                            style = {{ marginTop: "5px" }}
+                        />
+                      </Grid.Column>
+
+                      {/* FORM FIELDS */}
+                    <Grid.Column width={14}>
+                          <Dropdown
+                              compact
+                              fluid // sağa doğru uzar
+                              placeholder='Doküman seçin'
+                              search selection
+                              options={this.state.optionsDokumanlar}
+                              onChange = {this.handleChangeDokuman}
+                          />
+                          <Dropdown
+                              button
+                              className='icon'
+                              labeled
+                              icon='world'
+                              compact
+                              search selection
+                              placeholder='Yayın Durumu'
+                              options={this.state.optionsYayinDurumlari}
+                              onChange = {this.handleChangeYayinDurumu}
+                              style = {{ marginTop:"5px" }}
+                          />
+                        </Grid.Column>
+
+                </Grid>
+              </Segment>
   }
 
 componentDidMount() {
-  const didMount = true;
-  this.setState({ didMount })
+  this.setState({ didMount: true })
 
-  this.loadOptions();
+  this.loadDokumanlarOptions();
+  this.loadYayinDurumlariOptions();
 }
 
 componentDidUpdate(prevProps, prevState) {
@@ -163,38 +219,18 @@ componentDidUpdate(prevProps, prevState) {
 AddIcon =() =>{
 
   return <Icon  // listeleme modunda (+) butonu
-                                id={this.props.pidm}
+                                id={this.state.birim_pidm}
                                 link
                                 name="add circle"
                                 size="large"
                                 color="olive"
-                                onClick={()=>this.handleAdd(this.props.pidm)}
+                                onClick={()=>this.handleAdd(this.state.birim_pidm)}
                               />
 }
 
- // (x) (v)
-AddMenuButtons =()=>{
-    return <div style={{ display: 'inline-block' }}>
-                      <Icon   //Add modunda (X) kapat ikonu
-                                link
-                                name="remove circle"
-                                size="large"
-                                color="grey"
-                                onClick={this.handleClose}
-                      /><Icon  // Add modunda (V) approve ikonu
-                          link
-                          name="check circle"
-                          size="large"
-                          color="blue"
-                          onClick={this.handleSubmit}
-                      />
-                      </div>
-}
-
 ErrorMessage = () => {
-  return <Message
+  return <MyMessage
               error
-              header='Kayıt Eklenemedi!'
               content='Kayıt işleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.'
           />
 }
@@ -204,9 +240,10 @@ ErrorMessage = () => {
     return (
       <div>
             {this.state.error? <this.ErrorMessage />
-                :this.state.addMode&&this.state.selectedPidm===this.props.pidm?
-                        <this.DropdownSelectKurumlar />
-                            : <this.AddIcon />}
+                :this.state.addMode&&this.state.selectedPidm===this.state.birim_pidm?
+                        <this.AddForm />:null}
+
+            <this.AddIcon />
       </div>
       )
       }

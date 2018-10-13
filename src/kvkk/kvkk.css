@@ -9,3 +9,10 @@
   height: 50%;
   background: url("/src/img/notify.png");
 }
+
+/* elementleri tek sırada göstermek için */
+/* .container {
+  display:flex;
+  flex-direction: row;
+} */
+

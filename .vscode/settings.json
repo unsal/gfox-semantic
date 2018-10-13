@@ -8,6 +8,20 @@
    "parent_id": null,
    "workspacePath": "src/config",
    "id": "ckxIwiWMvf6a4yYN"
+  },
+  {
+   "type": "Directory",
+   "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/components/myComponents",
+   "parent_id": null,
+   "workspacePath": "src/kvkk/components/myComponents",
+   "id": "5ndVpRoFIhKDbrNx"
+  },
+  {
+   "type": "File",
+   "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/kvkk.css",
+   "parent_id": null,
+   "workspacePath": "src/kvkk/kvkk.css",
+   "id": "y4CBOs7qEn1xKfP8"
   }
  ]
 }

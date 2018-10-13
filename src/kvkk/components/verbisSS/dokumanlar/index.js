@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Message } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
 
 import axios from "axios";
@@ -12,6 +12,8 @@ import { updateStoreData } from "../../../../reducer/actions";
 
 import AddBox from "./AddBox";
 import DeleteBox from "./DeleteBox";
+
+import {MyMessage, MyLoader} from "../../myComponents";
 
 import '../../../kvkk.css';
 
@@ -83,7 +85,7 @@ class SSDokumanlar extends Component {
 
                         ))}
                         <AddBox
-                            pidm={key.birim_pidm}
+                            birim_pidm={key.birim_pidm}
                             store={store}
                         />
 
@@ -105,8 +107,8 @@ class SSDokumanlar extends Component {
         {!isLoading && apiIsOnline?
           this.render_()
          : !isLoading&&!apiIsOnline?
-          <Message error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
-         : null
+          <MyMessage error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
+         : <MyLoader /> // sayfa ilk yüklendiğinde ekranda birşey gözükmemesi için null yapıldı.. buraya loading koyabilirsin.
         }
       </KVKKLayout>
     );

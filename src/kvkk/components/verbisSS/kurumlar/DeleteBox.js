@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Label, Icon, Message } from "semantic-ui-react";
+import { Label, Icon } from "semantic-ui-react";
 import { getAPI } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
+import MyMessage from "../../myComponents";
 
 //DELETE BOX KURUM
 class DeleteBox extends Component {
@@ -12,7 +13,7 @@ class DeleteBox extends Component {
     this.state = {
      error: false,
 
-     deleteModeON: false,
+     deleteMode: false,
      selectedPidm: 0 //seçili tanımı silmek için
     };
   }
@@ -36,22 +37,6 @@ class DeleteBox extends Component {
         this.refreshStoreData();
         this.setState({ error: false })
         this.handleClose();
-        // önce birimi  yakala
-        // const getBirimData = data.filter(row=>row.birim_pidm === birim_pidm);
-        // const getKurumData = getBirimData[0].kurumlar; //Array olduğu için böyle çağırıyorsun
-
-        // //sonra birim > kurum > pidm'i filtrele
-        // const updatedKurumlar = getKurumData.filter(row=>row.pidm !== selectedPidm); //burda tekrar objeye döndü
-        // console.log("updated kurumlar",updatedKurumlar);
-        // // birimi bu yeni kurum ile güncelle
-        // const updatedBirimData = {...getBirimData, kurumlar: updatedKurumlar}
-        // console.log('updated Birim Data', updatedBirimData)
-
-        // //datayı bu yeni birim ile güncelle
-        // // const updatedData = {...data,
-        // // updatedData.birimler = updatedBirimData;
-
-        // // store.dispatch(updateStoreData(updatedData));
       })
       .catch(error => {
         this.setState({ error: true });
@@ -60,12 +45,12 @@ class DeleteBox extends Component {
   };
 
   handleDelete =(selectedPidm)=>{
-    const deleteModeON = !this.state.deleteModeOn;
-    this.setState({ deleteModeON, selectedPidm });
+    // const deleteMode = !this.state.deleteMode;
+    this.setState({ deleteMode: true, error: false, selectedPidm }); //deletemodu seçilen pidm için açar
   }
 
   handleClose =()=>{
-    this.setState({ deleteModeON: false, selectedPidm:0 })
+    this.setState({ deleteMode: false, selectedPidm:0 })
   }
 
   refreshStoreData =() => {
@@ -105,7 +90,7 @@ class DeleteBox extends Component {
   }
 
   ErrorMessage = () => {
-    return <Message
+    return <MyMessage
                 error
                 header='Kayıt Silinemedi!'
                 content='Silme işleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.'
@@ -119,7 +104,7 @@ class DeleteBox extends Component {
 
           {this.state.error?
                     <this.ErrorMessage />
-                    :this.state.deleteModeON &&this.state.selectedPidm===this.props.pidm?
+                    :this.state.deleteMode &&this.state.selectedPidm===this.props.pidm?
                        <this.DeleteMenuButtons />:null}
 
 

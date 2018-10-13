@@ -38,6 +38,7 @@ export const getAPI = {
 
   // KV Dokumanlar
   getSSDokumanlar: server+'/ss/dokumanlar',
+  addSSDokumanlar: server+'/ss/dokumanlar/add',
   delSSDokumanlar: server+'/ss/dokumanlar/del',
 
 

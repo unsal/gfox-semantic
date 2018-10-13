@@ -1,10 +1,10 @@
 import React, {Component} from "react";
-import {Icon, Dropdown, Message } from "semantic-ui-react";
+import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
 import {getOffset} from "../../myComponents";
 import { getAPI } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
-
+import "../../../kvkk.css";
 // ADDBOX KURUM
 class AddBox extends Component {
   // props: id, pidm, name, store, data
@@ -128,22 +128,42 @@ class AddBox extends Component {
     // Dropdown ekleme formu cell içinde relative değil dışında absolute gözükün diye.. çünkü sığmıyordu.. cdm'e bak..
     const styleDD = { position: "absolute",
                 top: offset.top,
-                left: offset.left,
+                left: offset.left, //(x)(v)-> solda olsun diye
                 width: "400px", //styledeki width kadar genişlik limiti olur
                 backgroundColor: '#fff',
-                zIndex: "100" //butonları öne getirsin ve arkadaki (+) ile karışmasın diye
+                zIndex: "100", //butonları öne getirsin ve arkadaki (+) ile karışmasın diye
+                padding: "0px"
               }
 
-    return   <div style={styleDD}>
-                <this.AddMenuButtons />
-                <Dropdown
+    return <Segment basic compact size='mini' style={styleDD}>
+              <Grid celled columns={2}  style={{ margin: '0px'}}>
+                 <Grid.Column width={2}>
+                      <Icon   //Add modunda (X) kapat ikonu
+                                link
+                                name="remove circle"
+                                size="large"
+                                color="grey"
+                                onClick={this.handleClose}
+                      /><Icon  // Add modunda (V) approve ikonu
+                          link
+                          name="check circle"
+                          size="large"
+                          color="blue"
+                          onClick={this.handleSubmit}
+                      />
+                </Grid.Column>
+              <Grid.Column width={14}>
+                  <Dropdown
                     fluid
                     placeholder='Kurum seçin'
                     multiple search selection
                     options={this.state.options}
-                    onChange = {this.handleOnChange}
-                />
-              </div>
+                    onChange={this.handleOnChange}
+                    style= {{ flex: "auto" }}
+                  />
+             </Grid.Column>
+            </Grid>
+          </Segment>
   }
 
 componentDidMount() {
@@ -172,24 +192,7 @@ AddIcon =() =>{
                               />
 }
 
- // (x) (v)
-AddMenuButtons =()=>{
-    return <div style={{ display: 'inline-block' }}>
-                      <Icon   //Add modunda (X) kapat ikonu
-                                link
-                                name="remove circle"
-                                size="large"
-                                color="grey"
-                                onClick={this.handleClose}
-                      /><Icon  // Add modunda (V) approve ikonu
-                          link
-                          name="check circle"
-                          size="large"
-                          color="blue"
-                          onClick={this.handleSubmit}
-                      />
-                      </div>
-}
+
 
 ErrorMessage = () => {
   return <Message
