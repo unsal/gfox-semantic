@@ -1,23 +1,13 @@
 import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
-import {getOffset} from "../../myComponents";
+import {getOffset, removeDuplicates, refreshStoreData} from "../../myComponents";
 import axios from "axios";
-import { updateStoreData } from "../../../../reducer/actions";
 import "../../../kvkk.css";
-import _ from 'lodash';
+import {config} from '../../../../config'
 
 // ADDBOX KURUM
 class AddBox extends PureComponent {
   state = {
-
-    //props
-     URL_GET: this.props.URL_GET,
-     URL_ADD: this.props.URL_ADD,
-     URL_OPTIONS: this.props.URL_OPTIONS,
-     birimPidm: this.props.birimPidm,
-     store: this.props.store,
-     id: this.props.id, //Form submit ederken common alan belirlemek için
-
      didMount: false,
      isLoading: true,
 
@@ -26,15 +16,22 @@ class AddBox extends PureComponent {
      offset: [],
      options: [],
 
-     dataSelected: [],
-     error: false,
+     selectedData: [], //KV
 
+     error: false
 
+  }
+
+  getOptionsURL() {
+      const {id} = this.props
+      if (id==='profiller') {
+          return config.URL_GET_PROFILLER
+      } else return null
   }
 
   loadDropdownOptions =()=> {
     //Dropdown için key, text, value formatında
-    const {URL_OPTIONS}= this.state;
+    const URL_OPTIONS= this.getOptionsURL()
     let options =[];
 
     axios
@@ -55,78 +52,72 @@ class AddBox extends PureComponent {
       return null;
   }
 
-  refreshStoreData =() => {
-    const {URL_GET, store} = this.state;
+  concatDatas = async (data1, data2)=>{
+    // cell > varolan liteye > dropdown seçilmişleri ekler..
+    let newData = []
 
-    axios
-      .get(URL_GET)
-      .then(json => {
-        const data = _.size(json.data)>0?json.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-        this.setState({ error:false})
-      })
-      .catch(err => {
-        this.setState({ error: true})
-        console.log(err);
-      });
+    await data1.forEach(item=>{ newData.push(item) })
+    await data2.forEach(item=>{ newData.push(item) })
+
+    newData = await removeDuplicates(newData)
+
+    return await (newData)
+
   }
 
-  submit = (related_item_pidm) => {
-
-    const {URL_ADD, id, birimPidm}= this.state;
-
-    const form = new FormData();
-    // Must bu set; otherwise Python gets "AttributeError: 'NoneType' object has no attribute 'upper'"
-    form.set("id", id)
-    form.set("birim_pidm", birimPidm);
-    form.set("related_item_pidm", related_item_pidm)
-
-    axios({ method: "POST", url: URL_ADD, data: form })
-      .catch(err => {
-        console.log("Hata!",err);
-        this.setState({ error: true})
-      });
-  }
-
-  // Sil onayı
-  handleSubmit = (event) => {
+  // Ekleme onayı
+  handleSubmit = async (event) => {
     event.preventDefault();
+    const URL_GET = config.URL_GET_KVANAVERI //refreshStoreData için
+    const URL_UPDATE= config.URL_UPDATE_KVANAVERI+"/"+this.props.id // ../ulkelerr_data  /kanallar_data etc
+    const {dataCell, store}=this.props
+    const {selectedData} = this.state
+    const pidm = this.props.rowPidm
 
-    const {dataSelected} = this.state;
+    let data = await this.concatDatas(dataCell, selectedData)
 
-    // python api ye related_item_pidm, related_item_name basman lazım, dikkat..
-    dataSelected.map(({related_item_pidm})=>(
-        this.submit(related_item_pidm)
-    ))
+    const params = {pidm, data}
 
-    this.refreshStoreData();
-    this.handleClose();
+    try {
+        const config = { headers: {
+                          'Content-Type': 'application/json',
+                          'Access-Control-Allow-Origin': '*'}
+    }
+        await axios.post(URL_UPDATE, params, config)
+
+        await this.setState({ error: false, success:true })
+        await refreshStoreData(URL_GET, store)
+        await this.handleClose();
+    } catch (err) {
+          console.log("KVAnaveri->AddBox->Update API Error!",err);
+          this.setState({ error: true })
+    }
 
   };
 
-  handleAdd =()=>{
-    this.setState({ addMode: true });
+  handleAdd = async ()=>{
+    await this.setState({ addMode: true });
   }
 
-  handleClose =()=>{
-    this.setState({ addMode: false})
+  handleClose = async ()=>{
+    await this.setState({ addMode: false})
   }
 
-  handleOnChange = (event, data) => {
+  handleChangeSelected = (event, data) => {
     event.preventDefault();
-    const dataSelected = data.value.map(key=>({related_item_pidm: key}));
+    const selectedData = data.value.map(item=>item);
 
-    this.setState({ dataSelected});
+    this.setState({ selectedData});
   }
 
-  AddForm = () => {
+  AddBoxForm = () => {
     const offset = getOffset(this.state.birimPidm); //getElementOffset by id
 
     // Dropdown ekleme formu cell içinde relative değil dışında absolute gözükün diye.. çünkü sığmıyordu.. cdm'e bak..
     const styleDD = { position: "absolute",
                 top: offset.top,
                 left: offset.left, //(x)(v)-> solda olsun diye
-                width: "400px", //styledeki width kadar genişlik limiti olur
+                width: "300px", //styledeki width kadar genişlik limiti olur
                 backgroundColor: '#fff',
                 zIndex: "100", //butonları öne getirsin ve arkadaki (+) ile karışmasın diye
                 padding: "0px"
@@ -155,7 +146,7 @@ class AddBox extends PureComponent {
                     placeholder='Seçiminiz'
                     multiple search selection
                     options={this.state.options}
-                    onChange={this.handleOnChange}
+                    onChange={this.handleChangeSelected}
                     style= {{ flex: "auto" }}
                   />
              </Grid.Column>
@@ -177,14 +168,13 @@ componentDidUpdate(prevProps, prevState) {
 }
 
 // (+)
-AddIcon =() =>{
-
+AddIcon =(props) =>{
+  const {color} = props
   return <Icon  // listeleme modunda (+) butonu
-                                id={this.state.birimPidm}
                                 link
                                 name="add circle"
                                 size="large"
-                                color="olive"
+                                color={color}
                                 onClick={this.handleAdd}
                               />
 }
@@ -200,13 +190,15 @@ ErrorMessage = () => {
 }
 
   render() {
+    const {color} = this.props
     //ekleme butonunu alta atmadan sağa doğru sıralasın diye
-    const style = !this.state.addMode?{ display: 'inline-block' }:null;
+    const style = !this.state.addMode?{ float:'left'}:null;
+
     return (
       <div style={style}>
-            {this.state.error? <this.ErrorMessage />
-                :this.state.addMode? <this.AddForm />
-                : <this.AddIcon />}
+            {this.state.Error? <this.ErrorMessage />
+                :this.state.addMode? <this.AddBoxForm />
+                : <this.AddIcon color={color}/>}
       </div>
       )
       }

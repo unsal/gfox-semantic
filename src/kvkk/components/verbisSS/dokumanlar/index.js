@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Table } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
 
@@ -10,14 +10,14 @@ import { connect } from "react-redux";
 import { store } from "../../../../reducer";
 import { updateStoreData } from "../../../../reducer/actions";
 
-import AddBox from "./AddBox";
-import DeleteBox from "./DeleteBox";
+import AddBox from "./addbox";
+import DeleteBox from "./deletebox";
 
 import {MyMessage, MyLoader} from "../../myComponents";
 
 import '../../../kvkk.css';
 
-class SSDokumanlar extends Component {
+class SSDokumanlar extends PureComponent {
   state = {
     didMount: false,
     isLoading: true,
@@ -103,12 +103,11 @@ class SSDokumanlar extends Component {
     const { isLoading, apiIsOnline } = this.state;
     return (
       <KVKKLayout>
-        {!isLoading && apiIsOnline?
-          this.render_()
-         : !isLoading&&!apiIsOnline?
-          <MyMessage error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
+        {!isLoading && apiIsOnline? this.render_()
+         : !isLoading&&!apiIsOnline? <MyMessage error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
          : <MyLoader /> // sayfa ilk yüklendiğinde ekranda birşey gözükmemesi için null yapıldı.. buraya loading koyabilirsin.
         }
+
       </KVKKLayout>
     );
   }

@@ -1,49 +1,67 @@
-// U2Y
-// Uygulamaların içinden tanimlarID.birimler şeklinde kullanmak için..
-export const tanimlarID = {
-  profiller: "profiller",
-  birimler: "birimler",
-  dayanaklar: "dayanaklar",
-  dokumanlar: "dokumanlar",
-  islemeAmaclari: "islemeamaclari",
-  kanallari: "toplamakanallari",
-  kurumlar: "kurumlar",
-  kv: "kv",
-  arsivOrtamlari: "arsivortamlari",
-  paylasimAmaclari: "paylasimAmaclari",
-  paylasimSekilleri: "paylasimsekilleri",
-  kvSistemler: "kvsistemler",
-  saklamaSuresi: "saklamasuresi",
-  ulkeler: "guvenliulkeler"
-}
-
 
 // API URL Settings
-const hostURL = 'http://localhost:2300';
+const apiHost = 'http://localhost:2300';
+// const frontendHost = 'http://localhost:3000';
 
 export const config = {
-  // Tanımlar ******************************************
-  URL_GetTanimlar: hostURL+'/tanimlar',
-  URL_AddTanimlar: hostURL+'/tanimlar/add',
-  URL_DelTanimlar: hostURL+'/tanimlar/del',
-
   // ss > common > related > dropdownlar için
-  URL_GET_KURUMLAR: hostURL+'/tanimlar/kurumlar',
-  URL_GET_SISTEMLER: hostURL+'/tanimlar/kvsistemler',
-  URL_GET_KANALLAR: hostURL+'/tanimlar/kanallar',
+  URL_GET_KURUMLAR: apiHost+'/tanimlar/kurumlar',
+  URL_GET_SISTEMLER: apiHost+'/tanimlar/sistemler',
+  URL_GET_KANALLAR: apiHost+'/tanimlar/kanallar',
+  URL_GET_PROFILLER: apiHost+'/tanimlar/profiller',
+  URL_GET_BIRIMLER: apiHost+'/tanimlar/birimler',
+  URL_GET_KV: apiHost+'/tanimlar/kv',
+  URL_GET_ISLEMEAMACLARI: apiHost+'/tanimlar/islemeamaclari',
+  URL_GET_PAYLASIMAMACLARI: apiHost+'/tanimlar/paylasimamaclari',
+  URL_GET_PAYLASIMSEKILLERI: apiHost+'/tanimlar/paylasimsekilleri',
+  URL_GET_ULKELER: apiHost+'/tanimlar/ulkeler',
+  URL_GET_DOKUMANLAR: apiHost+'/tanimlar/dokumanlar',
+  URL_GET_DAYANAKLAR: apiHost+'/tanimlar/dayanaklar',
+  URL_GET_ORTAMLAR: apiHost+'/tanimlar/ortamlar',
+  URL_GET_SURELER: apiHost+'/tanimlar/sureler',
+  URL_GET_ISLEMDURUMLARI: apiHost+'/tanimlar/islemdurumlari',
+
+  // Tanımlar ******************************************
+  URL_GetTanimlar: apiHost+'/tanimlar',
+  URL_AddTanimlar: apiHost+'/tanimlar/add',
+  URL_DelTanimlar: apiHost+'/tanimlar/del',
 
   // SS ******************************************
-  //Paylasilan Kurumlar
-  URL_GetPaylasilanKurumlar: hostURL+'/ss/paylasilankurumlar',
-  URL_AddPaylasilanKurumlar: hostURL+'/ss/paylasilankurumlar/add',
-  URL_DelPaylasilanKurumlar: hostURL+'/ss/paylasilankurumlar/del',
+  URL_GetSSCommon: apiHost+'/ss/common',
+  URL_AddSSCommon: apiHost+'/ss/common/add',
+  URL_DeleteSSCommon: apiHost+'/ss/common/delete',
 
-  // KV Dokumanlar
-  URL_GetSSDokumanlar: hostURL+'/ss/dokumanlar',
-  URL_AddSSDokumanlar: hostURL+'/ss/dokumanlar/add',
-  URL_DelSSDokumanlar: hostURL+'/ss/dokumanlar/del',
+  // *****************************KV Dokumanlar*****************************
+  URL_GetSSDokumanlar: apiHost+'/ss/dokumanlar',
+  URL_AddSSDokumanlar: apiHost+'/ss/dokumanlar/add',
+  URL_DeleteSSDokumanlar: apiHost+'/ss/dokumanlar/del',
+
+    // ***************KV Profil*****************************
+  URL_GET_KVPROFIL: apiHost+'/verbis/kvprofil',
+  URL_ADD_KVPROFIL: apiHost+'/verbis/kvprofil/add',
+  URL_UPDATE_KVPROFIL: apiHost+'/verbis/kvprofil/update',
+  URL_DELETE_KVPROFIL: apiHost+'/verbis/kvprofil/delete',
+
+  // *************** KV Paylasim *****************************
+  URL_GET_KVPAYLASIM: apiHost+'/verbis/kvpaylasim',
+  URL_ADD_KVPAYLASIM: apiHost+'/verbis/kvpaylasim/add',
+  URL_UPDATE_KVPAYLASIM: apiHost+'/verbis/kvpaylasim/update',
+  URL_DELETE_KVPAYLASIM: apiHost+'/verbis/kvpaylasim/delete',
+
+  // *************** KV Anaveri *****************************
+  URL_GET_KVANAVERI: apiHost+'/verbis/kvanaveri',
+  URL_ADD_KVANAVERI: apiHost+'/verbis/kvanaveri/add',
+  URL_UPDATE_KVANAVERI: apiHost+'/verbis/kvanaveri/update',
+  URL_DELETE_KVANAVERI: apiHost+'/verbis/kvanaveri/delete',
+
+  // *************** KV TALEPLER *****************************
+  URL_GET_KVTALEPLER: apiHost+'/verbis/kvtalepler',
+  URL_ADD_KVTALEPLER: apiHost+'/verbis/kvtalepler/add',
+  URL_UPDATE_KVTALEPLER: apiHost+'/verbis/kvtalepler/update',
+  URL_DELETE_KVTALEPLER: apiHost+'/verbis/kvtalepler/delete',
 
 };
+
 
 
 

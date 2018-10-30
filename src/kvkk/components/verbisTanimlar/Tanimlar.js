@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Table, Icon, Header, Form, Input, Checkbox, Segment, Message } from "semantic-ui-react";
 import KVKKLayout from "../../layout";
 
@@ -15,9 +15,9 @@ import './Tanimlar.css';
 import '../../kvkk.css';
 import _ from 'lodash';
 
-import MyMessage from "../myComponents";
+import {MyMessage} from "../myComponents";
 
-class Tanimlar extends Component {
+class Tanimlar extends PureComponent {
 
     state = {
       url: config.URL_GetTanimlar + "/" + this.props.id,
@@ -44,7 +44,8 @@ class Tanimlar extends Component {
       .get(this.state.url) //api den data yükler
       .then(this.setState({ searchString: '' }))
       .then(res => {
-        store.dispatch(updateStoreData(res.data)); //store data güncelle
+        const data = _.size(res.data)>0?res.data:[];
+        store.dispatch(updateStoreData(data)); //store data güncelle
         this.setState({ apiIsOnline: true, didMount: true });
       })
       .catch(err => {
@@ -67,7 +68,6 @@ class Tanimlar extends Component {
 
   handleSubmit =(event)=> {
     event.preventDefault();
-      console.log("handle Submit ok")
     // const form = new FormData(event.target); //Form'dan alanları almak için bu kullanılır.
     const form = new FormData(event.target);
     // Must bu set; otherwise Python gets "AttributeError: 'NoneType' object has no attribute 'upper'"
@@ -137,7 +137,7 @@ class Tanimlar extends Component {
   AddForm = (props) => {
 
     const { id, inputIcon } = props;
-    const isSistemler = id ==="kvsistemler";
+    const isSistemler = id ==="sistemler";
     const isUlkeler = id === "ulkeler";
 
     return <Segment basic compact className="segment-form" >
@@ -234,10 +234,10 @@ class Tanimlar extends Component {
 
   render_() {
     const { data, id, title } = this.props; //data > from reducer
-    let _data = data;
-    const isSistemler = id === "kvsistemler";
-    const isUlkeler = id === "ulkeler";
 
+    let _data = data;
+    const isSistemler = id === "sistemler";
+    const isUlkeler = id === "ulkeler";
 
     // Data.Filter> Ekleme yapılarken tablo filtre ile girileni getirsin diye..
     const searchString = this.state.searchString.trim().toLowerCase();
@@ -258,7 +258,6 @@ class Tanimlar extends Component {
         <Header as='h2' onClick={this.handleHomeClick}>{title}</Header>
 
         <this.AddForm id={id} inputIcon = {_inputIcon} recordExist={recordExist} />
-
         <Table
           sortable
           celled
@@ -292,7 +291,6 @@ class Tanimlar extends Component {
               ) : null}
             </Table.Row>
           </Table.Header>
-
           <Table.Body>
             {_data.map(({ pidm, name, local, phone_area, secure }) => (
               <Table.Row key={pidm}>
@@ -327,7 +325,8 @@ class Tanimlar extends Component {
                 ) : null}
 
               </Table.Row>
-            ))}
+            ))
+            }
           </Table.Body>
         </Table>
       </div>

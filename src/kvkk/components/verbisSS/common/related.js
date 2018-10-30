@@ -1,36 +1,13 @@
-import { config } from "../../../../config";
+import React from "react";
+import  Common from "./"
 
-export const KURUMLAR = 'KURUMLAR';
-export const TOPLAMA_KANALLARI = 'TOPLAMA_KANALLARI';
-export const KULLANILAN_SISTEMLER = 'KULLANILAN_SISTEMLER'
+export const KURUMLAR = 'kurumlar';
+export const TOPLAMA_KANALLARI = 'kanallar';
+export const KULLANILAN_SISTEMLER = 'sistemler'
 
-export const getURL=(ssMode)=> {
-  if (ssMode===KURUMLAR) return config.URL_GetPaylasilanKurumlar
-  else if (ssMode===TOPLAMA_KANALLARI) return config.getToplamaKanallari
-  else if (ssMode===KULLANILAN_SISTEMLER) return config.getKullanilanSistemler
-  else return 'getURLnotFound'
-}
-
-export const addURL =(ssMode)=>{
-  if (ssMode===KURUMLAR) return config.URL_AddPaylasilanKurumlar
-  else if (ssMode===TOPLAMA_KANALLARI) return config.addToplamaKanallari
-  else if (ssMode===KULLANILAN_SISTEMLER) return config.addKullanilanSistemler
-  else return 'addURLnotFound'
-}
-
-export const deleteURL = (ssMode)=>{
-  if (ssMode===KURUMLAR) return config.deletePaylasilanKurumlar
-  else if (ssMode===TOPLAMA_KANALLARI) return config.deleteToplamaKanallari
-  else if (ssMode===KULLANILAN_SISTEMLER) return config.deleteKullanilanSistemler
-  else return 'deleteURLnotFound'
-}
-
-export const optionsURL = (ssMode)=>{
-  if (ssMode===KURUMLAR) return config.URL_GET_KURUMLAR
-  else if (ssMode===TOPLAMA_KANALLARI) return config.URL_GET_KANALLAR
-  else if (ssMode===KULLANILAN_SISTEMLER) return config.URL_GET_SISTEMLER
-  else return 'optionsURLnotFound'
-}
-
-
+// Common SS Componentler
+// Dikkat: Common için api tarafında related_item_pidm, related_item_name dondurmen lazım..
+export const SSKurumlar = ()=> <Common title="KV Paylaşılan Kurumlar" id={KURUMLAR} />
+export const SSKanallar = ()=> <Common title="KV Toplama Kanalları" id={TOPLAMA_KANALLARI} />
+export const SSSistemler= ()=><Common title="KV Kullanan Sistemler" id={KULLANILAN_SISTEMLER} />
 

@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import { config } from "../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../reducer/actions";
-import MyMessage from "../myComponents";
+import {MyMessage} from "../myComponents";
 
-class DeleteBoxTanim extends Component {
+class DeleteBoxTanim extends PureComponent {
   // props: id, pidm, name, store, data
   constructor(props) {
     super(props);
@@ -57,10 +57,11 @@ class DeleteBoxTanim extends Component {
   }
 
   render() {
+    const color = this.state.deleteMode?'red':null;
     return (
       <div>
         {/* <Icon color="grey" size="small" name="remove circle" onClick={this.show("mini")}/> */}
-        <Label key={this.props.pidm} as='a' content={this.props.name.toUpperCase()} icon='remove circle' onClick={()=>this.handleDelete(this.props.pidm)} />
+        <Label color={color} key={this.props.pidm} as='a' content={this.props.name.toUpperCase()} onRemove={()=>this.handleDelete(this.props.pidm)} />
 
           {this.state.error?
                     <MyMessage error header='Kayıt Silinemedi!' content='Silme İşleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.' />

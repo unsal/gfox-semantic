@@ -1,39 +1,36 @@
-import React, {Component} from "react";
+import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
-import {getOffset} from "../../myComponents";
-import { config } from "../../../../config";
+import {getOffset, removeDuplicates} from "../../myComponents";
 import axios from "axios";
-import { updateStoreData } from "../../../../reducer/actions";
+import { updateStoreData, updateStoreMode } from "../../../../reducer/actions";
 import "../../../kvkk.css";
+import _ from 'lodash';
+import {config} from '../../../../config'
+
 // ADDBOX KURUM
-class AddBox extends Component {
-  // props: id, pidm, name, store, data
-  constructor(props) {
-    super(props);
-    this.state = {
+class AddBox extends PureComponent {
+  state = {
      didMount: false,
      isLoading: true,
 
-     addModeON: false,
-     selectedPidm: 0, //seçili tanımı silmek için
+     addMode: false,
 
      offset: [],
      options: [],
 
-     dataSelected: [],
-     error: false,
-     success: false
+     selectedData: [], //KV
 
-    };
+     error: false
+
   }
 
-  loadOptions =()=> {
+  loadDropdownOptions =()=> {
     //Dropdown için key, text, value formatında
-    const url= config.URL_GetTanimlar + "/kurumlar";
+    const URL_OPTIONS= config.URL_GET_KV
     let options =[];
 
     axios
-      .get(url) //api den data yükler
+      .get(URL_OPTIONS) //api den data yükler
       .then(json => {
         const data = json.data;
         data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
@@ -42,94 +39,100 @@ class AddBox extends Component {
         this.setState({ options })
       })
       .catch(err => {
-        console.log("Dropdown Kurumlar yüklenemedi!");
+        console.log("Dropdown yüklenemedi!");
         console.log(err);
-        this.setState({ options: [], error:true, success:false })
+        this.setState({ options: [], error:true})
       });
 
       return null;
   }
 
   refreshStoreData =() => {
-    const url = config.URL_GetPaylasilanKurumlar;
-    const store = this.props.store;
+    const URL_GET = config.URL_GET_KVPROFIL
+    const {store} = this.props;
 
     axios
-      .get(url)
+      .get(URL_GET)
       .then(json => {
-        const data = json.data;
+        const data = _.size(json.data)>0?json.data:[];
         store.dispatch(updateStoreData(data)); //store data güncelle
-        this.setState({ error:false, succes: true})
-        // console.log("store refresh successfully")
+        this.setState({ error:false})
       })
       .catch(err => {
-        this.setState({ error: true, success: false})
+        this.setState({ error: true})
         console.log(err);
       });
   }
 
-  submit = (birim_pidm, kurum_pidm) => {
+  concatDatas = async (data1, data2)=>{
+    // cell > varolan liteye > dropdown seçilmişleri ekler..
+    let newData = []
 
-    const url= config.URL_AddPaylasilanKurumlar;
+    await data1.forEach(item=>{ newData.push(item) })
+    await data2.forEach(item=>{ newData.push(item) })
 
-    const form = new FormData();
-    // Must bu set; otherwise Python gets "AttributeError: 'NoneType' object has no attribute 'upper'"
-    form.set("birim_pidm", birim_pidm);
-    form.set("kurum_pidm", kurum_pidm);
+    newData = await removeDuplicates(newData)
 
-    axios({ method: "POST", url: url, data: form })
-      .then(() => {
-        this.refreshStoreData();
-        this.setState({ error: false, success: true })
-        this.handleClose();
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ error: true, success: false })
-      });
+    return await (newData)
+
   }
 
-  // Sil onayı
-  handleSubmit = (event) => {
+  // Ekleme onayı
+  handleSubmit = async (event) => {
     event.preventDefault();
+    const URL_UPDATE= config.URL_UPDATE_KVPROFIL
+    const {dataCell}=this.props
+    const {selectedData} = this.state
+    const pidm = this.props.rowPidm
 
-    const birim_pidm = this.props.pidm;
-    const dataSelected = this.state.dataSelected;
+    let data = await this.concatDatas(dataCell, selectedData)
 
-    dataSelected.map(({kurum_pidm})=>(
-        this.submit(birim_pidm, kurum_pidm)
-    )
-    )
+    const params = {pidm, data}
 
-    this.handleClose(event);
-    this.refreshStoreData();
+    try {
+        const config = { headers: {
+                          'Content-Type': 'application/json',
+                          'Access-Control-Allow-Origin': '*'}
+    }
+        await axios.post(URL_UPDATE, params, config)
+
+        await this.setState({ error: false, success:true })
+        await this.refreshStoreData()
+        await this.handleClose();
+    } catch (err) {
+          console.log("Update API Error!",err);
+          this.setState({ error: true })
+    }
 
   };
 
-  handleAdd =(selectedPidm)=>{
-    const addModeON = !this.state.addModeON;
-    this.setState({ addModeON, selectedPidm });
+  handleAdd = async ()=>{
+    const {store} = await this.props
+    await this.setState({ addMode: true });
+    await store.dispatch(updateStoreMode('ADD'))
   }
 
-  handleClose =()=>{
-    this.setState({ addModeON: false, selectedPidm:0 })
+  handleClose = async ()=>{
+    const {store} = await this.props
+    await this.setState({ addMode: false})
+    await store.dispatch(updateStoreMode('DEFAULT'))
   }
 
-  handleOnChange = (event, data) => {
+  handleChangeSelected = (event, data) => {
     event.preventDefault();
-    const dataSelected = data.value.map(key=>({kurum_pidm: key}));
+    const selectedData = data.value.map(item=>item);
 
-    this.setState({ dataSelected});
+    this.setState({ selectedData});
   }
 
-  DropdownSelectKurumlar = () => {
-    const offset = getOffset(this.props.pidm); //getElementOffset by id
+  AddBoxForm = () => {
+    const offset = getOffset(this.state.birimPidm); //getElementOffset by id
 
     // Dropdown ekleme formu cell içinde relative değil dışında absolute gözükün diye.. çünkü sığmıyordu.. cdm'e bak..
     const styleDD = { position: "absolute",
                 top: offset.top,
                 left: offset.left, //(x)(v)-> solda olsun diye
-                width: "400px", //styledeki width kadar genişlik limiti olur
+                width: "300px", //styledeki width kadar genişlik limiti olur
                 backgroundColor: '#fff',
                 zIndex: "100", //butonları öne getirsin ve arkadaki (+) ile karışmasın diye
                 padding: "0px"
@@ -155,10 +158,10 @@ class AddBox extends Component {
               <Grid.Column width={14}>
                   <Dropdown
                     fluid
-                    placeholder='Kurum seçin'
+                    placeholder='KV Seçiminiz'
                     multiple search selection
                     options={this.state.options}
-                    onChange={this.handleOnChange}
+                    onChange={this.handleChangeSelected}
                     style= {{ flex: "auto" }}
                   />
              </Grid.Column>
@@ -170,7 +173,7 @@ componentDidMount() {
   const didMount = true;
   this.setState({ didMount })
 
-  this.loadOptions();
+  this.loadDropdownOptions();
 }
 
 componentDidUpdate(prevProps, prevState) {
@@ -181,14 +184,12 @@ componentDidUpdate(prevProps, prevState) {
 
 // (+)
 AddIcon =() =>{
-
   return <Icon  // listeleme modunda (+) butonu
-                                id={this.props.pidm}
                                 link
                                 name="add circle"
                                 size="large"
-                                color="olive"
-                                onClick={()=>this.handleAdd(this.props.pidm)}
+                                color="teal"
+                                onClick={this.handleAdd}
                               />
 }
 
@@ -204,13 +205,13 @@ ErrorMessage = () => {
 
   render() {
     //ekleme butonunu alta atmadan sağa doğru sıralasın diye
-    const style = !this.state.addModeON?{ display: 'inline-block' }:null;
+    const style = !this.state.addMode?{ float:'left'}:null;
+
     return (
       <div style={style}>
-            {this.state.error? <this.ErrorMessage />
-                :this.state.addModeON&&this.state.selectedPidm===this.props.pidm?
-                        <this.DropdownSelectKurumlar />
-                            : <this.AddIcon />}
+            {this.state.Error? <this.ErrorMessage />
+                :this.state.addMode? <this.AddBoxForm />
+                : <this.AddIcon />}
       </div>
       )
       }

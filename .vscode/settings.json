@@ -22,6 +22,20 @@
    "parent_id": null,
    "workspacePath": "src/kvkk/kvkk.css",
    "id": "y4CBOs7qEn1xKfP8"
+  },
+  {
+   "type": "File",
+   "name": "/Users/unsal/github/gfox/gfox-semantic/src/index.js",
+   "parent_id": null,
+   "workspacePath": "src/index.js",
+   "id": "Vte5CDA7bjydSr1f"
+  },
+  {
+   "type": "Directory",
+   "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/layout",
+   "parent_id": null,
+   "workspacePath": "src/kvkk/layout",
+   "id": "JObLyWoctZHq4QBl"
   }
  ]
 }

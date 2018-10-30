@@ -1,13 +1,14 @@
-import React, {Component} from "react";
+import React, {PureComponent} from "react";
 import {Icon, Dropdown, Segment, Grid } from "semantic-ui-react";
 import {getOffset} from "../../myComponents";
 import { config } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
-import MyMessage from "../../myComponents";
+import {MyMessage} from "../../myComponents";
+import _ from 'lodash';
 
 // SS ADDBOX DOKUMAN
-class AddBox extends Component {
+class AddBox extends PureComponent {
   // props: id, pidm, name, store, data
  state = {
      didMount: false,
@@ -83,7 +84,7 @@ class AddBox extends Component {
     axios
       .get(url)
       .then(json => {
-        const data = json.data;
+        const data = _.size(json.data)>0?json.data:[];
         store.dispatch(updateStoreData(data)); //store data güncelle
         this.setState({ error:false, succes: true})
         // console.log("store refresh successfully")

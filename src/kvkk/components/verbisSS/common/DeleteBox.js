@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
-import { config } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
-import MyMessage from "../../myComponents";
+import {MyMessage} from "../../myComponents";
+import _ from 'lodash';
 
 //DELETE BOX KURUM
-class DeleteBox extends Component {
+class DeleteBox extends PureComponent {
 state = {
 
     //get props
@@ -15,15 +15,17 @@ state = {
     selectedPidm: this.props.selectedPidm,
     name: this.props.name,
     store: this.props.store,
+    id: this.props.id,
 
-     error: false,
-     deleteMode: false,
+    error: false,
+    deleteMode: false,
 
   }
 
   handleDelete = () => {
 
     const formData = new FormData();
+    formData.set("id", this.state.id)
     formData.set("pidm", this.state.selectedPidm);
 
     axios({
@@ -58,7 +60,7 @@ state = {
     axios
       .get(URL_GET)
       .then(json => {
-        const data = json.data;
+        const data = _.size(json.data)>0?json.data:[];
         store.dispatch(updateStoreData(data)); //store data güncelle
       })
       .then(this.setState({error: false}))
@@ -97,10 +99,11 @@ state = {
 
   render() {
     const {selectedPidm,name, deleteMode} = this.state;
+    const color = this.state.deleteMode?'red':null;
 
     return (
       <div style={{ margin:"2px" }}>
-        <Label key={selectedPidm} as='a' content={name.toUpperCase()} icon='remove circle' onClick={()=>this.handleDeleteMode()} />
+        <Label color={color} key={selectedPidm} as='a' content={name} onRemove={()=>this.handleDeleteMode()} />
 
           {this.state.error?
                     <this.ErrorMessage />

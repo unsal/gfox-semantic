@@ -1,13 +1,14 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Label, Icon, List } from "semantic-ui-react";
 import { config } from "../../../../config";
 import axios from "axios";
 import { updateStoreData } from "../../../../reducer/actions";
 
-import MyMessage from "../../myComponents";
+import {MyMessage} from "../../myComponents";
+import _ from 'lodash';
 
 //DELETE BOX KURUM
-class DeleteBox extends Component {
+class DeleteBox extends PureComponent {
   // props: pidm, birim_pidm, name, store, data
 
   state = {
@@ -24,7 +25,7 @@ class DeleteBox extends Component {
 
     axios({
       method: "POST",
-      url: config.URL_DelSSDokumanlar,
+      url: config.URL_DeleteSSDokumanlar,
       data: formData
       // config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
@@ -56,7 +57,7 @@ class DeleteBox extends Component {
     axios
       .get(url)
       .then(json => {
-        const data = json.data;
+        const data = _.size(json.data)>0?json.data:[];
         store.dispatch(updateStoreData(data)); //store data güncelle
       })
       .then(this.setState({error: false}))
@@ -96,12 +97,13 @@ class DeleteBox extends Component {
 
   render() {
     const {dokuman_name, yayin_name} = this.props;
+
     return (
       <div style={{ margin:"2px", display: 'block' }}>
 
         <List size='small' celled divided selection onClick={this.handleDeleteMode} >
           <List.Item>
-            <span style={{ float:'left'}}> {dokuman_name}</span>
+            <span style={{ float:'left' }}> {dokuman_name}</span>
             <Label style={{ float:'right'}} as='a' size='mini' color={yayin_name==='yayında'?'teal':null} horizontal> {yayin_name} </Label>
         </List.Item>
         </List>
