@@ -1,22 +1,12 @@
 import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
-import {getOffset} from "../../myComponents";
+import {getOffset, refreshStoreData2} from "../../myComponents";
 import axios from "axios";
-import { updateStoreData } from "../../../../reducer/actions";
 import "../../../kvkk.css";
-import _ from 'lodash';
 
 // ADDBOX KURUM
 class AddBox extends PureComponent {
   state = {
-
-    //props
-     URL_GET: this.props.URL_GET,
-     URL_ADD: this.props.URL_ADD,
-     URL_OPTIONS: this.props.URL_OPTIONS,
-     birimPidm: this.props.birimPidm,
-     store: this.props.store,
-     id: this.props.id, //Form submit ederken common alan belirlemek için
 
      didMount: false,
      isLoading: true,
@@ -32,9 +22,10 @@ class AddBox extends PureComponent {
 
   }
 
-  loadDropdownOptions =()=> {
+
+
+  loadDropdownOptions =(URL_OPTIONS, cid)=> {
     //Dropdown için key, text, value formatında
-    const {URL_OPTIONS}= this.state;
     let options =[];
 
     axios
@@ -49,37 +40,24 @@ class AddBox extends PureComponent {
       .catch(err => {
         console.log("Dropdown yüklenemedi!");
         console.log(err);
-        this.setState({ options: [], error:true})
+        this.setState({ options: []})
       });
 
       return null;
   }
 
-  refreshStoreData =() => {
-    const {URL_GET, store} = this.state;
-
-    axios
-      .get(URL_GET)
-      .then(json => {
-        const data = _.size(json.data)>0?json.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-        this.setState({ error:false})
-      })
-      .catch(err => {
-        this.setState({ error: true})
-        console.log(err);
-      });
-  }
 
   submit = (related_item_pidm) => {
 
-    const {URL_ADD, id, birimPidm}= this.state;
+    const {URL_ADD, id, birimPidm, cid, uid}= this.state;
 
     const form = new FormData();
     // Must bu set; otherwise Python gets "AttributeError: 'NoneType' object has no attribute 'upper'"
     form.set("id", id)
     form.set("birim_pidm", birimPidm);
     form.set("related_item_pidm", related_item_pidm)
+    form.set("cid", cid)
+    form.set("uid", uid)
 
     axios({ method: "POST", url: URL_ADD, data: form })
       .catch(err => {
@@ -99,7 +77,8 @@ class AddBox extends PureComponent {
         this.submit(related_item_pidm)
     ))
 
-    this.refreshStoreData();
+    refreshStoreData2(this.state.store, this.state.cid, this.state.URL_GET);
+    this.setState({error: false})
     this.handleClose();
 
   };
@@ -163,11 +142,16 @@ class AddBox extends PureComponent {
           </Segment>
   }
 
-componentDidMount() {
+async componentDidMount() {
+
   const didMount = true;
   this.setState({ didMount })
 
-  this.loadDropdownOptions();
+  const {URL_GET, URL_ADD, options, store, id, cid, uid} = this.props.params
+  const {birimPidm}=this.props
+
+  await this.setState({ URL_GET, URL_ADD, store, id, cid, uid, birimPidm, options})
+
 }
 
 componentDidUpdate(prevProps, prevState) {

@@ -2,10 +2,8 @@ import React, { PureComponent } from "react";
 import { Label, Icon, List } from "semantic-ui-react";
 import { config } from "../../../../config";
 import axios from "axios";
-import { updateStoreData } from "../../../../reducer/actions";
 
-import {MyMessage} from "../../myComponents";
-import _ from 'lodash';
+import {MyMessage, refreshStoreData2} from "../../myComponents";
 
 //DELETE BOX KURUM
 class DeleteBox extends PureComponent {
@@ -16,22 +14,32 @@ class DeleteBox extends PureComponent {
      deleteMode: false,
   }
 
+  componentDidMount() {
+
+    const {cid, store} = this.props.params
+    const {dokuman_name, yayin_name, selectedPidm} = this.props
+    const URL_DELETE = config.URL_DeleteSSDokumanlar
+    const URL_GET = config.URL_GetSSDokumanlar
+    this.setState({ cid, store, dokuman_name, yayin_name, selectedPidm, URL_DELETE, URL_GET})
+
+}
+
   // Sil onayı
   handleDelete = () => {
     // event.preventDefault();
 
     const formData = new FormData();
-    formData.set("pidm", this.props.selectedPidm);
+    formData.set("pidm", this.state.selectedPidm);
+    formData.set("cid", this.state.cid)
 
     axios({
       method: "POST",
-      url: config.URL_DeleteSSDokumanlar,
+      url: this.state.URL_DELETE,
       data: formData
       // config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
       .then(() => {
-
-        this.refreshStoreData();
+        refreshStoreData2(this.state.store, this.state.cid, this.state.URL_GET);
         this.setState({ error: false })
         this.handleClose();
       })
@@ -50,22 +58,6 @@ class DeleteBox extends PureComponent {
     this.setState({ deleteMode: false, selectedPidm:0 })
   }
 
-  refreshStoreData =() => {
-    const url = config.URL_GetSSDokumanlar;
-    const store = this.props.store;
-
-    axios
-      .get(url)
-      .then(json => {
-        const data = _.size(json.data)>0?json.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-      })
-      .then(this.setState({error: false}))
-      .catch(err => {
-        this.setState({ error: true})
-        console.log(err);
-      });
-  }
 
   //(x)(v)
   DeleteMenuButtons = () => {
@@ -96,7 +88,7 @@ class DeleteBox extends PureComponent {
   }
 
   render() {
-    const {dokuman_name, yayin_name} = this.props;
+    const {dokuman_name, yayin_name} = this.state;
 
     return (
       <div style={{ margin:"2px", display: 'block' }}>

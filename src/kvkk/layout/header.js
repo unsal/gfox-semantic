@@ -1,10 +1,11 @@
-import React from "react";
+import React, { PureComponent }  from "react";
 import {
   Container,
   Image,
   Menu,
   Icon,
-  Dropdown
+  Dropdown,
+  Label
 } from "semantic-ui-react";
 import logo from "../../assets/img/logo2.png";
 import notify from "../../assets/img/notify.png";
@@ -16,15 +17,28 @@ import { connect } from 'react-redux';
 import {store} from '../../reducer';
 import { updateStoreNewRequest } from '../../reducer/actions';
 
+import { config } from "../../config"
+import axios from "axios"
+
 
 const Logo = () => (
   <Image size="mini" src={logo} style={{ marginRight: "1.5em" }} />
 );
 
-class KVKKHeader extends React.Component {
+class KVKKHeader extends PureComponent  {
+  state ={
+      optionsCids: []
+  }
+
   handleClick=()=>{
       const nr = this.props.newRequest
       store.dispatch(updateStoreNewRequest(!nr));
+  }
+
+  componentDidMount() {
+    const optionsCids = this.createCidOptions()
+    this.setState({ optionsCids })
+    console.log('options: ',optionsCids)
   }
 
   handleClickAyarlar=(event)=>{
@@ -32,11 +46,32 @@ class KVKKHeader extends React.Component {
     window.location.reload();
   }
 
+createCidOptions = async () => {
+    const {uid} = this.props
+    const params  = {uid}
+    let options =[]
+
+    try {
+      const result = await axios.post(config.URL_GET_AUTH_CIDS, params, config.axios)
+      const data = await result.data?result.data:[]
+      await data.map( ({cid, name}) =>  options = options.concat({'key':cid, 'text':name, 'value':cid}) )
+
+    } catch (err) {
+          console.log("myComponents->createCidOptions() hatası..",err);
+          options = []
+    }
+
+    return options
+  }
+
+
   style = {
               backgroundColor:'#E8E8E8',
   }
 
   render() {
+    const options = this.state.optionsCids
+
     return (
     <Menu fixed="top" inverted>
       <Container>
@@ -109,11 +144,20 @@ class KVKKHeader extends React.Component {
           <Icon name="setting" />
           Ayarlar
         </Menu.Item>
+        <Menu.Item header position='right'>
+
+        {/* <Dropdown options={options} /> */}
+          <Label as='a' image color='black'>
+              <Icon name="database" size="big"/>
+              Özyeğin Üniversitesi
+          </Label>
+        </Menu.Item>
+
       </Container>
     </Menu>
     )
   }
 }
 
-const mapStateToProps = (state) => ({ newRequest: state.newRequest})
+const mapStateToProps = (state) => ({ newRequest: state.newRequest, cid: state.cid, uid: state.uid})
 export default connect(mapStateToProps)(KVKKHeader)

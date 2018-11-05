@@ -1,32 +1,31 @@
 import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import axios from "axios";
-import { updateStoreData } from "../../../../reducer/actions";
-import {MyMessage} from "../../myComponents";
-import _ from 'lodash';
+import {MyMessage, refreshStoreData2} from "../../myComponents";
 
 //DELETE BOX KURUM
 class DeleteBox extends PureComponent {
 state = {
-
-    //get props
-    URL_GET: this.props.URL_GET,
-    URL_DELETE: this.props.URL_DELETE,
-    selectedPidm: this.props.selectedPidm,
-    name: this.props.name,
-    store: this.props.store,
-    id: this.props.id,
 
     error: false,
     deleteMode: false,
 
   }
 
+componentDidMount() {
+
+    const {URL_GET, URL_DELETE, id, cid, store} = this.props.params
+    const {name, selectedPidm} = this.props
+    this.setState({ URL_GET, URL_DELETE, id, cid, store, name, selectedPidm})
+
+}
+
   handleDelete = () => {
 
     const formData = new FormData();
     formData.set("id", this.state.id)
     formData.set("pidm", this.state.selectedPidm);
+    formData.set("cid", this.state.cid)
 
     axios({
       method: "POST",
@@ -35,8 +34,7 @@ state = {
 
     })
       .then(() => {
-
-        this.refreshStoreData();
+        refreshStoreData2(this.state.store, this.state.cid, this.state.URL_GET);
         this.setState({ error: false })
         this.handleClose();
       })
@@ -52,22 +50,6 @@ state = {
 
   handleClose =()=>{
     this.setState({ deleteMode: false })
-  }
-
-  refreshStoreData =() => {
-    const {URL_GET, store} = this.state;
-
-    axios
-      .get(URL_GET)
-      .then(json => {
-        const data = _.size(json.data)>0?json.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-      })
-      .then(this.setState({error: false}))
-      .catch(err => {
-        this.setState({ error: true})
-        console.log(err);
-      });
   }
 
   //(x)(v)

@@ -1,9 +1,11 @@
 import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
-import {getOffset, removeDuplicates, refreshStoreData} from "../../myComponents";
+import {getOffset, removeDuplicates, refreshStoreData2, createDropdownOptions} from "../../myComponents";
 import axios from "axios";
 import "../../../kvkk.css";
 import {config} from '../../../../config'
+import {store} from "../../../../reducer"
+import { connect } from "react-redux";
 
 // ADDBOX KURUM
 class AddBox extends PureComponent {
@@ -22,44 +24,16 @@ class AddBox extends PureComponent {
 
   }
 
-  getOptionsURL() {
-      const {id} = this.props
-      if (id==='ulkeler') {
-          return config.URL_GET_ULKELER
-      } else if (id==='kanallar') {
-          return config.URL_GET_KANALLAR
-      } else if (id==='dokumanlar') {
-          return config.URL_GET_DOKUMANLAR
-      } else if (id==='sistemler') {
-          return config.URL_GET_SISTEMLER
-      } else if (id==='dayanaklar') {
-          return config.URL_GET_DAYANAKLAR
-      } else if (id==='ortamlar') {
-          return config.URL_GET_ORTAMLAR
-      } else return null
+  componentDidMount() {
+    const {id, cid, uid} = this.props
+    const didMount = true;
+    this.setState({didMount, id, cid, uid})
   }
 
-  loadDropdownOptions =()=> {
-    //Dropdown için key, text, value formatında
-    const URL_OPTIONS= this.getOptionsURL()
-    let options =[];
-
-    axios
-      .get(URL_OPTIONS) //api den data yükler
-      .then(json => {
-        const data = json.data;
-        data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
-      })
-      .then(()=>{
-        this.setState({ options })
-      })
-      .catch(err => {
-        console.log("Dropdown yüklenemedi!");
-        console.log(err);
-        this.setState({ options: [], error:true})
-      });
-
-      return null;
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.didMount !== this.state.didMount) {
+      this.setState({ isLoading: false });
+    }
   }
 
   concatDatas = async (data1, data2)=>{
@@ -78,25 +52,20 @@ class AddBox extends PureComponent {
   // Ekleme onayı
   handleSubmit = async (event) => {
     event.preventDefault();
-    const URL_GET = config.URL_GET_KVANAVERI //refreshStoreData için
     const URL_UPDATE= config.URL_UPDATE_KVANAVERI+"/"+this.props.id // ../ulkelerr_data  /kanallar_data etc
-    const {dataCell, store}=this.props
-    const {selectedData} = this.state
+    const {dataCell}=this.props
+    const {selectedData, cid, uid} = this.state
     const pidm = this.props.rowPidm
 
     let data = await this.concatDatas(dataCell, selectedData)
 
-    const params = {pidm, data}
+    const params = {pidm, data, uid}
 
     try {
-        const config = { headers: {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '*'}
-    }
-        await axios.post(URL_UPDATE, params, config)
+        await axios.post(URL_UPDATE, params, config.axios)
 
         await this.setState({ error: false, success:true })
-        await refreshStoreData(URL_GET, store)
+        await refreshStoreData2(store, cid, config.URL_GET_KVANAVERI)
         await this.handleClose();
     } catch (err) {
           console.log("KVAnaveri->AddBox->Update API Error!",err);
@@ -106,7 +75,28 @@ class AddBox extends PureComponent {
   };
 
   handleAdd = async ()=>{
-    await this.setState({ addMode: true });
+
+    const {id, cid} = this.state
+
+    let options =null
+
+      if (id==='ulkeler') {
+        options = await createDropdownOptions(config.URL_GET_ULKELER, cid);
+      } else if (id==='kanallar') {
+        options = await createDropdownOptions(config.URL_GET_KANALLAR, cid);
+      } else if (id==='dokumanlar') {
+        options = await createDropdownOptions(config.URL_GET_DOKUMANLAR, cid);
+      } else if (id==='sistemler') {
+        options = await createDropdownOptions(config.URL_GET_SISTEMLER, cid);
+      } else if (id==='dayanaklar') {
+        options = await createDropdownOptions(config.URL_GET_DAYANAKLAR, cid);
+      } else if (id==='ortamlar') {
+        options = await createDropdownOptions(config.URL_GET_ORTAMLAR, cid);
+      } else options = null
+
+      const addMode = true
+      await this.setState({options, addMode})
+
   }
 
   handleClose = async ()=>{
@@ -115,7 +105,7 @@ class AddBox extends PureComponent {
 
   handleChangeSelected = (event, data) => {
     event.preventDefault();
-    const selectedData = data.value.map(item=>item);
+    const selectedData = data?data.value.map(item=>item):null;
 
     this.setState({ selectedData});
   }
@@ -164,18 +154,7 @@ class AddBox extends PureComponent {
           </Segment>
   }
 
-componentDidMount() {
-  const didMount = true;
-  this.setState({ didMount })
 
-  this.loadDropdownOptions();
-}
-
-componentDidUpdate(prevProps, prevState) {
-  if (prevState.didMount !== this.state.didMount) {
-    this.setState({ isLoading: false });
-  }
-}
 
 // (+)
 AddIcon =(props) =>{
@@ -214,4 +193,5 @@ ErrorMessage = () => {
       }
   }
 
-export default AddBox;
+  const mapStateToProps = state => ({ cid: state.cid, uid: state.uid });
+  export default connect(mapStateToProps)(AddBox);

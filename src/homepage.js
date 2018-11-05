@@ -16,6 +16,7 @@ import {
   Visibility,
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+
 // import logo from "./assets/img/logo2.png";
 
 // const Logo = () => <Image src={logo} size='small' />
@@ -54,6 +55,7 @@ const HomepageHeading = ({ mobile }) => (
       KVKK Menu
       <Icon name='right arrow' />
     </Button>
+
   </Container>
 )
 
@@ -212,6 +214,7 @@ const Homepage = () => (
           <Grid.Column width={8}>
             <Header as='h3' style={{ fontSize: '2em' }}>
               We Help Companies and Companions
+
             </Header>
             <p style={{ fontSize: '1.33em' }}>
               We can give your company superpowers to do things that they never thought possible.
@@ -332,5 +335,6 @@ const Homepage = () => (
     </Segment>
   </ResponsiveContainer>
 )
+
 
 export default Homepage

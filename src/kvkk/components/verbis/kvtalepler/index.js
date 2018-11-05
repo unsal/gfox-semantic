@@ -113,11 +113,7 @@ class KVTalepler extends PureComponent {
     const params = await {pidm} //{pidm=##} olrak gönderilir
 
     try {
-        const config = { headers: {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '*'}
-    }
-        await axios.post(URL_DELETE, params, config)
+        await axios.post(URL_DELETE, params, config.axios)
         await this.setState({ success:true })
         await refreshStoreData(URL_GET, store )
     } catch (err) {

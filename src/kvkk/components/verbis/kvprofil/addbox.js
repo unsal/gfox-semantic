@@ -1,11 +1,11 @@
 import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
-import {getOffset, removeDuplicates} from "../../myComponents";
+import {getOffset, removeDuplicates, refreshStoreData2} from "../../myComponents";
 import axios from "axios";
-import { updateStoreData, updateStoreMode } from "../../../../reducer/actions";
 import "../../../kvkk.css";
-import _ from 'lodash';
 import {config} from '../../../../config'
+import {store} from "../../../../reducer"
+import { connect } from "react-redux";
 
 // ADDBOX KURUM
 class AddBox extends PureComponent {
@@ -16,7 +16,6 @@ class AddBox extends PureComponent {
      addMode: false,
 
      offset: [],
-     options: [],
 
      selectedData: [], //KV
 
@@ -24,45 +23,6 @@ class AddBox extends PureComponent {
 
   }
 
-  loadDropdownOptions =()=> {
-    //Dropdown için key, text, value formatında
-    const URL_OPTIONS= config.URL_GET_KV
-    let options =[];
-
-    axios
-      .get(URL_OPTIONS) //api den data yükler
-      .then(json => {
-        const data = json.data;
-        data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
-      })
-      .then(()=>{
-        this.setState({ options })
-      })
-      .catch(err => {
-        console.log("Dropdown yüklenemedi!");
-        console.log(err);
-        this.setState({ options: [], error:true})
-      });
-
-      return null;
-  }
-
-  refreshStoreData =() => {
-    const URL_GET = config.URL_GET_KVPROFIL
-    const {store} = this.props;
-
-    axios
-      .get(URL_GET)
-      .then(json => {
-        const data = _.size(json.data)>0?json.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-        this.setState({ error:false})
-      })
-      .catch(err => {
-        this.setState({ error: true})
-        console.log(err);
-      });
-  }
 
   concatDatas = async (data1, data2)=>{
     // cell > varolan liteye > dropdown seçilmişleri ekler..
@@ -79,25 +39,21 @@ class AddBox extends PureComponent {
 
   // Ekleme onayı
   handleSubmit = async (event) => {
-    event.preventDefault();
-    const URL_UPDATE= config.URL_UPDATE_KVPROFIL
+    event.preventDefault()
+
     const {dataCell}=this.props
-    const {selectedData} = this.state
-    const pidm = this.props.rowPidm
+    const {selectedData, uid, cid} = this.state
+    const pidm = this.state.rowPidm
 
     let data = await this.concatDatas(dataCell, selectedData)
 
-    const params = {pidm, data}
+    const params = {pidm, data, uid}
 
     try {
-        const config = { headers: {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '*'}
-    }
-        await axios.post(URL_UPDATE, params, config)
+        await axios.post(config.URL_UPDATE_KVPROFIL, params, config.axios)
 
         await this.setState({ error: false, success:true })
-        await this.refreshStoreData()
+        await refreshStoreData2(store, cid, config.URL_GET_KVPROFIL)
         await this.handleClose();
     } catch (err) {
           console.log("Update API Error!",err);
@@ -107,15 +63,11 @@ class AddBox extends PureComponent {
   };
 
   handleAdd = async ()=>{
-    const {store} = await this.props
     await this.setState({ addMode: true });
-    await store.dispatch(updateStoreMode('ADD'))
   }
 
   handleClose = async ()=>{
-    const {store} = await this.props
     await this.setState({ addMode: false})
-    await store.dispatch(updateStoreMode('DEFAULT'))
   }
 
   handleChangeSelected = (event, data) => {
@@ -160,7 +112,7 @@ class AddBox extends PureComponent {
                     fluid
                     placeholder='KV Seçiminiz'
                     multiple search selection
-                    options={this.state.options}
+                    options={this.state.optionsKV}
                     onChange={this.handleChangeSelected}
                     style= {{ flex: "auto" }}
                   />
@@ -171,9 +123,9 @@ class AddBox extends PureComponent {
 
 componentDidMount() {
   const didMount = true;
-  this.setState({ didMount })
-
-  this.loadDropdownOptions();
+  const {rowPidm, optionsKV} = this.props.params
+  const {cid, uid} = this.props
+  this.setState({ didMount, rowPidm, optionsKV, cid, uid })
 }
 
 componentDidUpdate(prevProps, prevState) {
@@ -217,4 +169,5 @@ ErrorMessage = () => {
       }
   }
 
-export default AddBox;
+  const mapStateToProps = state => ({ cid: state.cid, uid: state.uid });
+  export default connect(mapStateToProps)(AddBox);

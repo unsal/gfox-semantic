@@ -1,12 +1,11 @@
 import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import axios from "axios";
-import { updateStoreData } from "../../../../reducer/actions";
+import {store} from "../../../../reducer"
+import { connect } from "react-redux";
 
-import {MyMessage} from "../../myComponents";
-import _ from 'lodash';
+import {MyMessage, refreshStoreData2 } from "../../myComponents";
 import { config } from "../../../../config";
-
 
 //UPDATE BOX KURUM
 class LabelBox extends PureComponent {
@@ -38,18 +37,15 @@ state = {
     event.preventDefault();
     const URL_UPDATE= config.URL_UPDATE_KVPAYLASIM+"/"+this.props.id // ../ia, ../pa, ../ps
     const pidm=this.props.rowPidm
+    const {cid, uid} = this.props
     let data = await this.removedData() //remove selected pidm from data
 
-    const params = await {pidm, data}
+    const params = await {pidm, data, uid} //silinen kayde uid logu düşer
 
     try {
-        const config = { headers: {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '*'}
-    }
-        await axios.post(URL_UPDATE, params, config)
+        await axios.post(URL_UPDATE, params, config.axios)
         await this.setState({ error: false, success:true })
-        await this.refreshStoreData()
+        await refreshStoreData2(store, cid, config.URL_GET_KVPAYLASIM)
     } catch (err) {
           console.log("KVPaylasim->Update on delete API Error!",err);
           this.setState({ error: true })
@@ -63,23 +59,6 @@ state = {
 
   handleClose = async()=>{
     await this.setState({ deleteMode: false })
-  }
-
-  refreshStoreData =() => {
-    const URL_GET = config.URL_GET_KVPAYLASIM;
-    const {store} = this.props
-
-    axios
-      .get(URL_GET)
-      .then(json => {
-        const data = _.size(json.data)>0?json.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-      })
-      .then(this.setState({error: false}))
-      .catch(err => {
-        this.setState({ error: true})
-        console.log(err);
-      });
   }
 
   //(x)(v)
@@ -144,4 +123,5 @@ state = {
   }
 }
 
-export default LabelBox
+const mapStateToProps = state => ({ cid: state.cid, uid: state.uid });
+export default connect(mapStateToProps)(LabelBox);

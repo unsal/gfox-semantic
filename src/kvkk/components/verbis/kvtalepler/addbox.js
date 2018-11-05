@@ -79,11 +79,7 @@ class AddBox extends PureComponent {
     const params = {pidm, data}
 
     try {
-        const config = { headers: {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '*'}
-    }
-        await axios.post(URL_UPDATE, params, config)
+        await axios.post(URL_UPDATE, params, config.axios)
 
         await this.setState({ error: false, success:true })
         await refreshStoreData(URL_GET, store)

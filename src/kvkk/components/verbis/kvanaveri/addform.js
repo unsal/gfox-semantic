@@ -1,22 +1,21 @@
-import React, { Component } from 'react'
+import React,  { PureComponent }   from 'react'
 import { Button, Image, Modal, Icon, Form, Dropdown, Grid } from 'semantic-ui-react'
 import { config } from "../../../../config";
 import axios from "axios";
 import ImageBanner from "../../../../assets/img/kvanaveri.jpg"
-import {refreshStoreData} from "../../myComponents"
+import {refreshStoreData2, createDropdownOptions} from "../../myComponents"
+import {store} from "../../../../reducer"
+import { connect } from "react-redux";
 
 
-export default class AddForm extends Component {
+class AddForm extends PureComponent {
   state = {
    open: false, // modal için
 
   //URLs
-  URL_GET: config.URL_GET_KVANAVERI,
-  URL_ADD: config.URL_ADD_KVANAVERI,
 
   error: false,
   success: false,
-
 
   birim_pidm: 0,
   kv_pidm: 0,
@@ -38,7 +37,11 @@ export default class AddForm extends Component {
   sistemlerChanged: false,
   dayanaklarChanged: false,
   ortamlarChanged: false
+  }
 
+  componentDidMount() {
+    const {cid, uid} = this.props
+    this.setState({ cid, uid })
   }
 
   clearFields = () => {
@@ -48,9 +51,23 @@ export default class AddForm extends Component {
     })
   }
 
-  show = dimmer => () => {
-    this.setState({ dimmer, open: true })
-    this.clearFields()
+   show = dimmer => async() => {
+    const {cid} = this.state
+
+    const optionsBirimler    = await createDropdownOptions(config.URL_GET_BIRIMLER, cid);
+    const optionsKV          = await createDropdownOptions(config.URL_GET_KV, cid);
+    const optionsSureler     = await createDropdownOptions(config.URL_GET_SURELER, cid);
+    const optionsUlkeler     = await createDropdownOptions(config.URL_GET_ULKELER, cid);
+    const optionsKanallar    = await createDropdownOptions(config.URL_GET_KANALLAR, cid);
+    const optionsDokumanlar  = await createDropdownOptions(config.URL_GET_DOKUMANLAR, cid);
+    const optionsSistemler   = await createDropdownOptions(config.URL_GET_SISTEMLER, cid);
+    const optionsDayanaklar  = await createDropdownOptions(config.URL_GET_DAYANAKLAR, cid);
+    const optionsOrtamlar    = await createDropdownOptions(config.URL_GET_ORTAMLAR, cid);
+
+    this.setState({ dimmer, open: true, optionsBirimler, optionsKV, optionsSureler,
+      optionsUlkeler, optionsKanallar, optionsDokumanlar,
+      optionsSistemler,optionsDayanaklar, optionsOrtamlar },this.clearFields())
+
   }
 
 
@@ -80,7 +97,7 @@ export default class AddForm extends Component {
   FormFields=()=> {
    const style = { overflow: 'visible', width: '300px' }
    const {optionsBirimler, optionsKV, optionsSureler, optionsUlkeler, optionsKanallar,
-          optionsDokumanlar, optionsSistemler, optionsDayanaklar, optionsOrtamlar} = this.props
+          optionsDokumanlar, optionsSistemler, optionsDayanaklar, optionsOrtamlar} = this.state
    const {success,
           birim_pidm, kv_pidm, sure_pidm, ulkeler_pidms, kanallar_pidms, dokumanlar_pidms, sistemler_pidms, dayanaklar_pidms, ortamlar_pidms,
           birimChanged, kvChanged, sureChanged, ulkelerChanged, kanallarChanged, dokumanlarChanged, sistemlerChanged, dayanaklarChanged, ortamlarChanged
@@ -201,11 +218,10 @@ export default class AddForm extends Component {
 
   handleSubmit= async (event)=>{
    event.preventDefault();
-   const {store} = this.props
-   const {URL_ADD, URL_GET, birim_pidm, kv_pidm, sure_pidm, ulkeler_pidms,
+   const {cid, uid, birim_pidm, kv_pidm, sure_pidm, ulkeler_pidms,
           kanallar_pidms, dokumanlar_pidms, sistemler_pidms, dayanaklar_pidms, ortamlar_pidms}= this.state;
 
-   const ulkeler_data       = await ulkeler_pidms.map(item=>item) //convert [array] to [{json}] for data post
+   const ulkeler_data     = await ulkeler_pidms.map(item=>item) //convert [array] to [{json}] for data post
    const kanallar_data    = await kanallar_pidms.map(item=>item) //convert [array] to [{json}] for data post
    const dokumanlar_data  = await dokumanlar_pidms.map(item=>item) //convert [array] to [{json}] for data post
    const sistemler_data   = await sistemler_pidms.map(item=>item) //convert [array] to [{json}] for data post
@@ -213,16 +229,12 @@ export default class AddForm extends Component {
    const ortamlar_data    = await ortamlar_pidms.map(item=>item) //convert [array] to [{json}] for data post
 
    const params  = await {birim_pidm, kv_pidm, sure_pidm,
-                          ulkeler_data, kanallar_data, dokumanlar_data, sistemler_data, dayanaklar_data, ortamlar_data}
+                          ulkeler_data, kanallar_data, dokumanlar_data, sistemler_data, dayanaklar_data, ortamlar_data, cid, uid}
    console.log('inserted successfully')
 
    //PYTHON SUBMIT PART
    try {
-       const config = { headers: {
-                         'Content-Type': 'application/json',
-                         'Access-Control-Allow-Origin': '*'}
-   }
-       await axios.post(URL_ADD, params, config)
+       await axios.post(config.URL_ADD_KVANAVERI, params, config.axios)
        await this.setState({ error: false,
                              success:true,
                              birim_pidm:0, kv_pidm:0, sure_pidm:0,
@@ -231,7 +243,7 @@ export default class AddForm extends Component {
                              open: false //close modal
                             })
 
-       await refreshStoreData(URL_GET, store )
+       await refreshStoreData2(store, cid, config.URL_GET_KVANAVERI )
    } catch (err) {
          console.log("Hata!",err);
          this.setState({ error: true })
@@ -274,3 +286,5 @@ export default class AddForm extends Component {
   }
 }
 
+const mapStateToProps = state => ({ cid: state.cid, uid: state.uid });
+export default connect(mapStateToProps)(AddForm);

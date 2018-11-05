@@ -8,19 +8,19 @@ import { config } from "../../../config";
 //Redux
 import { connect } from "react-redux";
 import { store } from "../../../reducer";
-import { updateStoreData } from "../../../reducer/actions";
 
 import DeleteBoxTanim from "./DeleteBoxTanim";
 import './Tanimlar.css';
 import '../../kvkk.css';
 import _ from 'lodash';
 
-import {MyMessage} from "../myComponents";
+import {MyMessage, refreshStoreData2} from "../myComponents"
+
 
 class Tanimlar extends PureComponent {
 
     state = {
-      url: config.URL_GetTanimlar + "/" + this.props.id,
+      URL_GET: config.URL_GetTanimlar+"/"+this.props.id,
       // bu ikisi
       didMount: false,
       isLoading:true,
@@ -38,25 +38,12 @@ class Tanimlar extends PureComponent {
       selectedTanimPidm: 0   //Seçilmiş tanımı silmek için
     };
 
+  async componentDidMount() {
+     const formId = this.props.id
 
-  refreshStoreData() {
-    axios
-      .get(this.state.url) //api den data yükler
-      .then(this.setState({ searchString: '' }))
-      .then(res => {
-        const data = _.size(res.data)>0?res.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-        this.setState({ apiIsOnline: true, didMount: true });
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ apiIsOnline: false });
-      });
-  }
-
-  componentDidMount() {
-     this.setState({ formId: this.props.id})
-     this.refreshStoreData();
+     this.setState({formId})
+    refreshStoreData2(store, this.props.cid, this.state.URL_GET)
+     this.setState({ apiIsOnline: true, didMount: true });
   }
 
   // Herzaman iki değişken kullanmalısın yoksa hata verir
@@ -76,11 +63,14 @@ class Tanimlar extends PureComponent {
     form.set("local",this.state.formLocal);
     form.set("phone_area",this.state.formPhoneArea);
     form.set("secure",this.state.formSecure);
+    //auth
+    form.set("cid", this.props.cid)
+    form.set("uid", this.props.uid)
 
     const url= config.URL_AddTanimlar;
     axios({ method: "POST", url: url, data: form })
       .then(() => {
-        this.refreshStoreData();
+        refreshStoreData2(store, this.props.cid, this.state.URL_GET)
       })
       .then(()=> {
         // submit ettikten sonra mevcut değerleri resetlemek için
@@ -122,7 +112,7 @@ class Tanimlar extends PureComponent {
 
   handleKeyDown = (event) => {
     if (event.keyCode===27) {
-          this.refreshStoreData();
+          refreshStoreData2(store, this.props.cid, this.state.URL_GET)
           console.log("Escape pressed...")
     } else if (event.keyCode===27) {
            this.handleSubmit()
@@ -131,7 +121,7 @@ class Tanimlar extends PureComponent {
 
   handleHomeClick =(event)=>{
     event.preventDefault();
-    this.refreshStoreData();
+    refreshStoreData2(store, this.props.cid, this.state.URL_GET)
   }
 
   AddForm = (props) => {
@@ -232,10 +222,10 @@ class Tanimlar extends PureComponent {
     </Segment>
   }
 
-  render_() {
+  myRender=()=> {
     const { data, id, title } = this.props; //data > from reducer
 
-    let _data = data;
+    let dataFiltered = data;
     const isSistemler = id === "sistemler";
     const isUlkeler = id === "ulkeler";
 
@@ -243,15 +233,22 @@ class Tanimlar extends PureComponent {
     const searchString = this.state.searchString.trim().toLowerCase();
 
     if (searchString.length > 0) {
-      _data = _data.filter(({name}) => {
+      dataFiltered = dataFiltered.filter(({name}) => {
         return name.toLowerCase().match(searchString);
       });
     }
 
     // Kayıt varsa ekleme, uyarı ver. Aşağıda HeaderCell'de
-    const count = _.size(_data);
+    const count = _.size(dataFiltered);
     const recordExist = (count >0) && (searchString.length >0);
     const _inputIcon = 'pencil alternate';
+
+    const params = {
+                    id: this.props.id,
+                    cid: this.props.cid,
+                    store: store,
+                    URL_GET: this.state.URL_GET
+    }
 
     return (
       <div className="kvkk-content">
@@ -292,40 +289,37 @@ class Tanimlar extends PureComponent {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {_data.map(({ pidm, name, local, phone_area, secure }) => (
-              <Table.Row key={pidm}>
-                <Table.Cell style={{textAlign:"left"}}>
+            {dataFiltered?dataFiltered.map(item => (
+                  <Table.Row key={item.pidm}>
+                    <Table.Cell style={{textAlign:"left"}}>
 
-                <DeleteBoxTanim
-                    id={this.props.id}
-                    pidm={pidm}
-                    name={name}
-                    store={store}
-                    data={data}
-                  />
+                    <DeleteBoxTanim
+                        pidm={item.pidm}
+                        name={item.name}
+                        params={params}
+                      />
 
-                </Table.Cell>
+                    </Table.Cell>
 
+                    {isSistemler ? (
+                      <Table.Cell style={{ textAlign: "center" }}>
+                        {item.local? ( <Icon name="hdd" color="orange" /> )
+                        :( <Icon name="mixcloud" color="blue" /> )}
+                      </Table.Cell>
+                    ) : null}
+                    {isUlkeler ? (
+                      <Table.Cell style={{ textAlign: "center" }}>
+                        {item.phone_area}
+                      </Table.Cell>
+                    ) : null}
+                    {isUlkeler ? (
+                      <Table.Cell style={{ textAlign: "center" }}>
+                        {item.secure ? <Icon name="check circle" color="green" /> : null}
+                      </Table.Cell>
+                    ) : null}
 
-                {isSistemler ? (
-                  <Table.Cell style={{ textAlign: "center" }}>
-                    {local? ( <Icon name="hdd" color="orange" /> )
-                    :( <Icon name="mixcloud" color="blue" /> )}
-                  </Table.Cell>
-                ) : null}
-                {isUlkeler ? (
-                  <Table.Cell style={{ textAlign: "center" }}>
-                    {phone_area}
-                  </Table.Cell>
-                ) : null}
-                {isUlkeler ? (
-                  <Table.Cell style={{ textAlign: "center" }}>
-                    {secure ? <Icon name="check circle" color="green" /> : null}
-                  </Table.Cell>
-                ) : null}
-
-              </Table.Row>
-            ))
+                  </Table.Row>
+                )):null
             }
           </Table.Body>
         </Table>
@@ -338,7 +332,7 @@ class Tanimlar extends PureComponent {
     return (
       <KVKKLayout>
       { !isLoading && apiIsOnline?
-         this.render_()
+         this.myRender()
          :!isLoading&&!apiIsOnline?
          <Message error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
          :null
@@ -348,5 +342,5 @@ class Tanimlar extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({ data: state.data });
+const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid });
 export default connect(mapStateToProps)(Tanimlar);

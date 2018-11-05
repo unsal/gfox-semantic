@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import axios from "axios";
-import { updateStoreData, updateStoreMode } from "../../../../reducer/actions";
 
-import {MyMessage} from "../../myComponents";
+import {MyMessage, refreshStoreData2} from "../../myComponents";
 import _ from 'lodash';
 import { config } from "../../../../config";
+import {store} from "../../../../reducer"
+import { connect } from "react-redux";
 
 //UPDATE BOX KURUM
 class LabelBox extends PureComponent {
@@ -16,9 +17,9 @@ state = {
 
   }
 
-  removedData = async ()=>{
+  removedData = async (selectedPidm)=>{
 
-    const {selectedPidm, dataCell} = this.props
+    const {dataCell} = this.props
     let newData = []  //[{pidm, name}]
     await dataCell.forEach(pidm=>{
         if (pidm!==selectedPidm) {
@@ -32,17 +33,13 @@ state = {
 
   deleteEntireRecord = async () => {
      // delete entire record after last kv pidm was deleted
-     const URL_DELETE = config.URL_DELETE_KVPROFIL
-     const pidm = this.props.rowPidm
+    const URL_DELETE = config.URL_DELETE_KVPROFIL
+    const pidm = this.props.rowPidm
 
-     const params = await {pidm}
+    const params = await {pidm}
 
-     try {
-          const config = { headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'}
-              }
-          await axios.post(URL_DELETE, params, config)
+    try {
+          await axios.post(URL_DELETE, params, config.axios)
     } catch(err) {
       console.log("Error on entire row deleting", err)
     }
@@ -51,31 +48,25 @@ state = {
 
   handleDelete = async (event) => {
     event.preventDefault();
-    const URL_UPDATE= config.URL_UPDATE_KVPROFIL
     const pidm=this.props.rowPidm
-    let data = await this.removedData() //remove selected kv pidm from data
+    const {selectedPidm, uid} = this.props
+    let data = await this.removedData(selectedPidm) //remove selected kv pidm from data
 
     // data = JSON.stringify(data)
 
-    const params = await {pidm, data}
+    const params = await {pidm, data, uid}
 
     try {
-        const config = { headers: {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '*'}
-    }
-        await axios.post(URL_UPDATE, params, config)
+        await axios.post(config.URL_UPDATE_KVPROFIL, params, config.axios)
 
             //son pidm silinmişse bütün satırı yok et
-            const {dataCell} = this.props
-            const size = _.size(dataCell)
-
+            const size = _.size(this.props.dataCell)
             if (size===1) {
                 await this.deleteEntireRecord()
             }
 
-        await this.setState({ error: false, success:true })
-        await this.refreshStoreData()
+        await refreshStoreData2(store, this.props.cid, config.URL_GET_KVPROFIL)
+        await this.setState({ error: false, success:true, deleteMode: false })
     } catch (err) {
           console.log("Update API Error!",err);
           this.setState({ error: true })
@@ -84,32 +75,11 @@ state = {
   };
 
   onDeleteMode = async ()=>{
-    const {store} = await this.props
     await this.setState({ deleteMode: true, error: false }); //updatemodu seçilen pidm için açar
-    await store.dispatch(updateStoreMode('UPDATE'))
   }
 
   handleClose = async()=>{
-    const {store} = await this.props
     await this.setState({ deleteMode: false })
-    await store.dispatch(updateStoreMode('DEFAULT'))
-  }
-
-  refreshStoreData =() => {
-    const URL_GET = config.URL_GET_KVPROFIL;
-    const {store} = this.props
-
-    axios
-      .get(URL_GET)
-      .then(json => {
-        const data = _.size(json.data)>0?json.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-      })
-      .then(this.setState({error: false}))
-      .catch(err => {
-        this.setState({ error: true})
-        console.log(err);
-      });
   }
 
   //(x)(v)
@@ -158,4 +128,5 @@ state = {
   }
 }
 
-export default LabelBox;
+const mapStateToProps = state => ({ cid: state.cid, uid: state.uid });
+export default connect(mapStateToProps)(LabelBox);

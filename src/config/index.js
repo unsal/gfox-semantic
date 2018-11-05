@@ -20,6 +20,7 @@ export const config = {
   URL_GET_ORTAMLAR: apiHost+'/tanimlar/ortamlar',
   URL_GET_SURELER: apiHost+'/tanimlar/sureler',
   URL_GET_ISLEMDURUMLARI: apiHost+'/tanimlar/islemdurumlari',
+  URL_GET_YAYINDURUMLARI: apiHost+'/tanimlar/yayindurumlari',
 
   // Tanımlar ******************************************
   URL_GetTanimlar: apiHost+'/tanimlar',
@@ -60,8 +61,16 @@ export const config = {
   URL_UPDATE_KVTALEPLER: apiHost+'/verbis/kvtalepler/update',
   URL_DELETE_KVTALEPLER: apiHost+'/verbis/kvtalepler/delete',
 
-};
 
+  //************* AUTH ************************
+  URL_GET_AUTH_CIDS: apiHost+'/auth/cids',
 
+  //axios GET, OST header için config
+  axios: { headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'}
+  }
+
+}
 
 

@@ -2,18 +2,16 @@ import React, { PureComponent } from "react";
 import { Table } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
 
-import axios from "axios";
 import { config } from "../../../../config";
 
 //Redux
 import { connect } from "react-redux";
 import { store } from "../../../../reducer";
-import { updateStoreData } from "../../../../reducer/actions";
 
 import AddBox from "./addbox";
 import DeleteBox from "./deletebox";
 
-import {MyMessage, MyLoader} from "../../myComponents";
+import {MyMessage, MyLoader, refreshStoreData2} from "../../myComponents";
 
 import '../../../kvkk.css';
 
@@ -23,21 +21,17 @@ class SSDokumanlar extends PureComponent {
     isLoading: true,
 
     apiIsOnline: false,
+
   };
 
-  componentDidMount() {
-    const url = config.URL_GetSSDokumanlar;
-    axios
-      .get(url)
-      .then(json => {
-        const data = json.data;
-        store.dispatch(updateStoreData(data)); //store data güncelle
-        this.setState({ apiIsOnline: true, didMount: true });
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ apiIsOnline: false });
-      });
+   async componentDidMount() {
+      const URL_GET =  config.URL_GetSSDokumanlar
+      const {cid} =  this.props
+
+      //Addbox için
+      this.setState({ apiIsOnline: true, didMount: true });
+      await refreshStoreData2(store, cid, URL_GET)
+
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -47,8 +41,9 @@ class SSDokumanlar extends PureComponent {
   }
 
 
-  render_() {
-    const { data } = this.props; //data > from reducer
+  myRender() {
+    const { data, cid, uid } = this.props; //data > from reducer
+    const params = { store, cid, uid }
 
     return (
       <div className="kvkk-content">
@@ -68,31 +63,29 @@ class SSDokumanlar extends PureComponent {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {data.map((key) => (
-              <Table.Row key={key.birim_pidm}>
-                <Table.Cell style={{ verticalAlign: 'top' }}>{key.birim_name}</Table.Cell>
+            {data?data.map((row) => (
+              <Table.Row key={row.birim_pidm}>
+                <Table.Cell style={{ verticalAlign: 'top' }}>{row.birim_name}</Table.Cell>
                 <Table.Cell>
-                     {key.dokumanlar.map( ({pidm, dokuman_name, yayin_name}) => ( //pidm -> unique keyidir
+                     {row.dokumanlar?row.dokumanlar.map( item => ( //pidm -> unique keyidir
 
                             <DeleteBox
-                                key={pidm}
-                                selectedPidm={pidm}
-                                dokuman_name={dokuman_name}
-                                yayin_name={yayin_name}
-                                store={store}
+                                key={item.pidm}
+                                selectedPidm={item.pidm}
+                                dokuman_name={item.dokuman_name}
+                                yayin_name={item.yayin_name}
+                                params = {params}
                             />
 
-                        ))}
+                        )):null}
                         <AddBox
-                            birim_pidm={key.birim_pidm}
-                            store={store}
+                            birim_pidm={row.birim_pidm}
+                            params = {params}
                         />
-
-
 
                 </Table.Cell>
               </Table.Row>
-            ))}
+            )):null}
           </Table.Body>
         </Table>
       </div>
@@ -103,7 +96,7 @@ class SSDokumanlar extends PureComponent {
     const { isLoading, apiIsOnline } = this.state;
     return (
       <KVKKLayout>
-        {!isLoading && apiIsOnline? this.render_()
+        {!isLoading && apiIsOnline? this.myRender()
          : !isLoading&&!apiIsOnline? <MyMessage error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
          : <MyLoader /> // sayfa ilk yüklendiğinde ekranda birşey gözükmemesi için null yapıldı.. buraya loading koyabilirsin.
         }
@@ -113,5 +106,5 @@ class SSDokumanlar extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({ data: state.data });
+const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid });
 export default connect(mapStateToProps)(SSDokumanlar);

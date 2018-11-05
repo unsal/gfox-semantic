@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Table, Message, Dropdown, Icon } from "semantic-ui-react";
+import { Table, Dropdown, Icon } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
 
 import axios from "axios";
@@ -7,14 +7,14 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { store } from "../../../../reducer";
-import { updateStoreData, updateStoreMode } from "../../../../reducer/actions";
+import { updateStoreMode } from "../../../../reducer/actions";
 
 import AddBox from "./addbox";
 import LabelBox from "./labelbox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {MyLoader, MyMessage, getOptions}  from '../../myComponents'
+import {MyLoader, MyMessage,refreshStoreData2, createDropdownOptions}  from '../../myComponents'
 
 import _ from 'lodash';
 
@@ -23,13 +23,8 @@ class KVProfil extends PureComponent {
   state = {
 
     //URLs
-    URL_GET: config.URL_GET_KVPROFIL,
-    URL_ADD: config.URL_ADD_KVPROFIL,
-
     didMount: false,
     isLoading: true,
-
-    apiIsOnline: false,
 
     //Dropdown options
     optionsProfiller: [],
@@ -48,33 +43,21 @@ class KVProfil extends PureComponent {
 
   };
 
-  refreshStoreData= ()=> {
-    const {URL_GET} = this.state;
-    axios
-      .get(URL_GET)
-      .then(json => {
-        const data = json.data;
-        store.dispatch(updateStoreData(data)); //store data güncelle
-        this.setState({ apiIsOnline: true, didMount: true });
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ apiIsOnline: false, didMount: true });
-      });
-  }
-
 
   async componentDidMount() { //Dropdownlar dolsun diye async kullanıldı..
+    const {cid, uid} = this.props
 
-    const optionsProfiller  = await getOptions(config.URL_GET_PROFILLER);
-    const optionsBirimler   = await getOptions(config.URL_GET_BIRIMLER);
-    const optionsKV         = await getOptions(config.URL_GET_KV);
+    const optionsProfiller  = await createDropdownOptions(config.URL_GET_PROFILLER, cid);
+    const optionsBirimler   = await createDropdownOptions(config.URL_GET_BIRIMLER, cid);
+    const optionsKV         = await createDropdownOptions(config.URL_GET_KV, cid);
 
-    await this.setState({optionsProfiller, optionsBirimler, optionsKV }, this.refreshStoreData()) //callback func
+    await this.setState({optionsProfiller, optionsBirimler, optionsKV, cid, uid, didMount: true },
+    refreshStoreData2(store, cid, config.URL_GET_KVPROFIL)) //callback func
 
     await store.dispatch(updateStoreMode('DEFAULT'))
 
   }
+
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.didMount !== this.state.didMount) {
@@ -90,19 +73,15 @@ class KVProfil extends PureComponent {
 
   handleSubmit= async (event)=>{
     event.preventDefault();
-    const {URL_ADD, profil_pidm, birim_pidm, kv_values}= this.state;
+    const {profil_pidm, birim_pidm, kv_values, cid, uid}= this.state
     const data = await kv_values.map(item=>item) //convert [array] to [{json}] for data post
-    const params = await {profil_pidm, birim_pidm, data}
+    const params = await {profil_pidm, birim_pidm, data, cid, uid}
     console.log('inserted successfully')
 
     try {
-        const config = { headers: {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '*'}
-    }
-        await axios.post(URL_ADD, params, config)
+        await axios.post(config.URL_ADD_KVPROFIL, params, config.axios)
         await this.setState({ error: false, profil_value:0, birim_value:0, kv_values:[], success:true })
-        await this.refreshStoreData()
+        await refreshStoreData2(store, cid, config.URL_GET_KVPROFIL)
     } catch (err) {
           console.log("Hata!",err);
           this.setState({ error: true })
@@ -120,14 +99,6 @@ class KVProfil extends PureComponent {
               /></div>
   }
 
-  // AddKVButton= () =>{
-  //   return <div><Icon name="add circle"
-  //                 link
-  //                 size="large"
-  //                 color="olive"
-  //                 onClick={this.handleSubmitKV}
-  //             /></div>
-  // }
 
   handleChangeProfil = (event, data) => {
     event.preventDefault()
@@ -156,7 +127,7 @@ class KVProfil extends PureComponent {
     await this.setState({ kv_values, error, success });
   }
 
-  RenderTableForm=()=> {
+  myRenderForm=()=> {
     const cellStyle= {overflow: 'visible', backgroundColor: '#fff'}
     return <Table.Row>
               <Table.Cell style={cellStyle}>
@@ -194,9 +165,11 @@ class KVProfil extends PureComponent {
 
   DataCell = (props) => {
   const {rowPidm, data} = props
+  const {optionsKV} = this.state
+  const params = {rowPidm, optionsKV}
 
   return <div>
-      {JSON.stringify(data)==="[]"?null:
+      {data?JSON.stringify(data)==="[]"?null:
                        data.map( ({pidm, name }) => ( //related_item_name: api tarafında kurumlar, toplamakanallari ve kullanilansistemler için tek bir common api yazıldığı için: ordan gelen kolon adıdır
                       // related_item_pidm yerine pidm kullanıldu çünkü: tablodaki unique kayıt pidmine ihtiyaç var..
                         <LabelBox
@@ -204,21 +177,19 @@ class KVProfil extends PureComponent {
                             rowPidm = {rowPidm} //row pidm for updating particulary this record
                             selectedPidm={pidm} //remove this item from selected KV's
                             name={name} //printing name on screen for onClick this name
-                            store={store} //for refreshStoreData
                             dataCell = {data.map(({pidm})=>pidm)} //işaretli hücrenin içindeki datayı sildikten sonra güncelleyip db'ye basmak için...
                         />
 
-                        ))}
+                        )):null}
 
                             <AddBox
-                                rowPidm={rowPidm} //update edilecek pidm
-                                store={store}
-                                dataCell = {data.map(({pidm})=>pidm)}
+                                dataCell = {data?data.map(({pidm})=>pidm):null}
+                                params = {params}
                             />
       </div>
   }
 
-  RenderTable=()=> {
+  myRender=()=> {
     const { data } = this.props; //data > from reducer
     const headerBGColor = "#f3f3f3"
 
@@ -247,7 +218,7 @@ class KVProfil extends PureComponent {
 
           <Table.Body>
 
-            <this.RenderTableForm />
+            <this.myRenderForm />
 
            {_.size(data)===0?null:
            data.map((key) => (
@@ -268,14 +239,12 @@ class KVProfil extends PureComponent {
 
 
   render() {
-    const { isLoading, apiIsOnline } = this.state;
+    const { isLoading } = this.state;
     return (
 
       <KVKKLayout>
         {
-         !isLoading && apiIsOnline? <this.RenderTable />:
-          !isLoading&&!apiIsOnline? <Message error header='API Bağlantı Hatası' content='Veriye erişilemiyor...' />:
-            <MyLoader />
+         isLoading? <MyLoader />:<this.myRender />
         }
 
       </KVKKLayout>
@@ -285,5 +254,5 @@ class KVProfil extends PureComponent {
 }
 
 
-const mapStateToProps = state => ({ data: state.data, mode: state.mode });
+const mapStateToProps = state => ({ data: state.data, mode: state.mode, cid: state.cid, uid: state.uid });
 export default connect(mapStateToProps)(KVProfil);

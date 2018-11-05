@@ -3,9 +3,7 @@ import {Icon, Dropdown, Segment, Grid } from "semantic-ui-react";
 import {getOffset} from "../../myComponents";
 import { config } from "../../../../config";
 import axios from "axios";
-import { updateStoreData } from "../../../../reducer/actions";
-import {MyMessage} from "../../myComponents";
-import _ from 'lodash';
+import {MyMessage, refreshStoreData2, createDropdownOptions, createYayindurumlariOptions} from "../../myComponents";
 
 // SS ADDBOX DOKUMAN
 class AddBox extends PureComponent {
@@ -18,97 +16,33 @@ class AddBox extends PureComponent {
      selectedPidm: 0, //seçili tanımı silmek için
 
      offset: [],
-     optionsDokumanlar: [],
-     optionsYayinDurumlari: [],
 
      error: false,
      success: false,
      message: '',
 
-     birim_pidm: this.props.birim_pidm,
      dokuman_pidm: 0,
      yayindurumu_pidm: 0, //Dropdown'dan selecet edilecek pidm için
 
   }
 
-  loadDokumanlarOptions =()=> {
-    //Dropdown için key, text, value formatında
-    const url= config.URL_GetTanimlar + "/dokumanlar";
-    let options =[];
-
-    axios
-      .get(url) //api den data yükler
-      .then(json => {
-        const data = json.data;
-        data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
-      })
-      .then(()=>{
-        this.setState({ optionsDokumanlar: options })
-      })
-      .catch(err => {
-        console.log("Dropdown Dokümanlar yüklenemedi!");
-        console.log(err);
-        this.setState({ optionsDokumanlar: [], error:true, success:false })
-      });
-
-      return null;
-  }
-
-  loadYayinDurumlariOptions =()=> {
-    //Dropdown için key, text, value formatında
-    const url= config.URL_GetTanimlar + "/yayindurumlari";
-    let options =[];
-
-    axios
-      .get(url) //api den data yükler
-      .then(json => {
-        const data = json.data;
-        data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
-      })
-      .then(()=>{
-        this.setState({ optionsYayinDurumlari: options })
-      })
-      .catch(err => {
-        console.log("Dropdown Yayın Durumları yüklenemedi!");
-        console.log(err);
-        this.setState({ optionsYayinDurumlari: [], error:true, success:false })
-      });
-
-      return null;
-  }
-
-  refreshStoreData =() => {
-    const url = config.URL_GetSSDokumanlar;
-    const store = this.props.store;
-
-    axios
-      .get(url)
-      .then(json => {
-        const data = _.size(json.data)>0?json.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-        this.setState({ error:false, succes: true})
-        // console.log("store refresh successfully")
-      })
-      .catch(err => {
-        this.setState({ error: true, success: false})
-        console.log(err);
-      });
-  }
-
   // Sil onayı
   handleSubmit = (event) => {
     event.preventDefault();
-    const url= config.URL_AddSSDokumanlar;
-
+    const URL_ADD = config.URL_AddSSDokumanlar
+    const URL_GET = config.URL_GetSSDokumanlar
+    const {store, cid } = this.state
     const form = new FormData();
 
     form.set("birim_pidm", this.state.birim_pidm);
     form.set("dokuman_pidm", this.state.dokuman_pidm);
     form.set("yayin_pidm", this.state.yayindurumu_pidm);
+    form.set("cid", this.state.cid);
+    form.set("uid", this.state.uid);
 
-    axios({ method: "POST", url: url, data: form })
+    axios({ method: "POST", url: URL_ADD, data: form })
       .then(() => {
-        this.refreshStoreData();
+        refreshStoreData2(store, cid, URL_GET);
         this.setState({ error: false, success: true })
       })
       .catch(err => {
@@ -118,8 +52,13 @@ class AddBox extends PureComponent {
 
   };
 
-  handleAddMode =(selectedPidm)=>{
-    this.setState({ addMode: true, error: false, selectedPidm }); //bir önceki hatadan 2sn içnde kapanan errmessagedan dolayı error:false set edildi.
+  handleAddMode =async (selectedPidm)=>{
+    const {cid} =  this.state
+
+    //Addbox için
+    const optionsYayindurumlari =  await createYayindurumlariOptions()
+    const optionsDokumanlar =  await createDropdownOptions(config.URL_GET_DOKUMANLAR, cid)
+    await this.setState({ addMode: true, error: false, selectedPidm, optionsYayindurumlari, optionsDokumanlar }); //bir önceki hatadan 2sn içnde kapanan errmessagedan dolayı error:false set edildi.
   }
 
   handleClose =()=>{
@@ -152,6 +91,8 @@ class AddBox extends PureComponent {
                 padding: "0px", // aşağıda segment->grid content arasında boşluk bırakmaz. gridde de margin=0 yaparsan aralarda boşluk kalmaz
               }
 
+    const {optionsDokumanlar, optionsYayindurumlari} = this.state
+
     return   <Segment basic compact size='mini' style={styleDD}>
                 <Grid celled columns={2} style={{ margin: '0px'}}>
 
@@ -180,7 +121,7 @@ class AddBox extends PureComponent {
                               fluid // sağa doğru uzar
                               placeholder='Doküman seçin'
                               search selection
-                              options={this.state.optionsDokumanlar}
+                              options={optionsDokumanlar}
                               onChange = {this.handleChangeDokuman}
                           />
                           <Dropdown
@@ -191,7 +132,7 @@ class AddBox extends PureComponent {
                               compact
                               search selection
                               placeholder='Yayın Durumu'
-                              options={this.state.optionsYayinDurumlari}
+                              options={optionsYayindurumlari}
                               onChange = {this.handleChangeYayinDurumu}
                               style = {{ marginTop:"5px" }}
                           />
@@ -201,12 +142,11 @@ class AddBox extends PureComponent {
               </Segment>
   }
 
-componentDidMount() {
-  this.setState({ didMount: true })
-
-  this.loadDokumanlarOptions();
-  this.loadYayinDurumlariOptions();
-}
+ componentDidMount() {
+  const {store, cid, uid} = this.props.params
+  const {birim_pidm} = this.props
+  this.setState({ didMount: true, store, cid, uid, birim_pidm })
+ }
 
 componentDidUpdate(prevProps, prevState) {
   if (prevState.didMount !== this.state.didMount) {

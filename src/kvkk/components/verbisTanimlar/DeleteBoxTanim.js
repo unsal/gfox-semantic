@@ -2,30 +2,30 @@ import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import { config } from "../../../config";
 import axios from "axios";
-import { updateStoreData } from "../../../reducer/actions";
-import {MyMessage} from "../myComponents";
+import {MyMessage, refreshStoreData2} from "../myComponents";
 
 class DeleteBoxTanim extends PureComponent {
   // props: id, pidm, name, store, data
-  constructor(props) {
-    super(props);
-    this.state = {
+
+   state = {
      url: config.URL_DelTanimlar,
      error: false,
 
      deleteMode: false,
      selectedPidm: 0 //seçili tanımı silmek için
-    };
   }
 
   // Sil onayı
-  approveDelete = (event) => {
+  approveDelete =  (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    const { id, pidm, data, store } = this.props;
-    formData.set("id", id);
-    formData.set("pidm", pidm);
+    const { id, cid, store, URL_GET } = this.props.params;
+    const { pidm } = this.props
+
+    formData.set("id", id)
+    formData.set("pidm", pidm)
+    formData.set("cid", cid)
 
     axios({
       method: "POST",
@@ -35,8 +35,9 @@ class DeleteBoxTanim extends PureComponent {
     })
       .then(() => {
         // Delete Table Row
-        const _data = data.filter(row => row.pidm !== pidm);
-        store.dispatch(updateStoreData(_data));
+        // const _data = data.filter(row => row.pidm !== pidm);
+        // store.dispatch(updateStoreData(_data));
+        refreshStoreData2(store, cid, URL_GET );
       })
       .then(
           this.setState({ error:false })
@@ -58,14 +59,15 @@ class DeleteBoxTanim extends PureComponent {
 
   render() {
     const color = this.state.deleteMode?'red':null;
+    const {pidm, name} = this.props
     return (
       <div>
         {/* <Icon color="grey" size="small" name="remove circle" onClick={this.show("mini")}/> */}
-        <Label color={color} key={this.props.pidm} as='a' content={this.props.name.toUpperCase()} onRemove={()=>this.handleDelete(this.props.pidm)} />
+        <Label color={color} key={pidm} as='a' content={name} onRemove={()=>this.handleDelete(pidm)} />
 
           {this.state.error?
                     <MyMessage error header='Kayıt Silinemedi!' content='Silme İşleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.' />
-                    :this.state.deleteMode &&this.state.selectedPidm===this.props.pidm?
+                    :this.state.deleteMode &&this.state.selectedPidm===pidm?
                         <div style={{ display: 'inline-block' }}>
                             <Icon   //(x)
                                 link

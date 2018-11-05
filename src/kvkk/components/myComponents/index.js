@@ -3,7 +3,7 @@ import { Message, Segment, Icon } from 'semantic-ui-react'
 import axios from "axios";
 import _ from 'lodash';
 import { updateStoreData, updateErrorStatus } from "../../../reducer/actions";
-
+import {config} from '../../../config'
 
 export const upperCase=string=>
 {
@@ -85,22 +85,8 @@ export const getOffset = (element)=> {
   // get Options for Dropdown components. !!! only works for pidm, name included Tanimlar tables..
 
 
-   export const getOptions =  async URL => {
+   export const getOptions =  async (URL) => {
     let options = []
-
-    //  await axios // bu işlem bitmeden en alttaki return işlemi yapılmaz
-    //     .get(URL)
-    //     .then(json => {
-    //       const data = json.data;
-    //       data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}))
-    //     })
-    //     .catch(err => {
-    //       console.log("myComponents > getOptions() hatası!", err);
-    //     });
-
-    // return options;
-
-    //Yukardaki yerine çok daha az kod ile Async Await kullanımı ile..
 
     const response = await axios.get(URL)
         try {
@@ -135,6 +121,20 @@ export const refreshStoreData = async (URL, store) => {
       // store.dispatch(updateStoreError(true))
       console.log(err)
     }
+}
+
+export const refreshStoreData2 = (store, cid, URL_GET) => {
+  const params  = {cid}
+
+    try {
+      axios.post(URL_GET, params, config.axios)
+      .then(result => {
+        const data = _.size(result.data)>0?result.data:[];
+        store.dispatch(updateStoreData(data)); //store data güncelle
+      })
+    } catch (err) {
+          console.log("refreshStoreData hatası..",err);
+    }
 
 }
 
@@ -147,4 +147,48 @@ export const updateStoreError = (errorStatus, store) => {
   }
 
 }
+
+
+export const createDropdownOptions = async (URL_OPTIONS, cid) => {
+//{pidm:, text:, value:} for Semantic Dropdown Component. cid=> her kurum için ayrı ayrı
+  const params  = {cid}
+  let options =[]
+
+  try {
+    const result = await axios.post(URL_OPTIONS, params, config.axios)
+    const data = await _.size(result.data)>0?result.data:[];
+    await data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
+
+  } catch (err) {
+        console.log("myComponents->createDropdownOptions() hatası..",err);
+        options = []
+  }
+
+  return options
+}
+
+
+export const createYayindurumlariOptions = async () => {
+  //{pidm:, text:, value:} for Semantic Dropdown Component. cid=> her kurum için ayrı ayrı
+    const URL_GET = config.URL_GET_YAYINDURUMLARI
+    const params  = {cid:'0'} //yayın durumları için  cid'ye ihtiyaç duyulmadığından
+    let options =[]
+
+    try {
+      const result = await axios.post(URL_GET, params, config)
+      const data = await _.size(result.data)>0?result.data:[];
+      await data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
+
+    } catch (err) {
+          console.log("myComponents->createYayindurumlariOptions() hatası..",err);
+          options = []
+    }
+
+    return options
+  }
+
+
+
+
+
 

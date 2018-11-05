@@ -1,9 +1,11 @@
 import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
-import {getOffset, removeDuplicates, refreshStoreData} from "../../myComponents";
+import {getOffset, removeDuplicates, refreshStoreData2, createDropdownOptions} from "../../myComponents";
 import axios from "axios";
 import "../../../kvkk.css";
 import {config} from '../../../../config'
+import {store} from "../../../../reducer"
+import { connect } from "react-redux";
 
 // ADDBOX KURUM
 class AddBox extends PureComponent {
@@ -22,40 +24,6 @@ class AddBox extends PureComponent {
 
   }
 
-  getOptionsURL() {
-      const {id} = this.props
-      if (id==='ia') {
-          return config.URL_GET_ISLEMEAMACLARI
-      } else if (id==='pa') {
-          return config.URL_GET_PAYLASIMAMACLARI
-      } else if (id==='ps') {
-          return config.URL_GET_PAYLASIMSEKILLERI
-      } else return null
-  }
-
-  loadDropdownOptions =()=> {
-    //Dropdown için key, text, value formatında
-    const URL_OPTIONS= this.getOptionsURL()
-    let options =[];
-
-    axios
-      .get(URL_OPTIONS) //api den data yükler
-      .then(json => {
-        const data = json.data;
-        data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
-      })
-      .then(()=>{
-        this.setState({ options })
-      })
-      .catch(err => {
-        console.log("Dropdown yüklenemedi!");
-        console.log(err);
-        this.setState({ options: [], error:true})
-      });
-
-      return null;
-  }
-
   concatDatas = async (data1, data2)=>{
     // cell > varolan liteye > dropdown seçilmişleri ekler..
     let newData = []
@@ -72,25 +40,21 @@ class AddBox extends PureComponent {
   // Ekleme onayı
   handleSubmit = async (event) => {
     event.preventDefault();
-    const URL_GET = config.URL_GET_KVPAYLASIM //refreshStoreData için
-    const URL_UPDATE= config.URL_UPDATE_KVPAYLASIM+"/"+this.props.id // ../ia, ../pa, ../ps
-    const {dataCell, store}=this.props
-    const {selectedData} = this.state
-    const pidm = this.props.rowPidm
+    const {selectedData, cid, uid, id} = this.state
+    const URL_UPDATE= config.URL_UPDATE_KVPAYLASIM+"/"+id // ../ia, ../pa, ../ps
+    const {dataCell, rowPidm}=this.props
+
+    const pidm = rowPidm
 
     let data = await this.concatDatas(dataCell, selectedData)
 
-    const params = {pidm, data}
+    const params = {pidm, data, uid}
 
     try {
-        const config = { headers: {
-                          'Content-Type': 'application/json',
-                          'Access-Control-Allow-Origin': '*'}
-    }
-        await axios.post(URL_UPDATE, params, config)
+        await axios.post(URL_UPDATE, params, config.axios)
 
         await this.setState({ error: false, success:true })
-        await refreshStoreData(URL_GET, store)
+        await refreshStoreData2(store, cid, config.URL_GET_KVPAYLASIM)
         await this.handleClose();
     } catch (err) {
           console.log("Update API Error!",err);
@@ -100,7 +64,21 @@ class AddBox extends PureComponent {
   };
 
   handleAdd = async ()=>{
-    await this.setState({ addMode: true });
+    const {id, cid} = this.state
+
+    let options =null
+
+      if (id==='ia') {
+        options = await createDropdownOptions(config.URL_GET_ISLEMEAMACLARI, cid);
+      } else if (id==='pa') {
+        options = await createDropdownOptions(config.URL_GET_PAYLASIMAMACLARI, cid);
+      } else if (id==='ps') {
+        options = await createDropdownOptions(config.URL_GET_PAYLASIMSEKILLERI, cid);
+      } else options = null
+
+      const addMode = true
+      await this.setState({options, addMode})
+
   }
 
   handleClose = async ()=>{
@@ -159,10 +137,10 @@ class AddBox extends PureComponent {
   }
 
 componentDidMount() {
+  const {id, cid, uid} = this.props
   const didMount = true;
-  this.setState({ didMount })
+  this.setState({didMount, id, cid, uid})
 
-  this.loadDropdownOptions();
 }
 
 componentDidUpdate(prevProps, prevState) {
@@ -182,8 +160,6 @@ AddIcon =(props) =>{
                                 onClick={this.handleAdd}
                               />
 }
-
-
 
 ErrorMessage = () => {
   return <Message
@@ -208,4 +184,5 @@ ErrorMessage = () => {
       }
   }
 
-export default AddBox;
+  const mapStateToProps = state => ({ cid: state.cid, uid: state.uid });
+  export default connect(mapStateToProps)(AddBox);
