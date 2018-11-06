@@ -40,10 +40,10 @@ class Tanimlar extends PureComponent {
 
   async componentDidMount() {
      const formId = this.props.id
+     const {cid} = this.props
 
-     this.setState({formId})
-    refreshStoreData2(store, this.props.cid, this.state.URL_GET)
-     this.setState({ apiIsOnline: true, didMount: true });
+     await refreshStoreData2(store, cid, this.state.URL_GET)
+     this.setState({ apiIsOnline: true, cid, formId, didMount: true });
   }
 
   // Herzaman iki değişken kullanmalısın yoksa hata verir

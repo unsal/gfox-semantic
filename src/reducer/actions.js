@@ -29,7 +29,7 @@ export const updateStoreAuthenticated = (authenticated) => {
   return {type: GFOX_AUTH, authenticated}
 }
 
-export const updateStoreCompany = (cid) => {
+export const updateStoreCID = (cid) => {
   return {type: GFOX_CID, cid}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }
 

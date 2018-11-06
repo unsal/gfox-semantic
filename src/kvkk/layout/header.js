@@ -5,7 +5,6 @@ import {
   Menu,
   Icon,
   Dropdown,
-  Label
 } from "semantic-ui-react";
 import logo from "../../assets/img/logo2.png";
 import notify from "../../assets/img/notify.png";
@@ -16,9 +15,7 @@ import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import {store} from '../../reducer';
 import { updateStoreNewRequest } from '../../reducer/actions';
-
-import { config } from "../../config"
-import axios from "axios"
+import {DropboxSelectCID} from '../components/myComponents'
 
 
 const Logo = () => (
@@ -27,18 +24,13 @@ const Logo = () => (
 
 class KVKKHeader extends PureComponent  {
   state ={
-      optionsCids: []
+      // optionsCids: []
   }
+
 
   handleClick=()=>{
-      const nr = this.props.newRequest
-      store.dispatch(updateStoreNewRequest(!nr));
-  }
-
-  componentDidMount() {
-    const optionsCids = this.createCidOptions()
-    this.setState({ optionsCids })
-    console.log('options: ',optionsCids)
+    const nr = this.props.newRequest
+    store.dispatch(updateStoreNewRequest(!nr));
   }
 
   handleClickAyarlar=(event)=>{
@@ -46,23 +38,6 @@ class KVKKHeader extends PureComponent  {
     window.location.reload();
   }
 
-createCidOptions = async () => {
-    const {uid} = this.props
-    const params  = {uid}
-    let options =[]
-
-    try {
-      const result = await axios.post(config.URL_GET_AUTH_CIDS, params, config.axios)
-      const data = await result.data?result.data:[]
-      await data.map( ({cid, name}) =>  options = options.concat({'key':cid, 'text':name, 'value':cid}) )
-
-    } catch (err) {
-          console.log("myComponents->createCidOptions() hatası..",err);
-          options = []
-    }
-
-    return options
-  }
 
 
   style = {
@@ -70,7 +45,7 @@ createCidOptions = async () => {
   }
 
   render() {
-    const options = this.state.optionsCids
+
 
     return (
     <Menu fixed="top" inverted>
@@ -145,12 +120,7 @@ createCidOptions = async () => {
           Ayarlar
         </Menu.Item>
         <Menu.Item header position='right'>
-
-        {/* <Dropdown options={options} /> */}
-          <Label as='a' image color='black'>
-              <Icon name="database" size="big"/>
-              Özyeğin Üniversitesi
-          </Label>
+        <DropboxSelectCID cid={this.props.cid} uid={this.props.uid}/>
         </Menu.Item>
 
       </Container>

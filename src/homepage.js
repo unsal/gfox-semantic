@@ -14,10 +14,13 @@ import {
   Segment,
   Sidebar,
   Visibility,
+  Modal
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import ImageBanner from "./assets/img/cid.jpg"
+import {DropboxSelectCID} from './kvkk/components/myComponents'
+import { connect } from 'react-redux';
 
-// import logo from "./assets/img/logo2.png";
 
 // const Logo = () => <Image src={logo} size='small' />
 
@@ -70,8 +73,26 @@ HomepageHeading.propTypes = {
 class DesktopContainer extends PureComponent {
   state = {}
 
+
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
+
+
+ SelectCID = (props) => (
+      <Modal trigger={<Button inverted >{props.children}</Button>} centered={false} closeIcon>
+        <Modal.Header>KVKK Envanter Yönetimi için Şirketinizi Seçin</Modal.Header>
+        <Modal.Content image>
+        <Image wrapped size='medium' src={ImageBanner} />
+          <Modal.Description>
+            <Header>Şirket</Header>
+            <p>Tüm işlemleriniz seçmiş olduğunuz şirket üzerinden gerçekleştirilecektir.</p>
+            <p>Uygulama ekranlarından dilediğiniz zaman seçiminizi değiştirebilirsiniz</p>
+            <DropboxSelectCID cid={this.props.cid} uid={this.props.uid} />
+            {/* <Button style={{display: 'block', marginTop:'60px'}} basic content='Devam' /> */}
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
+    )
 
   render() {
     const { children } = this.props
@@ -105,9 +126,7 @@ class DesktopContainer extends PureComponent {
                 <Menu.Item as='a'>Hizmetlerimiz</Menu.Item>
                 <Menu.Item as='a'>İletişim</Menu.Item>
                 <Menu.Item position='right'>
-                  <Button as='a' inverted={!fixed}>
-                    Giriş
-                  </Button>
+                  <this.SelectCID> Giriş</this.SelectCID>
                 </Menu.Item>
               </Container>
             </Menu>
@@ -336,5 +355,8 @@ const Homepage = () => (
   </ResponsiveContainer>
 )
 
+
+const mapStateToProps = (state) => ({ cid: state.cid, uid: state.uid})
+connect(mapStateToProps)(DesktopContainer)
 
 export default Homepage

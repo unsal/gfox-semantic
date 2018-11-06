@@ -1,9 +1,12 @@
 import React, { PureComponent } from 'react'
-import { Message, Segment, Icon } from 'semantic-ui-react'
+import { Message, Segment, Icon, Dropdown, Button } from 'semantic-ui-react'
 import axios from "axios";
 import _ from 'lodash';
 import { updateStoreData, updateErrorStatus } from "../../../reducer/actions";
 import {config} from '../../../config'
+
+import {store} from '../../../reducer';
+import { updateStoreCID } from '../../../reducer/actions';
 
 export const upperCase=string=>
 {
@@ -188,7 +191,56 @@ export const createYayindurumlariOptions = async () => {
   }
 
 
+  export const createCidOptions = async (uid) => {
+    const params  = {uid}
+    let options =[]
+
+    try {
+      const result = await axios.post(config.URL_GET_AUTH_CIDS, params, config.axios)
+      const data = await result.data?result.data:[]
+      await data.map( ({cid, name}) =>  options = options.concat({'key':cid, 'text':name, 'value':cid}) )
+
+    } catch (err) {
+          console.log("myComponents->createCidOptions() hatası..",err);
+          options = []
+    }
+    return options
+
+  }
 
 
+   // Change Cid Dropbox for using everywhere
+   export class DropboxSelectCID extends PureComponent {
+     state = {
+        options: [],
+        cid: 1
+     }
+
+     async componentDidMount() {
+       const {cid, uid} = await this.props
+       const options = await createCidOptions(uid)
+       await this.setState({ options, cid })
+     }
+
+     handleChange = async (e, data)=> {
+      e.preventDefault()
+      const cid = await data.value
+      await this.setState({ cid })
+      await store.dispatch(updateStoreCID(cid))
+    }
+
+    render() {
+        const {options, cid} = this.state
+        return <Button.Group color='black'>
+                <Dropdown
+                    value={cid}
+                    options={options}
+                    onChange={this.handleChange}
+                    button
+                    placeholder='Seçiminiz?'
+                />
+                </Button.Group>
+          }
+          }
 
 
