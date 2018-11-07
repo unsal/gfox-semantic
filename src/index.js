@@ -37,11 +37,14 @@ import KVTalepler from './kvkk/components/verbis/kvtalepler'
 import { Provider } from 'react-redux';
 import { store } from './reducer'
 
+import LoginForm from './login'
+
 ReactDOM.render(
 <Provider store = {store}>
 <Router>
  <Switch>
     <Route exact path='/' component={App} />
+    <Route exact path='/login' component={LoginForm} />
     <Route exact path='/kvkk' component={KVKK} />
     <Route exact path='/kvkk/tanimlar/profiller' component={Profiller} />
     <Route exact path='/kvkk/tanimlar/birimler' component={Birimler} />

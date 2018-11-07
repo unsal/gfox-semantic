@@ -4,7 +4,7 @@ export const GFOX_MODE = "GFOX_MODE"; // ADD, DELETE, UPDATE, DEFAULT
 export const GFOX_ERROR = "GFOX_ERROR"
 export const GFOX_CID = "GFOX_CID"
 export const GFOX_UID = "GFOX_UID"
-export const GFOX_AUTH = "GFOX_AUTH"
+export const GFOX_TOKEN = "GFOX_TOKEN"
 
 
 // KV Talepleri Yeni talep varsa..
@@ -24,16 +24,15 @@ export const updateErrorStatus = (error) => {
   return {type: GFOX_ERROR, error}
 }
 
-//Login olunmuşsa store'a true atar
-export const updateStoreAuthenticated = (authenticated) => {
-  return {type: GFOX_AUTH, authenticated}
-}
-
 export const updateStoreCID = (cid) => {
   return {type: GFOX_CID, cid}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }
 
-export const updateStoreUser = (uid) => {
+export const updateStoreUID = (uid) => {
   return {type: GFOX_UID, uid}  //data: [{cid:1, uid:'admin@grcfox.com}]
+}
+
+export const updateStoreToken = (token) => {
+  return {type: GFOX_TOKEN, token}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }
 

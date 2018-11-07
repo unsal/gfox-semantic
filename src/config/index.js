@@ -64,6 +64,7 @@ export const config = {
 
   //************* AUTH ************************
   URL_GET_AUTH_CIDS: apiHost+'/auth/cids',
+  URL_LOGIN: apiHost+'/auth/login',
 
   //axios GET, OST header için config
   axios: { headers: {

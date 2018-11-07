@@ -126,7 +126,8 @@ class DesktopContainer extends PureComponent {
                 <Menu.Item as='a'>Hizmetlerimiz</Menu.Item>
                 <Menu.Item as='a'>İletişim</Menu.Item>
                 <Menu.Item position='right'>
-                  <this.SelectCID> Giriş</this.SelectCID>
+                  {/* <this.SelectCID> Giriş</this.SelectCID> */}
+                  <Button as={Link} to='/login' inverted>Giriş</Button>
                 </Menu.Item>
               </Container>
             </Menu>

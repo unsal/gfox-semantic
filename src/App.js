@@ -4,16 +4,14 @@ import Homepage from './homepage';
 
 //Redux
 import { store } from "./reducer";
-import { updateStoreCID, updateStoreUser, updateStoreAuthenticated } from "./reducer/actions";
+import { updateStoreCID, updateStoreUID } from "./reducer/actions";
 
 class App extends PureComponent {
 
   componentDidMount() {
       // const auth = [{'cid':1, 'uid':'admin@grcfox.com'}]
+      store.dispatch(updateStoreUID('admin@grcfox.com'))
       store.dispatch(updateStoreCID(1))
-      store.dispatch(updateStoreUser('admin@grcfox.com'))
-      store.dispatch(updateStoreAuthenticated(true))
-
   }
 
   render() {

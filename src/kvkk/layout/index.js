@@ -9,7 +9,7 @@ import { connect } from "react-redux"
 // Header ve Footer şablonu için kullanılır..
 class KVKKLayout extends PureComponent {
     render() {
-        const authenticated = this.props.authenticated
+        const authenticated = true
         return (
             authenticated?<div>
                                 <KVKKHeader isNotified={true}/>

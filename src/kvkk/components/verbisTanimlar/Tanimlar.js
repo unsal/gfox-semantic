@@ -137,7 +137,7 @@ class Tanimlar extends PureComponent {
                   <input type="hidden" name="id" value={id} />
 
                   {/* CheckBox: Dahili / Harici Sistem  */}
-                  {isSistemler?
+                  {isSistemler&&
                     <Form.Field width="2">
                       <label>Dahili Sistem</label>
                       <Checkbox
@@ -147,7 +147,6 @@ class Tanimlar extends PureComponent {
                           checked = {this.state.formLocal}
                       />
                     </Form.Field>
-                    : null
                   }
 
                   {/* Input: Name alani */}
@@ -167,7 +166,7 @@ class Tanimlar extends PureComponent {
                   </Form.Field>
 
 
-                    {isUlkeler?
+                    {isUlkeler&&
                       // Telefon Alan Kodu
                       <Form.Field width="4">
                       <Input
@@ -182,9 +181,9 @@ class Tanimlar extends PureComponent {
                           onKeyDown={this.handleKeyDown}
                           autoComplete = "off"
                       />
-                      </Form.Field>:null}
+                      </Form.Field>}
 
-                       {isUlkeler?
+                       {isUlkeler&&
                         <Form.Field width="2">
                           <label>Güvenli</label>
                           <Checkbox
@@ -194,7 +193,6 @@ class Tanimlar extends PureComponent {
                               // checked = {this.state.formSecure}
                           />
                         </Form.Field>
-                        : null
                       }
 
                   <Form.Field width="2">
