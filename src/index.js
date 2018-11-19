@@ -37,7 +37,7 @@ import KVTalepler from './kvkk/components/verbis/kvtalepler'
 import { Provider } from 'react-redux';
 import { store } from './reducer'
 
-import LoginForm from './login'
+import LoginForm from './auth'
 
 ReactDOM.render(
 <Provider store = {store}>

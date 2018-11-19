@@ -1,6 +1,6 @@
 import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
-import {getOffset, refreshStoreData2} from "../../myComponents";
+import {getOffset, refreshStoreData} from "../../myComponents";
 import axios from "axios";
 import "../../../kvkk.css";
 
@@ -77,7 +77,7 @@ class AddBox extends PureComponent {
         this.submit(related_item_pidm)
     ))
 
-    refreshStoreData2(this.state.store, this.state.cid, this.state.URL_GET);
+    refreshStoreData(this.state.store, this.state.cid, this.state.URL_GET);
     this.setState({error: false})
     this.handleClose();
 

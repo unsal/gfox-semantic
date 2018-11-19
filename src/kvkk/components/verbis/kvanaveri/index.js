@@ -13,7 +13,7 @@ import LabelBox from "./labelbox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {MyLoader, refreshStoreData2}  from '../../myComponents'
+import {refreshStoreData, LoadingSpinner}  from '../../myComponents'
 import AddForm from "./addform"
 
 // import axios from "axios";
@@ -23,33 +23,9 @@ class KVAnaveri extends PureComponent {
 
   state = {
 
-    didMount: false,
-    isLoading: true,
-    apiOnline: false,
-
     onMouseOverPidm: 0, //üzerine gelinen pidmi yakalmak ve sadece onun için X remove ikonu göstermek için
     birimLabelClicked: false,
 
-    error:false
-  }
-
-  async componentDidMount() { //Dropdownlar dolsun diye async kullanıldı..
-
-    const {cid, uid} = this.props
-
-    await refreshStoreData2(store, cid, config.URL_GET_KVANAVERI)
-    await this.setState({apiOnline: true, didMount: true, cid, uid})
-
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.didMount !== this.state.didMount) {
-      this.setState({ isLoading: false });
-    }
-  }
-
-  componentWillUnmount() {
-    this.setState( {isLoading: false, didMount: false} )
   }
 
   // İŞLEME AMAÇLARI
@@ -93,11 +69,9 @@ class KVAnaveri extends PureComponent {
 
     try {
         await axios.post(config.URL_DELETE_KVANAVERI, params, config.axios)
-        await this.setState({ error: false, success:true })
-        await refreshStoreData2(store, cid, config.URL_GET_KVANAVERI )
+        await refreshStoreData(store, cid, config.URL_GET_KVANAVERI )
     } catch (err) {
           console.log("KVAnaveri->delete entire row-> API Error!",err);
-          this.setState({ error: true })
     }
 
   }
@@ -168,7 +142,7 @@ class KVAnaveri extends PureComponent {
           <Table.Body>
 
 
-           {data?data.map((key) => (
+           {data&&data.map((key) => (
               <Table.Row  key={key.pidm}
                           onMouseOver={()=>this.setState({ onMouseOverPidm:key.pidm })}
                           onMouseLeave={()=>this.setState({ birimLabelClicked: false })} //silme menüsü  kalksın diye harekette
@@ -184,7 +158,7 @@ class KVAnaveri extends PureComponent {
                 <Table.Cell style={{ verticalAlign: 'top' }} > <this.DataCell id="ortamlar"   color='orange' rowPidm={key.pidm} data={key.ortamlar_data} /> </Table.Cell>
 
               </Table.Row>
-            )):null}
+            ))}
           </Table.Body>
         </Table>
       </div>
@@ -193,16 +167,15 @@ class KVAnaveri extends PureComponent {
 
 
   render() {
-    const { isLoading, apiOnline } = this.state;
+    const {cid} = this.props
+    const url = config.URL_GET_KVANAVERI
 
     return (
 
       <KVKKLayout>
-        {
-         !isLoading&&apiOnline? <this.myRender />:
-            <MyLoader />
-        }
-
+          <LoadingSpinner cid={cid} url={url}>
+              <this.myRender />
+          </LoadingSpinner>
       </KVKKLayout>
 
     );
@@ -210,5 +183,5 @@ class KVAnaveri extends PureComponent {
 }
 
 
-const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid  });
+const mapStateToProps = state => ({ data: state.data, cid: state.cid });
 export default connect(mapStateToProps)(KVAnaveri);

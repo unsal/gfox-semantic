@@ -14,17 +14,21 @@ import './Tanimlar.css';
 import '../../kvkk.css';
 import _ from 'lodash';
 
-import {refreshStoreData, MyMessage, LoadingSpinner} from "../myComponents"
+import {refreshStoreData, MyMessage, MyLoader, clearStoreData} from "../myComponents"
+
 
 class Tanimlar extends PureComponent {
 
     state = {
-
       URL_GET: config.URL_GetTanimlar+"/"+this.props.id,
+      // bu ikisi
+      mounted: false,
+      isLoading:true,
+
       apiHasInsertError: false, // kayıt eklerken
       searchString: '', // girilen texte göre datayı filtrelemesi için gerekli alan
       // Form Fields
-      formId: this.props.id,
+      formId: '',
       formLocal: false,
       formName: '',
       formPhoneArea: '',
@@ -32,6 +36,25 @@ class Tanimlar extends PureComponent {
 
       selectedTanimPidm: 0,   //Seçilmiş tanımı silmek için
     };
+
+   async componentDidMount() {
+        const formId =  this.props.id
+        const {cid} =  this.props
+        await refreshStoreData(store, cid, this.state.URL_GET)
+        await this.setState({ cid, formId, mounted: true})
+  }
+
+  // Herzaman iki değişken kullanmalısın yoksa hata verir
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.mounted !== this.state.mounted) {
+      this.setState({ isLoading: false });
+    }
+  }
+
+  componentWillUnmount() {
+    clearStoreData(store)
+  }
+
 
   handleSubmit =(event)=> {
     event.preventDefault();
@@ -305,14 +328,11 @@ class Tanimlar extends PureComponent {
     );
   }
 
-render() {
-    const {cid, id} = this.props
-    const url = config.URL_GetTanimlar+"/"+id
+  render() {
+    const { isLoading } = this.state;
     return (
-        <KVKKLayout>
-          <LoadingSpinner cid={cid} url={url}>
-              <this.myRender />
-          </LoadingSpinner>
+      <KVKKLayout>
+          { isLoading?<MyLoader />: <this.myRender />}
       </KVKKLayout>
     );
   }

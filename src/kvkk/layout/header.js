@@ -15,29 +15,29 @@ import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import {store} from '../../reducer';
 import { updateStoreNewRequest } from '../../reducer/actions';
-import {DropboxSelectCID} from '../components/myComponents'
+import {DropboxCID} from '../components/myComponents'
 
 
 const Logo = () => (
   <Image size="mini" src={logo} style={{ marginRight: "1.5em" }} />
 );
 
+
+
 class KVKKHeader extends PureComponent  {
   state ={
       // optionsCids: []
   }
-
 
   handleClick=()=>{
     const nr = this.props.newRequest
     store.dispatch(updateStoreNewRequest(!nr));
   }
 
-  handleClickAyarlar=(event)=>{
+  handleExit=(event)=>{
     event.preventDefault();
     window.location.reload();
   }
-
 
 
   style = {
@@ -45,7 +45,7 @@ class KVKKHeader extends PureComponent  {
   }
 
   render() {
-
+    const {cid, cidOptions} = this.props
 
     return (
     <Menu fixed="top" inverted>
@@ -54,7 +54,7 @@ class KVKKHeader extends PureComponent  {
           <Logo /> KVKK
         </Menu.Item>
 
-        <Dropdown item simple text="Veri Girişi">
+        {cid&&<Dropdown item simple text="Veri Girişi">
           <Dropdown.Menu style={this.style }>
 
             {/* TANIMLAR */}
@@ -100,28 +100,34 @@ class KVKKHeader extends PureComponent  {
             </Dropdown.Item>
 
           </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown>}
 
         {/* <Menu.Item header onClick={this.handleClick}> */}
-        <Menu.Item header as={Link} to='/kvkk/verbis/kvtalepler'>
+        {cid&&<Menu.Item header as={Link} to='/kvkk/verbis/kvtalepler'>
           {/* Talep varsa notifiy icon göster yoksa normal ikon.. */}
           {
             this.props.newRequest?<Image src={notify} style={{padding:"5px"}} alt="Notification"/>
             :<Icon name="phone volume" />
           }
           KV Talepleri
-        </Menu.Item>
-        <Menu.Item header as={Link} to="/">
+        </Menu.Item>}
+
+
+        {cid&&<Menu.Item header as={Link} to="/">
           <Icon name="search" />
           Sorgula
-        </Menu.Item>
-        <Menu.Item header onClick={this.handleClickAyarlar}>
-          <Icon name="setting" />
-          Ayarlar
-        </Menu.Item>
+        </Menu.Item>}
+
+        {/* Firma Seç   */}
         <Menu.Item header position='right'>
-        <DropboxSelectCID cid={this.props.cid} uid={this.props.uid}/>
+            <DropboxCID cid={cid} cidOptions={cidOptions}/>
         </Menu.Item>
+
+        {/* Çıkış */}
+        <Menu.Item header as={Link} to="/logout" onClick={this.handleExit}>
+           <Icon name='sign-out' size='large' color='grey'/>
+        </Menu.Item>
+
 
       </Container>
     </Menu>
@@ -129,5 +135,5 @@ class KVKKHeader extends PureComponent  {
   }
 }
 
-const mapStateToProps = (state) => ({ newRequest: state.newRequest, cid: state.cid, uid: state.uid})
+const mapStateToProps = (state) => ({ newRequest: state.newRequest, cid: state.cid, cidOptions: state.cidOptions})
 export default connect(mapStateToProps)(KVKKHeader)

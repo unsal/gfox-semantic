@@ -3,7 +3,7 @@ import { Button, Image, Modal, Icon, Form, Dropdown, Grid } from 'semantic-ui-re
 import { config } from "../../../../config";
 import axios from "axios";
 import ImageBanner from "../../../../assets/img/kvanaveri.jpg"
-import {refreshStoreData2, createDropdownOptions} from "../../myComponents"
+import {refreshStoreData, createDropdownOptions, MyLoader} from "../../myComponents"
 import {store} from "../../../../reducer"
 import { connect } from "react-redux";
 
@@ -36,12 +36,23 @@ class AddForm extends PureComponent {
   dokumanlarChanged: false,
   sistemlerChanged: false,
   dayanaklarChanged: false,
-  ortamlarChanged: false
+  ortamlarChanged: false,
+
+  isLoading: true,
+  mounted: false
   }
 
   componentDidMount() {
     const {cid, uid} = this.props
-    this.setState({ cid, uid })
+    this.loadDropdownComponents()
+    this.setState({ cid, uid, isLoading: false, mounted: true })
+
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.mounted !== this.state.mounted) {
+      this.setState({ isLoading: false });
+    }
   }
 
   clearFields = () => {
@@ -51,22 +62,31 @@ class AddForm extends PureComponent {
     })
   }
 
-   show = dimmer => async() => {
-    const {cid} = this.state
+  loadDropdownComponents = async ()=>{
+    const {cid} = this.props
 
-    const optionsBirimler    = await createDropdownOptions(config.URL_GET_BIRIMLER, cid);
-    const optionsKV          = await createDropdownOptions(config.URL_GET_KV, cid);
-    const optionsSureler     = await createDropdownOptions(config.URL_GET_SURELER, cid);
-    const optionsUlkeler     = await createDropdownOptions(config.URL_GET_ULKELER, cid);
-    const optionsKanallar    = await createDropdownOptions(config.URL_GET_KANALLAR, cid);
-    const optionsDokumanlar  = await createDropdownOptions(config.URL_GET_DOKUMANLAR, cid);
-    const optionsSistemler   = await createDropdownOptions(config.URL_GET_SISTEMLER, cid);
-    const optionsDayanaklar  = await createDropdownOptions(config.URL_GET_DAYANAKLAR, cid);
-    const optionsOrtamlar    = await createDropdownOptions(config.URL_GET_ORTAMLAR, cid);
+    const optionsBirimler    =  await createDropdownOptions(config.URL_GET_BIRIMLER, cid);
+    const optionsKV          =  await createDropdownOptions(config.URL_GET_KV, cid);
+    const optionsSureler     =  await createDropdownOptions(config.URL_GET_SURELER, cid);
+    const optionsUlkeler     =  await createDropdownOptions(config.URL_GET_ULKELER, cid);
+    const optionsKanallar    =  await createDropdownOptions(config.URL_GET_KANALLAR, cid);
+    const optionsDokumanlar  =  await createDropdownOptions(config.URL_GET_DOKUMANLAR, cid);
+    const optionsSistemler   =  await createDropdownOptions(config.URL_GET_SISTEMLER, cid);
+    const optionsDayanaklar  =  await createDropdownOptions(config.URL_GET_DAYANAKLAR, cid);
+    const optionsOrtamlar    =  await createDropdownOptions(config.URL_GET_ORTAMLAR, cid);
 
-    this.setState({ dimmer, open: true, optionsBirimler, optionsKV, optionsSureler,
+
+    await this.setState({ optionsBirimler, optionsKV, optionsSureler,
       optionsUlkeler, optionsKanallar, optionsDokumanlar,
-      optionsSistemler,optionsDayanaklar, optionsOrtamlar },this.clearFields())
+      optionsSistemler,optionsDayanaklar, optionsOrtamlar})
+  }
+
+
+   show = dimmer => async() => {
+    //  await this.loadDropdownComponents()
+      this.setState( { dimmer, open: true },
+        this.clearFields()
+        )
 
   }
 
@@ -92,8 +112,6 @@ class AddForm extends PureComponent {
     else if (id==="id_ortamlar")  { const ortamlar_pidms = data.value; this.setState({ ortamlar_pidms, error, success, ortamlarChanged:true }) }
   }
 
-
-
   FormFields=()=> {
    const style = { overflow: 'visible', width: '300px' }
    const {optionsBirimler, optionsKV, optionsSureler, optionsUlkeler, optionsKanallar,
@@ -104,7 +122,6 @@ class AddForm extends PureComponent {
          } = this.state
 
    return <Form>
-
               <Form.Field>
                <Dropdown id="id_birim"
                 placeholder="Süreç Sahibi"
@@ -243,7 +260,7 @@ class AddForm extends PureComponent {
                              open: false //close modal
                             })
 
-       await refreshStoreData2(store, cid, config.URL_GET_KVANAVERI )
+       await refreshStoreData(store, cid, config.URL_GET_KVANAVERI )
    } catch (err) {
          console.log("Hata!",err);
          this.setState({ error: true })
@@ -255,7 +272,7 @@ class AddForm extends PureComponent {
     const { open, dimmer } = this.state
 
     return (
-      <div style={{ float: 'left'}}>
+      this.state.isLoading?<MyLoader />:<div style={{ float: 'left'}}>
         <Icon name="add circle"
               link
               size="big"

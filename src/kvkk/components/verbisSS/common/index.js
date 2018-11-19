@@ -11,7 +11,7 @@ import DeleteBox from "./deletebox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {MyLoader, refreshStoreData2, createDropdownOptions} from '../../myComponents';
+import {MyLoader, refreshStoreData, createDropdownOptions} from '../../myComponents';
 
 
 class Common extends PureComponent {
@@ -40,7 +40,7 @@ class Common extends PureComponent {
   async componentDidMount() {
      const {cid} = this.props
      const {URL_OPTIONS, URL_GET} = this.state
-     await refreshStoreData2(store, cid, URL_GET)
+     await refreshStoreData(store, cid, URL_GET)
 
      const options = await createDropdownOptions(URL_OPTIONS, cid)
 

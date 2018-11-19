@@ -11,7 +11,7 @@ import { store } from "../../../../reducer";
 import AddBox from "./addbox";
 import DeleteBox from "./deletebox";
 
-import {MyMessage, MyLoader, refreshStoreData2} from "../../myComponents";
+import {MyMessage, MyLoader, refreshStoreData} from "../../myComponents";
 
 import '../../../kvkk.css';
 
@@ -30,7 +30,7 @@ class SSDokumanlar extends PureComponent {
 
       //Addbox için
       this.setState({ apiIsOnline: true, didMount: true });
-      await refreshStoreData2(store, cid, URL_GET)
+      await refreshStoreData(store, cid, URL_GET)
 
   }
 

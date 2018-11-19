@@ -13,6 +13,7 @@ export const upperCase=string=>
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+export const spinnerIcon = "firefox"
 
 // HTML elementin koordinatini getirmek için ara prosedür
 const offset=(element)=> {
@@ -78,11 +79,15 @@ export const getOffset = (element)=> {
   export const MyLoader = () => {
     return <div style={{ padding: "100px" }}>
       <Segment basic compact>
-        <Icon loading name="circle notch" size="big" />
-           <span>Yükleniyor...</span>
+        <Icon loading name={spinnerIcon} size="big" />
       </Segment>
     </div>
   }
+
+// loader küçük alanlar için
+export const MyLittleLoader = () => {
+  return <Icon loading name="spinner" size="large" />
+}
 
   //Somehow not WORKS!!
   // get Options for Dropdown components. !!! only works for pidm, name included Tanimlar tables..
@@ -115,30 +120,23 @@ export const removeDuplicates=(arr)=> {
 }
 
 
-export const refreshStoreData = async (URL, store) => {
-    const response = await axios.get(URL)
-    try {
-        const data = await _.size(response.data)>0?response.data:[]
-        await store.dispatch(updateStoreData(data))
-    } catch (err) {
-      // store.dispatch(updateStoreError(true))
-      console.log(err)
-    }
+export const clearStoreData = (store) => {
+  try {
+      store.dispatch(updateStoreData(null))
+  } catch (err) {
+      console.log('myComponents>clearStoreData ERROR!!')
+  }
 }
 
-export const refreshStoreData2 = (store, cid, URL_GET) => {
+export const refreshStoreData = async (store, cid, URL_GET) => {
   const params  = {cid}
-
     try {
-      axios.post(URL_GET, params, config.axios)
-      .then(result => {
-        const data = _.size(result.data)>0?result.data:[];
-        store.dispatch(updateStoreData(data)); //store data güncelle
-      })
+      const result = await axios.post(URL_GET, params, config.axios)
+      const data = await  _.size(result.data)>0?result.data:[];
+      await store.dispatch(updateStoreData(data)); //store data güncelle
     } catch (err) {
-          console.log("refreshStoreData hatası..",err);
+          console.log("mycomponents>refreshstoredata() hatası..",err);
     }
-
 }
 
 //Hata durumunu store'a atar..
@@ -191,35 +189,27 @@ export const createYayindurumlariOptions = async () => {
   }
 
 
-  export const createCidOptions = async (uid) => {
-    const params  = {uid}
-    let options =[]
-
-    try {
-      const result = await axios.post(config.URL_GET_AUTH_CIDS, params, config.axios)
-      const data = await result.data?result.data:[]
-      await data.map( ({cid, name}) =>  options = options.concat({'key':cid, 'text':name, 'value':cid}) )
-
-    } catch (err) {
-          console.log("myComponents->createCidOptions() hatası..",err);
-          options = []
-    }
-    return options
-
-  }
-
-
    // Change Cid Dropbox for using everywhere
-   export class DropboxSelectCID extends PureComponent {
-     state = {
-        options: [],
-        cid: 1
-     }
+   export class DropboxCID extends PureComponent {
+    state = {
+      isLoading: true,
+      mounted: false
+    }
 
      async componentDidMount() {
-       const {cid, uid} = await this.props
-       const options = await createCidOptions(uid)
-       await this.setState({ options, cid })
+       const {cid, cidOptions} = await this.props
+       await this.setState({ cidOptions, cid, mounted: true })
+     }
+    //  async componentDidMount() {
+    //    const {cid, uid} = await this.props
+    //    const options = await createCIDOptions(uid)
+    //    await this.setState({ options, cid, mounted: true })
+    //  }
+
+     componentDidUpdate(prevProps, prevState) {
+      if (prevState.mounted !== this.state.mounted) {
+        this.setState({ isLoading: false });
+      }
      }
 
      handleChange = async (e, data)=> {
@@ -229,18 +219,51 @@ export const createYayindurumlariOptions = async () => {
       await store.dispatch(updateStoreCID(cid))
     }
 
+    Loader=()=> {
+      return <Icon loading name={spinnerIcon} size="large" />
+    //   return <span>yükleniyor...</span>
+    }
+
     render() {
-        const {options, cid} = this.state
-        return <Button.Group color='black'>
+        const {cidOptions, cid, isLoading} = this.state
+        // console.log('options: ',options)
+        return isLoading?<this.Loader />:<Button.Group color='black'>
                 <Dropdown
                     value={cid}
-                    options={options}
+                    options={cidOptions}
                     onChange={this.handleChange}
                     button
-                    placeholder='Seçiminiz?'
+                    placeholder='Firma seçiminiz?'
                 />
                 </Button.Group>
           }
-          }
+  }
+
+  //Loading Data with Spinner
+  export class LoadingSpinner extends PureComponent {
+    state = {isLoading: true, mounted: false}
+
+    async componentDidMount() {
+      const {cid, url} =  this.props
+      await refreshStoreData(store, cid, url)
+      this.setState({ mounted: true})
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+      if (prevState.mounted !== this.state.mounted) {
+        this.setState({ isLoading: false });
+      }
+    }
+
+    componentWillUnmount() {
+      clearStoreData(store)
+    }
+
+    render() {
+      return (
+            this.state.isLoading?<MyLoader />:this.props.children
+      );
+    }
+}
 
 

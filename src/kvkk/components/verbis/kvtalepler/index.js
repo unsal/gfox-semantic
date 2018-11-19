@@ -13,7 +13,7 @@ import LabelBox from "./labelbox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {MyLoader, getOptions, refreshStoreData}  from '../../myComponents'
+import {MyLoader, getOptions, refreshStoreData, clearStoreData}  from '../../myComponents'
 
 import _ from 'lodash';
 import AddForm from "./addform"
@@ -66,6 +66,7 @@ class KVTalepler extends PureComponent {
 
   componentWillUnmount() {
     this.setState( {isLoading: false, didMount: false} )
+    clearStoreData(store)
   }
 
   // İŞLEME AMAÇLARI

@@ -1,6 +1,6 @@
 import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
-import {getOffset, removeDuplicates, refreshStoreData2} from "../../myComponents";
+import {getOffset, removeDuplicates, refreshStoreData} from "../../myComponents";
 import axios from "axios";
 import "../../../kvkk.css";
 import {config} from '../../../../config'
@@ -53,7 +53,7 @@ class AddBox extends PureComponent {
         await axios.post(config.URL_UPDATE_KVPROFIL, params, config.axios)
 
         await this.setState({ error: false, success:true })
-        await refreshStoreData2(store, cid, config.URL_GET_KVPROFIL)
+        await refreshStoreData(store, cid, config.URL_GET_KVPROFIL)
         await this.handleClose();
     } catch (err) {
           console.log("Update API Error!",err);

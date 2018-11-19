@@ -3,7 +3,7 @@ import { Label, Icon, List } from "semantic-ui-react";
 import { config } from "../../../../config";
 import axios from "axios";
 
-import {MyMessage, refreshStoreData2} from "../../myComponents";
+import {MyMessage, refreshStoreData} from "../../myComponents";
 
 //DELETE BOX KURUM
 class DeleteBox extends PureComponent {
@@ -39,7 +39,7 @@ class DeleteBox extends PureComponent {
       // config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
       .then(() => {
-        refreshStoreData2(this.state.store, this.state.cid, this.state.URL_GET);
+        refreshStoreData(this.state.store, this.state.cid, this.state.URL_GET);
         this.setState({ error: false })
         this.handleClose();
       })

@@ -13,7 +13,7 @@ import LabelBox from "./labelbox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {MyLoader, refreshStoreData2}  from '../../myComponents'
+import {refreshStoreData, LoadingSpinner}  from '../../myComponents'
 
 import AddForm from "./addform"
 
@@ -21,31 +21,14 @@ class KVPaylasim extends PureComponent {
 
   state = {
 
-    didMount: false,
-    isLoading: true,
-    apiOnline: false,
-
     onMouseOverPidm: 0, //üzerine gelinen pidmi yakalmak ve sadece onun için X remove ikonu göstermek için
     birimLabelClicked: false
-  }
-
-  async componentDidMount() { //Dropdownlar dolsun diye async kullanıldı..
-    const {cid, uid} = this.props
-
-    await this.setState( {cid, uid } )
-    await refreshStoreData2(store, cid, config.URL_GET_KVPAYLASIM)
-    await this.setState({apiOnline: true, didMount: true})
-
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.didMount !== this.state.didMount) {
       this.setState({ isLoading: false });
     }
-  }
-
-  componentWillUnmount() {
-    this.setState( {isLoading: false, didMount: false} )
   }
 
   // İŞLEME AMAÇLARI
@@ -91,7 +74,7 @@ class KVPaylasim extends PureComponent {
     try {
         await axios.post(config.URL_DELETE_KVPAYLASIM, params, config.axios)
         await this.setState({ error: false, success:true })
-        await refreshStoreData2(store, this.props.cid, config.URL_GET_KVPAYLASIM )
+        await refreshStoreData(store, this.props.cid, config.URL_GET_KVPAYLASIM )
     } catch (err) {
           console.log("KVPaylasim->Update on delete API Error!",err);
           this.setState({ error: true })
@@ -183,15 +166,15 @@ class KVPaylasim extends PureComponent {
 
 
   render() {
-    const { isLoading, apiOnline } = this.state;
+    const {cid} = this.props
+    const url = config.URL_GET_KVPAYLASIM
+
     return (
 
       <KVKKLayout>
-        {
-         !isLoading&&apiOnline? <this.myRender />:
-            <MyLoader />
-        }
-
+          <LoadingSpinner cid={cid} url={url}>
+              <this.myRender />
+          </LoadingSpinner>
       </KVKKLayout>
 
     );
@@ -199,5 +182,5 @@ class KVPaylasim extends PureComponent {
 }
 
 
-const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid });
+const mapStateToProps = state => ({ data: state.data, cid: state.cid });
 export default connect(mapStateToProps)(KVPaylasim);

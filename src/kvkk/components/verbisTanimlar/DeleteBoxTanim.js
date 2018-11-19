@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import { config } from "../../../config";
 import axios from "axios";
-import {MyMessage, refreshStoreData2} from "../myComponents";
+import {MyMessage, refreshStoreData} from "../myComponents";
 
 class DeleteBoxTanim extends PureComponent {
   // props: id, pidm, name, store, data
@@ -37,7 +37,7 @@ class DeleteBoxTanim extends PureComponent {
         // Delete Table Row
         // const _data = data.filter(row => row.pidm !== pidm);
         // store.dispatch(updateStoreData(_data));
-        refreshStoreData2(store, cid, URL_GET );
+        refreshStoreData(store, cid, URL_GET );
       })
       .then(
           this.setState({ error:false })
@@ -58,7 +58,7 @@ class DeleteBoxTanim extends PureComponent {
   }
 
   render() {
-    const color = this.state.deleteMode?'red':null;
+    const color = this.state.deleteMode?'red':'teal';
     const {pidm, name} = this.props
     return (
       <div>

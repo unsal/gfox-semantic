@@ -3,7 +3,7 @@ import {Icon, Dropdown, Segment, Grid } from "semantic-ui-react";
 import {getOffset} from "../../myComponents";
 import { config } from "../../../../config";
 import axios from "axios";
-import {MyMessage, refreshStoreData2, createDropdownOptions, createYayindurumlariOptions} from "../../myComponents";
+import {MyMessage, refreshStoreData, createDropdownOptions, createYayindurumlariOptions} from "../../myComponents";
 
 // SS ADDBOX DOKUMAN
 class AddBox extends PureComponent {
@@ -42,7 +42,7 @@ class AddBox extends PureComponent {
 
     axios({ method: "POST", url: URL_ADD, data: form })
       .then(() => {
-        refreshStoreData2(store, cid, URL_GET);
+        refreshStoreData(store, cid, URL_GET);
         this.setState({ error: false, success: true })
       })
       .catch(err => {

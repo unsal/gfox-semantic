@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import axios from "axios";
 
-import {MyMessage, refreshStoreData2} from "../../myComponents";
+import {MyMessage, refreshStoreData} from "../../myComponents";
 import _ from 'lodash';
 import { config } from "../../../../config";
 import {store} from "../../../../reducer"
@@ -65,7 +65,7 @@ state = {
                 await this.deleteEntireRecord()
             }
 
-        await refreshStoreData2(store, this.props.cid, config.URL_GET_KVPROFIL)
+        await refreshStoreData(store, this.props.cid, config.URL_GET_KVPROFIL)
         await this.setState({ error: false, success:true, deleteMode: false })
     } catch (err) {
           console.log("Update API Error!",err);

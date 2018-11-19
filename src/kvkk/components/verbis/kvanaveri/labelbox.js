@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import axios from "axios";
 
-import {MyMessage, refreshStoreData2} from "../../myComponents";
+import {MyMessage, refreshStoreData} from "../../myComponents";
 import { config } from "../../../../config";
 import {store} from "../../../../reducer"
 import { connect } from "react-redux";
@@ -45,7 +45,7 @@ state = {
     try {
         await axios.post(URL_UPDATE, params, config.axios)
         await this.setState({ error: false, success:true })
-        await refreshStoreData2(store, cid, config.URL_GET_KVANAVERI)
+        await refreshStoreData(store, cid, config.URL_GET_KVANAVERI)
     } catch (err) {
           console.log("KVAnaveri->Labelbox->Update on delete API Error!",err);
           this.setState({ error: true })

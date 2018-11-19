@@ -4,7 +4,7 @@ import axios from "axios";
 import {store} from "../../../../reducer"
 import { connect } from "react-redux";
 
-import {MyMessage, refreshStoreData2 } from "../../myComponents";
+import {MyMessage, refreshStoreData } from "../../myComponents";
 import { config } from "../../../../config";
 
 //UPDATE BOX KURUM
@@ -45,7 +45,7 @@ state = {
     try {
         await axios.post(URL_UPDATE, params, config.axios)
         await this.setState({ error: false, success:true })
-        await refreshStoreData2(store, cid, config.URL_GET_KVPAYLASIM)
+        await refreshStoreData(store, cid, config.URL_GET_KVPAYLASIM)
     } catch (err) {
           console.log("KVPaylasim->Update on delete API Error!",err);
           this.setState({ error: true })

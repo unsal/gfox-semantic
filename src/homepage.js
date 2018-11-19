@@ -14,12 +14,14 @@ import {
   Segment,
   Sidebar,
   Visibility,
-  Modal
+  Modal,
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import ImageBanner from "./assets/img/cid.jpg"
-import {DropboxSelectCID} from './kvkk/components/myComponents'
+import {DropboxCID} from './kvkk/components/myComponents'
 import { connect } from 'react-redux';
+import ImageBackground from "./assets/img/bground.jpg" //1125 x 630px
+import Logo from './assets/img/logo2.png'
 
 
 // const Logo = () => <Image src={logo} size='small' />
@@ -29,37 +31,51 @@ import { connect } from 'react-redux';
  * such things.
  */
 
-
-
 const HomepageHeading = ({ mobile }) => (
-  <Container text>
-    <Header
-      as='h1'
-      content='Gfox '
-      inverted
-      style={{
-        fontSize: mobile ? '2em' : '4em',
-        fontWeight: 'normal',
-        marginBottom: 0,
-        marginTop: mobile ? '1.5em' : '3em',
-      }}
-    />
+
+<Segment basic style={{ margin:'0px'}}>
+<Image src={ImageBackground} fluid />
+<div style = {{position: 'absolute', top: '50%', left: '10%'}}>
+<div style={{marginBottom:'100px'}}>
+    <div style={{ display:'inline-block'}}>
+        <Image src={Logo} style={{ float:'left'}} />
+        <Header
+          as='h1'
+          content='Gfox '
+          // inverted
+          style={{
+            float: 'left',
+            color:'#fff',
+            fontSize: mobile ? '2em' : '4em',
+            fontWeight: 'normal',
+            // marginBottom: 0,
+            // marginTop: mobile ? '1.5em' : '3em',
+          }}
+        />
+     </div>
     <Header
       as='h2'
-      content='Yasal düzenin bittiği yerde, keyfi düzen başlar. William Pitt'
-      inverted
+      content='KVKK İşletim Sistemi'
+      // inverted
       style={{
+        color:'#fff',
         fontSize: mobile ? '1.5em' : '1.7em',
         fontWeight: 'normal',
-        marginTop: mobile ? '0.5em' : '1.5em',
+        // marginTop: mobile ? '0.5em' : '1.5em',
       }}
     />
-    <Button color='teal' size='huge' as={Link} to='/kvkk'>
-      KVKK Menu
+    <Button
+        color='teal'
+        size='huge'
+        as={Link} to='/login'
+    >
+       Hemen Başla
       <Icon name='right arrow' />
     </Button>
+    </div>
+    </div>
+  </Segment>
 
-  </Container>
 )
 
 HomepageHeading.propTypes = {
@@ -87,7 +103,7 @@ class DesktopContainer extends PureComponent {
             <Header>Şirket</Header>
             <p>Tüm işlemleriniz seçmiş olduğunuz şirket üzerinden gerçekleştirilecektir.</p>
             <p>Uygulama ekranlarından dilediğiniz zaman seçiminizi değiştirebilirsiniz</p>
-            <DropboxSelectCID cid={this.props.cid} uid={this.props.uid} />
+            <DropboxCID cid={this.props.cid} uid={this.props.uid} />
             {/* <Button style={{display: 'block', marginTop:'60px'}} basic content='Devam' /> */}
           </Modal.Description>
         </Modal.Content>
@@ -114,7 +130,7 @@ class DesktopContainer extends PureComponent {
             <Menu
               fixed={fixed ? 'top' : null}
               inverted={!fixed}
-              pointing={!fixed}
+              // pointing={!fixed}
               secondary={!fixed}
               size='large'
             >
@@ -249,7 +265,6 @@ const Homepage = () => (
             </p>
           </Grid.Column>
           <Grid.Column floated='right' width={6}>
-            <Image bordered rounded size='large' src='/images/wireframe/white-image.png' />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
@@ -274,7 +289,6 @@ const Homepage = () => (
               "I shouldn't have gone with their competitor."
             </Header>
             <p style={{ fontSize: '1.33em' }}>
-              <Image avatar src='/images/avatar/large/nan.jpg' />
               <b>Nan</b> Chief Fun Officer Acme Toys
             </p>
           </Grid.Column>

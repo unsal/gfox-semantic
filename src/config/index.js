@@ -1,8 +1,11 @@
 
 // API URL Settings
-const apiHost = 'http://localhost:2300';
-// const frontendHost = 'http://localhost:3000';
 
+const urlRoot = window.location.origin.toString()
+// const apiHost = urlRoot+'/service' // nginx > gunicorn local
+const apiHost = 'http://127.0.0.1:8000' // nginx gunicorn local
+
+// Python API configs
 export const config = {
   // ss > common > related > dropdownlar için
   URL_GET_KURUMLAR: apiHost+'/tanimlar/kurumlar',
@@ -72,6 +75,13 @@ export const config = {
     'Access-Control-Allow-Origin': '*'}
   }
 
+}
+
+
+// React App Settings
+export const settings = {
+  urlRoot: urlRoot,
+  urlLogin: urlRoot+'/login'
 }
 
 

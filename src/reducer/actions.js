@@ -5,6 +5,7 @@ export const GFOX_ERROR = "GFOX_ERROR"
 export const GFOX_CID = "GFOX_CID"
 export const GFOX_UID = "GFOX_UID"
 export const GFOX_TOKEN = "GFOX_TOKEN"
+export const GFOX_CID_OPTIONS = "GFOX_CID_OPTIONS"
 
 
 // KV Talepleri Yeni talep varsa..
@@ -16,9 +17,6 @@ export const updateStoreData = data => {
   return { type: GFOX_STORE_DATA, data };
 };
 
-export const updateStoreMode = (mode) => {
-  return {type: GFOX_MODE, mode}
-};
 
 export const updateErrorStatus = (error) => {
   return {type: GFOX_ERROR, error}
@@ -34,5 +32,11 @@ export const updateStoreUID = (uid) => {
 
 export const updateStoreToken = (token) => {
   return {type: GFOX_TOKEN, token}  //data: [{cid:1, uid:'admin@grcfox.com}]
+}
+
+//Headerdaki seçilen CID'leri yüklemek için...
+// Her sayfada KVKKLayout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi
+export const updateStoreCIDOptions = (cidOptions) => {
+  return {type: GFOX_CID_OPTIONS, cidOptions}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }
 

@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { Label, Icon } from "semantic-ui-react";
 import axios from "axios";
-import {MyMessage, refreshStoreData2} from "../../myComponents";
+import {MyMessage, refreshStoreData} from "../../myComponents";
 
 //DELETE BOX KURUM
 class DeleteBox extends PureComponent {
@@ -34,7 +34,7 @@ componentDidMount() {
 
     })
       .then(() => {
-        refreshStoreData2(this.state.store, this.state.cid, this.state.URL_GET);
+        refreshStoreData(this.state.store, this.state.cid, this.state.URL_GET);
         this.setState({ error: false })
         this.handleClose();
       })

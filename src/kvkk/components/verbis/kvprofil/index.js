@@ -7,29 +7,20 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { store } from "../../../../reducer";
-import { updateStoreMode } from "../../../../reducer/actions";
 
 import AddBox from "./addbox";
 import LabelBox from "./labelbox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {MyLoader, MyMessage,refreshStoreData2, createDropdownOptions}  from '../../myComponents'
+import {MyMessage,refreshStoreData, clearStoreData, createDropdownOptions, LoadingSpinner, MyLittleLoader}  from '../../myComponents'
 
-import _ from 'lodash';
+// import _ from 'lodash';
+
 
 class KVProfil extends PureComponent {
 
   state = {
-
-    //URLs
-    didMount: false,
-    isLoading: true,
-
-    //Dropdown options
-    optionsProfiller: [],
-    optionsBirimler: [],
-    optionsKV: [],
 
     profil_pidm: 0,
     birim_pidm: 0,
@@ -38,50 +29,38 @@ class KVProfil extends PureComponent {
     birim_value: 0,
     kv_values: [],
 
-    error: false,
-    success: false
+    success: false,
+    mounted: false
 
   };
 
+  async componentDidMount() {
+    const {cid} = this.props
 
-  async componentDidMount() { //Dropdownlar dolsun diye async kullanıldı..
-    const {cid, uid} = this.props
-
+    //load dropdownoptions
     const optionsProfiller  = await createDropdownOptions(config.URL_GET_PROFILLER, cid);
     const optionsBirimler   = await createDropdownOptions(config.URL_GET_BIRIMLER, cid);
     const optionsKV         = await createDropdownOptions(config.URL_GET_KV, cid);
 
-    await this.setState({optionsProfiller, optionsBirimler, optionsKV, cid, uid, didMount: true },
-    refreshStoreData2(store, cid, config.URL_GET_KVPROFIL)) //callback func
+    await this.setState({optionsProfiller, optionsBirimler, optionsKV, mounted: true})
 
-    await store.dispatch(updateStoreMode('DEFAULT'))
-
-  }
-
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.didMount !== this.state.didMount) {
-      this.setState({ isLoading: false });
-    }
   }
 
   componentWillUnmount() {
-    this.setState( {isLoading: false, didMount: false} )
+    clearStoreData(store)
   }
-
-
 
   handleSubmit= async (event)=>{
     event.preventDefault();
-    const {profil_pidm, birim_pidm, kv_values, cid, uid}= this.state
+    const {cid, uid} = this.props
+    const {profil_pidm, birim_pidm, kv_values}= this.state
     const data = await kv_values.map(item=>item) //convert [array] to [{json}] for data post
     const params = await {profil_pidm, birim_pidm, data, cid, uid}
-    console.log('inserted successfully')
 
     try {
         await axios.post(config.URL_ADD_KVPROFIL, params, config.axios)
         await this.setState({ error: false, profil_value:0, birim_value:0, kv_values:[], success:true })
-        await refreshStoreData2(store, cid, config.URL_GET_KVPROFIL)
+        await refreshStoreData(store, cid, config.URL_GET_KVPROFIL)
     } catch (err) {
           console.log("Hata!",err);
           this.setState({ error: true })
@@ -131,32 +110,32 @@ class KVProfil extends PureComponent {
     const cellStyle= {overflow: 'visible', backgroundColor: '#fff'}
     return <Table.Row>
               <Table.Cell style={cellStyle}>
-                      <Dropdown id="id_profil"
-                                placeholder="profiller"
-                                fluid search selection
-                                options={this.state.optionsProfiller}
-                                onChange={this.handleChangeProfil}
-                                value = {this.state.success?null:this.state.profil_value}
-                                />
+              {!this.state.mounted?<MyLittleLoader />:<Dropdown id="id_profil"
+                                      placeholder="profiller"
+                                      fluid search selection
+                                      options={this.state.optionsProfiller}
+                                      onChange={this.handleChangeProfil}
+                                      value = {this.state.success?null:this.state.profil_value}
+                                      />}
               </Table.Cell>
               <Table.Cell style={cellStyle}>
-                      <Dropdown id="id_birim"
+              {!this.state.mounted?<MyLittleLoader />:<Dropdown id="id_birim"
                                 placeholder="birimler"
                                 fluid search selection
                                 options={this.state.optionsBirimler}
                                 onChange={this.handleChangeBirim}
                                 value = {this.state.success?null:this.state.birim_value}
-                                />
+                                />}
               </Table.Cell>
               <Table.Cell style={cellStyle}>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                      <Dropdown id="id_kv"
+                  {!this.state.mounted?<MyLittleLoader />:<Dropdown id="id_kv"
                                 placeholder="kv"
                                 fluid multiple search selection
                                 options={this.state.optionsKV}
                                 onChange={this.handleChangeSelected}
                                 value={this.state.kv_values}
-                      />
+                      />}
                       <this.AddButton />
                   </div>
               </Table.Cell>
@@ -220,8 +199,7 @@ class KVProfil extends PureComponent {
 
             <this.myRenderForm />
 
-           {_.size(data)===0?null:
-           data.map((key) => (
+           { data && data.map((key) => (
               <Table.Row key={key.pidm}>
                 <Table.Cell style={{ verticalAlign: 'top' }}>{key.profil_name}</Table.Cell>
                 <Table.Cell style={{ verticalAlign: 'top' }}>{key.birim_name}</Table.Cell>
@@ -239,14 +217,14 @@ class KVProfil extends PureComponent {
 
 
   render() {
-    const { isLoading } = this.state;
+    const {cid} = this.props
+    const url = config.URL_GET_KVPROFIL
     return (
 
       <KVKKLayout>
-        {
-         isLoading? <MyLoader />:<this.myRender />
-        }
-
+          <LoadingSpinner cid={cid} url={url}>
+              <this.myRender />
+          </LoadingSpinner>
       </KVKKLayout>
 
     );
@@ -254,5 +232,5 @@ class KVProfil extends PureComponent {
 }
 
 
-const mapStateToProps = state => ({ data: state.data, mode: state.mode, cid: state.cid, uid: state.uid });
+const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid });
 export default connect(mapStateToProps)(KVProfil);

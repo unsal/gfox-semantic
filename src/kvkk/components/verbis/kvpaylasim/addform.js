@@ -3,7 +3,7 @@ import { Button, Image, Modal, Icon, Form, Dropdown } from 'semantic-ui-react'
 import { config } from "../../../../config";
 import axios from "axios";
 import ImagePaylasim from "../../../../assets/img/kvpaylasim.jpg"
-import {refreshStoreData2, createDropdownOptions} from "../../myComponents"
+import {refreshStoreData, createDropdownOptions} from "../../myComponents"
 import { connect } from "react-redux";
 import { store } from "../../../../reducer";
 
@@ -18,6 +18,7 @@ class AddForm extends Component {
 
     error: false,
     success: false,
+
 
   }
 
@@ -160,7 +161,7 @@ class AddForm extends Component {
                              open: false //close modal
                             })
 
-       await refreshStoreData2(store, cid, config.URL_GET_KVPAYLASIM )
+       await refreshStoreData(store, cid, config.URL_GET_KVPAYLASIM )
    } catch (err) {
          console.log("Hata!",err);
          this.setState({ error: true })
