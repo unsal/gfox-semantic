@@ -13,7 +13,7 @@ import LabelBox from "./labelbox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {refreshStoreData, LoadingSpinner}  from '../../myComponents'
+import {refreshStoreData, LoadingStoreData}  from '../../myComponents'
 import AddForm from "./addform"
 
 // import axios from "axios";
@@ -127,15 +127,16 @@ class KVAnaveri extends PureComponent {
         >
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell style={{ width: "20%", backgroundColor:headerBGColor }}> BİRİM</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "10%", backgroundColor:headerBGColor }}> KV</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "10%", backgroundColor:headerBGColor }}> SAKLAMA SÜRESİ</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "10%", backgroundColor:headerBGColor }}> AKTARILAN ÜLKELER</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "10%", backgroundColor:headerBGColor }}> TOPLAMA KANALLARI</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "10%", backgroundColor:headerBGColor }}> DOKÜMANLAR</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "10%", backgroundColor:headerBGColor }}> SİSTEMLER</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "10%", backgroundColor:headerBGColor }}> HUKUKİ DAYANAKLAR</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "10%", backgroundColor:headerBGColor }}> SAKLAMA ORTAMLARI</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "19%", backgroundColor:headerBGColor }}> BİRİM</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "13%", backgroundColor:headerBGColor }}> KV</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "5%", backgroundColor:headerBGColor }}> SAKLAMA SÜRESİ</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "9%", backgroundColor:headerBGColor }}> AKTARILAN ÜLKELER</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "9%", backgroundColor:headerBGColor }}> TOPLAMA KANALLARI</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "9%", backgroundColor:headerBGColor }}> DOKÜMANLAR</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "9%", backgroundColor:headerBGColor }}> SİSTEMLER</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "9%", backgroundColor:headerBGColor }}> HUKUKİ DAYANAKLAR</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "9%", backgroundColor:headerBGColor }}> SAKLAMA ORTAMLARI</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "9%", backgroundColor:headerBGColor }}> VERİ GÜVENLİK TEDBİRLERİ</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
@@ -156,6 +157,7 @@ class KVAnaveri extends PureComponent {
                 <Table.Cell style={{ verticalAlign: 'top' }} > <this.DataCell id="sistemler"  color='olive'  rowPidm={key.pidm} data={key.sistemler_data} /> </Table.Cell>
                 <Table.Cell style={{ verticalAlign: 'top' }} > <this.DataCell id="dayanaklar" color='yellow' rowPidm={key.pidm} data={key.dayanaklar_data} /> </Table.Cell>
                 <Table.Cell style={{ verticalAlign: 'top' }} > <this.DataCell id="ortamlar"   color='orange' rowPidm={key.pidm} data={key.ortamlar_data} /> </Table.Cell>
+                <Table.Cell style={{ verticalAlign: 'top' }} > <this.DataCell id="tedbirler"   color='brown' rowPidm={key.pidm} data={key.tedbirler_data} /> </Table.Cell>
 
               </Table.Row>
             ))}
@@ -173,9 +175,9 @@ class KVAnaveri extends PureComponent {
     return (
 
       <KVKKLayout>
-          <LoadingSpinner cid={cid} url={url}>
+          <LoadingStoreData cid={cid} url={url}>
               <this.myRender />
-          </LoadingSpinner>
+          </LoadingStoreData>
       </KVKKLayout>
 
     );

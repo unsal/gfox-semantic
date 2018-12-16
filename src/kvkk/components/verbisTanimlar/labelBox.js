@@ -3,8 +3,9 @@ import { Label, Icon } from "semantic-ui-react";
 import { config } from "../../../config";
 import axios from "axios";
 import {MyMessage, refreshStoreData} from "../myComponents";
+// import ProfilFoto from '../../../assets/img/profil.jpg'
 
-class DeleteBoxTanim extends PureComponent {
+class LabelBox extends PureComponent {
   // props: id, pidm, name, store, data
 
    state = {
@@ -57,13 +58,42 @@ class DeleteBoxTanim extends PureComponent {
     this.setState({ deleteMode: false, selectedPidm:0 })
   }
 
-  render() {
-    const color = this.state.deleteMode?'red':'teal';
+  MyLabel = () => {
     const {pidm, name} = this.props
+    const {id} = this.props.params
+    const color = this.state.deleteMode?'red':null;
+
+    const iconName=(id==='profiller')?"user outline":
+             (id==='birimler')?"clone outline":
+             (id==='sistemler')?"microchip":
+             (id==='ortamlar')?"hdd":
+             (id==='kv')?"shield alternate":
+             (id==='kurumlar')?"university":
+             (id==='kanallar')?"shopping cart":
+             (id==='islemeamaclari')?"crosshairs":
+             (id==='dokumanlar')?"sticky note outline":
+             (id==='dayanaklar')?"paperclip":
+             (id==='sureler')?"clock outline":
+             (id==='paylasimamaclari')?"handshake outline":
+             (id==='paylasimsekilleri')?"share alternate":
+             (id==='ulkeler')?"world":
+             (id==='tedbirler')?"lock":
+             'file outline'
+
+       return <Label color={color} key={pidm} >
+                    <Icon name={iconName} />
+                        {name}
+                    <Icon link name='delete' onClick={()=>this.handleDelete(pidm)}/>
+              </Label>
+  }
+
+  render() {
+    const {pidm} = this.props
     return (
       <div>
         {/* <Icon color="grey" size="small" name="remove circle" onClick={this.show("mini")}/> */}
-        <Label color={color} key={pidm} as='a' content={name} onRemove={()=>this.handleDelete(pidm)} />
+        {/* <Label color={color} key={pidm} as='a' content={name} onRemove={()=>this.handleDelete(pidm)} /> */}
+        <this.MyLabel />
 
           {this.state.error?
                     <MyMessage error header='Kayıt Silinemedi!' content='Silme İşleminde bilinmeyen hata oluştu. Lütfen veritabanı ve/veya ağ bağlantınızı kontrol edin.' />
@@ -90,4 +120,4 @@ class DeleteBoxTanim extends PureComponent {
   }
 }
 
-export default DeleteBoxTanim;
+export default LabelBox;

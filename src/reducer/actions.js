@@ -6,6 +6,7 @@ export const GFOX_CID = "GFOX_CID"
 export const GFOX_UID = "GFOX_UID"
 export const GFOX_TOKEN = "GFOX_TOKEN"
 export const GFOX_CID_OPTIONS = "GFOX_CID_OPTIONS"
+export const GFOX_URL = "GFOX_URL"
 
 
 // KV Talepleri Yeni talep varsa..
@@ -38,5 +39,10 @@ export const updateStoreToken = (token) => {
 // Her sayfada KVKKLayout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi
 export const updateStoreCIDOptions = (cidOptions) => {
   return {type: GFOX_CID_OPTIONS, cidOptions}  //data: [{cid:1, uid:'admin@grcfox.com}]
+}
+
+// Bulunulan sayfanın GET URL'i store'a atılır ki CID değiştirildiğinde refreshStoreData ile sayfa refresh edebilsin.
+export const updateStoreURL = (url) => {
+  return {type: GFOX_URL, url}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }
 

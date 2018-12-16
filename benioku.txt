@@ -6,5 +6,7 @@ index.js > import 'semantic-ui-css/semantic.min.css'
 npm install --save redux //store için
 npm install --save react-redux //Provider ve connect func için
 npm install --save axios
+npm install openpyxl --save
+
 
 

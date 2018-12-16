@@ -1,4 +1,3 @@
-
 import React, {PureComponent} from 'react'
 import { Button, Form, Grid, Header, Segment, Icon } from 'semantic-ui-react'
 import axios from "axios";
@@ -62,6 +61,8 @@ class LoginForm extends PureComponent {
 
             if (token) {
                 await store.dispatch(updateStoreToken(token))
+                await setLocalToken(token)
+
                 await store.dispatch(updateStoreUID(uid))
 
                 //Headerda, CID optionsı yüklemek için...
@@ -69,7 +70,7 @@ class LoginForm extends PureComponent {
                 let cidOptions = await this.createCIDOptions(uid)
                 // cidOptions = await JSON.stringify(cidOptions)
                 await store.dispatch(updateStoreCIDOptions(cidOptions))
-                await setLocalToken(token)
+
 
                 this.setState({authenticated: true})
 
@@ -97,10 +98,8 @@ class LoginForm extends PureComponent {
             this.setState({ submitted: false })
         }
 
-
-        render() {
-          const authenticated = this.state.authenticated
-          return authenticated?<KVKK />:<div className='LoginForm-form'>
+        RenderLoginForm = () => (
+          <div className='LoginForm-form'>
             <style>{`
               body > div,
               body > div > div,
@@ -153,6 +152,10 @@ class LoginForm extends PureComponent {
             </Grid>
 
           </div>
+        )
+
+        render() {
+          return this.state.authenticated?<KVKK />:<this.RenderLoginForm />
           }
 }
 
@@ -160,21 +163,10 @@ const setLocalToken=(token)=> {
   localStorage.setItem('gfox_token', token)
 }
 
-const getLocalToken=()=> {
-  return localStorage.getItem('gfox_token')
-}
-
 const removeLocalToken=()=>{
   localStorage.removeItem('gfox_token')
 }
 
-export const authenticated=(storeToken)=> {
-  const localToken = getLocalToken()
-
-  return localToken===storeToken
-}
-
-
-const mapStateToProps = state => ({ cid: state.cid, uid: state.uid, token: state.token });
+const mapStateToProps = state => ({ cid: state.cid, uid: state.uid });
 export default connect(mapStateToProps)(LoginForm);
 

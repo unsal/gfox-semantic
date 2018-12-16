@@ -9,12 +9,12 @@ import { config } from "../../../config";
 import { connect } from "react-redux";
 import { store } from "../../../reducer";
 
-import DeleteBoxTanim from "./DeleteBoxTanim";
+import LabelBox from "./labelBox";
 import './Tanimlar.css';
 import '../../kvkk.css';
 import _ from 'lodash';
 
-import {refreshStoreData, MyMessage, LoadingSpinner} from "../myComponents"
+import {refreshStoreData, MyMessage, LoadingStoreData} from "../myComponents"
 
 class Tanimlar extends PureComponent {
 
@@ -94,7 +94,7 @@ class Tanimlar extends PureComponent {
     if (event.keyCode===27) {
           refreshStoreData(store, this.props.cid, this.state.URL_GET)
           console.log("Escape pressed...")
-    } else if (event.keyCode===27) {
+    } else if (event.keyCode===13) {
            this.handleSubmit()
     }
   }
@@ -104,7 +104,7 @@ class Tanimlar extends PureComponent {
     refreshStoreData(store, this.props.cid, this.state.URL_GET)
   }
 
-  AddForm = (props) => {
+  AddButton = (props) => {
 
     const { id, inputIcon } = props;
     const isSistemler = id ==="sistemler";
@@ -183,6 +183,7 @@ class Tanimlar extends PureComponent {
                           size="big"
                           color="teal"
                           onClick={this.handleSubmit}
+                          link
                           />
                           {/* :null} */}
 
@@ -232,7 +233,7 @@ class Tanimlar extends PureComponent {
       <div className="kvkk-content">
         <Header as='h2' onClick={this.handleHomeClick}>{title}</Header>
 
-        <this.AddForm id={id} inputIcon = {_inputIcon} recordExist={recordExist} />
+        <this.AddButton id={id} inputIcon = {_inputIcon} recordExist={recordExist} />
         <Table
           sortable
           celled
@@ -271,7 +272,7 @@ class Tanimlar extends PureComponent {
                   <Table.Row key={item.pidm}>
                     <Table.Cell style={{textAlign:"left"}}>
 
-                    <DeleteBoxTanim
+                    <LabelBox
                         pidm={item.pidm}
                         name={item.name}
                         params={params}
@@ -310,9 +311,9 @@ render() {
     const url = config.URL_GetTanimlar+"/"+id
     return (
         <KVKKLayout>
-          <LoadingSpinner cid={cid} url={url}>
+          <LoadingStoreData cid={cid} url={url}>
               <this.myRender />
-          </LoadingSpinner>
+          </LoadingStoreData>
       </KVKKLayout>
     );
   }

@@ -247,31 +247,33 @@ const Homepage = () => (
     <Segment style={{ padding: '8em 0em' }} vertical>
       <Grid container stackable verticalAlign='middle'>
         <Grid.Row>
-          <Grid.Column width={8}>
+          <Grid.Column width={16}>
             <Header as='h3' style={{ fontSize: '2em' }}>
-              We Help Companies and Companions
-
+             Neden GFox?
             </Header>
             <p style={{ fontSize: '1.33em' }}>
-              We can give your company superpowers to do things that they never thought possible.
-              Let us delight your customers and empower your needs... through pure data analytics.
+            6698 Sayılı Kişisel Verilerin Korunması Kanunu (KVKK) ile kişisel verilerin işlenmesinde
+            başta özel hayatın gizliliği olmak üzere kişilerin temel hak ve özgürlüklerinin korunması ve
+            bu verileri işleyen kişilerin yükümlülüklerinin düzenlenmesi amaçlanmaktadır.
+            Yürürlüğe girdiği Nisan 2018 tarihinden itibaren bu kanun, kişisel veri işleyen
+            tüm kuruluşlar için verilerin iyi yönetilebileceği güçlü uygulama altyapılarına
+            ihtiyaç bulundurmaktadır. Verbis ile tam uyumlu kişisel veri işletim ve yönetim sistemi için biz
+            Türkiye'de ilk ve tek KVKK işletim sistemi olan GFox'u öneriyoruz.
             </p>
             <Header as='h3' style={{ fontSize: '2em' }}>
-              We Make Bananas That Can Dance
+            GDPR ile uyumlu musunuz?
             </Header>
             <p style={{ fontSize: '1.33em' }}>
-              Yes that's right, you thought it was the stuff of dreams, but even bananas can be
-              bioengineered.
+            GDPR (Genel Veri Koruma Yönetmeliği), 25 Mayıs 2018 tarihinde yürürlüğe girecek olan Avrupa
+            Birliği merkezli veri koruma düzenlemesidir. AB vatandaşlarının kişisel verilerini işleyen tüm kuruluşları
+            kapsamaktadır. Bu, AB ülkeleri dışında faaliyet gösteren şirketlerin de etkileneceği anlamına
+            gelmektedir. GDPR, şu ana dek hazırlanmış en katı ve kapsamlı veri koruma düzenlemesidir.
             </p>
           </Grid.Column>
           <Grid.Column floated='right' width={6}>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
-          <Grid.Column textAlign='center'>
-            <Button size='huge'>Check Them Out</Button>
-          </Grid.Column>
-        </Grid.Row>
+
       </Grid>
     </Segment>
 
@@ -280,17 +282,29 @@ const Homepage = () => (
         <Grid.Row textAlign='center'>
           <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
             <Header as='h3' style={{ fontSize: '2em' }}>
-              "What a Company"
+              "GDPR kapsamındaki en kritik değişiklikler neler?"
             </Header>
-            <p style={{ fontSize: '1.33em' }}>That is what they all say about us</p>
+            <List bulleted style={{ fontSize: '1.33em', textAlign:'left', paddingLeft:'70px' }}>
+              <List.Item >Yıllık cironun %4'ü kadar, 20 milyon Euro'ya varan yüksek para cezaları.</List.Item>
+              <List.Item >Veri güvenliğini temin etmek adına gerekli teknik ve idari tedbirlerin alınması gerekliliği.</List.Item>
+              <List.Item >Sistematik olarak veri işleyen kuruluşlar için “Veri Koruma Yetkilisi” belirleme zorunluluğu.</List.Item>
+              <List.Item >AB ülkelerine ürün veya hizmet sunan farklı ülkelerdeki kuruluşlar da düzenleme kapsamında.</List.Item>
+              <List.Item >Veriler, kullanım amaçları doğrultusunda kişilerin açık rızası olmadan işlenemiyor.</List.Item>
+              <List.Item >İşletmeler, veri kullanımıyla ilgili bilgi talep edilmesi durumunda en geç 72 saat içerisinde bilgi vermek zorunda.</List.Item>
+            </List>
           </Grid.Column>
           <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
             <Header as='h3' style={{ fontSize: '2em' }}>
-              "I shouldn't have gone with their competitor."
+              "İşletmenizin ne gibi kişisel verileri koruması gerekiyor?"
             </Header>
-            <p style={{ fontSize: '1.33em' }}>
-              <b>Nan</b> Chief Fun Officer Acme Toys
-            </p>
+            <List bulleted style={{ fontSize: '1.33em', textAlign:'left', paddingLeft:'70px' }}>
+              <List.Item >Çalışanların kişisel bilgileri (kimlik bilgileri, adres, doğum tarihi, vb.).</List.Item>
+              <List.Item >Müşterilerin/hastaların/konaklayanların kişisel bilgileri (pazarlama veritabanları
+                          sağlık kayıtları, iletişim listeleri).</List.Item>
+              <List.Item >İş ortaklarının ve hizmet sağlayıcıların kamuya açık olmayan kişisel verileri.</List.Item>
+              <List.Item >Üçüncü şahıslara aktarılıp işlenen kişisel bilgiler (muhasebe kayıtları, kredi sicilleri, doğrudan pazarlama).</List.Item>
+            </List>
+
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -299,16 +313,20 @@ const Homepage = () => (
     <Segment style={{ padding: '8em 0em' }} vertical>
       <Container text>
         <Header as='h3' style={{ fontSize: '2em' }}>
-          Breaking The Grid, Grabs Your Attention
+          GDPR uyumluluğu için verilerinizi nasıl güvende tutabilirsiniz?
         </Header>
-        <p style={{ fontSize: '1.33em' }}>
-          Instead of focusing on content creation and hard work, we have learned how to master the
-          art of doing nothing by providing massive amounts of whitespace and generic content that
-          can seem massive, monolithic and worth your attention.
-        </p>
-        <Button as='a' size='large'>
-          Read More
-        </Button>
+        <List bulleted style={{ fontSize: '1.33em', textAlign:'left', paddingLeft:'70px' }}>
+              <List.Item ><strong>1) Veri Denetimi: </strong>Şirketinizin sahip olduğu tüm verilerin nasıl kullanıldığını bilmek zorundasınız. Hassas içeriğe sahip
+              verilerin nereye taşındığını, bu verileri kimlerin, ne amaçla kullandığını görüntülemeniz gereklidir.</List.Item>
+              <List.Item ><strong>2) Veri kullanım kuralları: </strong>İş ortaklarının ve hizmet sağlayıcıların kamuya açık olmayan kişisel verileri.Kişisel verilerle kimlerin, ne şekilde çalışabileceği konusunda kesin kurallar oluşturmalısınız. Bu kurallar
+              kağıt üzerinde kalmamalı, etkin bir şekilde uygulanmalıdır.</List.Item>
+              <List.Item ><strong>3) Çalışanların eğitimi: </strong>Her çalışan hangi verinin ne şekilde kullanılması gerektiğini bilmelidir. Çalışanları güvenlik politikanız
+              hakkında bilgilendirerek veri kullanım sınırlarını belirleyebilirsiniz.</List.Item>
+              <List.Item ><strong>4) Şifreleme</strong>Kişisel bilgiler içeren tüm veriler şifrelenmelidir. Şifreleme kullanımını uç noktalar da dahil olmak üzere tüm şirketinize yaymalısınız.</List.Item>
+              <List.Item ><strong>5) Veri sızıntısı önleme (DLP): </strong>Veri sızıntısı önleme, mutlaka etkin bir şekilde uygulanmalı ve tüm iletişim kanallarını kapsamalıdır. E-posta, yazıcılar, USB, DVD gibi çıkarılabilir cihazlar ve diğer iletişim kanalları denetlenerek yalnızca belirli verilerin şirket
+              dışına çıkabilmesi sağlanmalıdır.</List.Item>
+          </List>
+
 
         <Divider
           as='h4'
@@ -316,20 +334,9 @@ const Homepage = () => (
           horizontal
           style={{ margin: '3em 0em', textTransform: 'uppercase' }}
         >
-          <a href='xxx'>Case Studies</a>
+          <a href='xxx'>Daha fazlası için bize ulaşın...</a>
         </Divider>
 
-        <Header as='h3' style={{ fontSize: '2em' }}>
-          Did We Tell You About Our Bananas?
-        </Header>
-        <p style={{ fontSize: '1.33em' }}>
-          Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but
-          it's really true. It took years of gene splicing and combinatory DNA research, but our
-          bananas can really dance.
-        </p>
-        <Button as='a' size='large'>
-          I'm Still Quite Interested
-        </Button>
       </Container>
     </Segment>
 
@@ -343,7 +350,6 @@ const Homepage = () => (
                 <List.Item as='a'>Vizyon</List.Item>
                 <List.Item as='a'>İletişim</List.Item>
                 <List.Item as='a'>Hizmetlerimiz</List.Item>
-                <List.Item as='a'>Gazebo Plans</List.Item>
               </List>
             </Grid.Column>
             <Grid.Column width={3}>
@@ -357,10 +363,10 @@ const Homepage = () => (
             </Grid.Column>
             <Grid.Column width={7}>
               <Header as='h4' inverted>
-                Footer Header
+                İletişim
               </Header>
               <p>
-                Extra space for a call to action inside the footer that could help re-engage users.
+                <Icon name='mail outline' />info@kvkk.org
               </p>
             </Grid.Column>
           </Grid.Row>

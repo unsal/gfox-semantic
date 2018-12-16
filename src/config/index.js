@@ -24,6 +24,7 @@ export const config = {
   URL_GET_SURELER: apiHost+'/tanimlar/sureler',
   URL_GET_ISLEMDURUMLARI: apiHost+'/tanimlar/islemdurumlari',
   URL_GET_YAYINDURUMLARI: apiHost+'/tanimlar/yayindurumlari',
+  URL_GET_TEDBIRLER: apiHost+'/tanimlar/tedbirler',
 
   // Tanımlar ******************************************
   URL_GetTanimlar: apiHost+'/tanimlar',
@@ -69,12 +70,30 @@ export const config = {
   URL_GET_AUTH_CIDS: apiHost+'/auth/cids',
   URL_LOGIN: apiHost+'/auth/login',
 
+  //export excel download
+  URL_EXPORT: apiHost +'/download',
+
+  //Bolumler
+  URL_GET_BOLUMLER: apiHost+'/tanimlar/bolumler',
+  URL_ADD_BOLUM: apiHost+'/tanimlar/bolumler/add',
+  URL_DELETE_BOLUM: apiHost+'/tanimlar/bolumler/delete',
+
+
   //axios GET, OST header için config
   axios: { headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'}
-  }
+  },
 
+  export: {
+    'responseType': 'blob',
+    headers: {
+    'Content-Type': 'application/json',
+    // 'responseType': 'application/vnd.ms-excel',
+    // 'responseType': 'arraybuffer',
+    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'Access-Control-Allow-Origin': '*'}
+  },
 }
 
 

@@ -1,9 +1,9 @@
 import React, {PureComponent} from "react";
 import {Icon, Dropdown, Message, Segment, Grid } from "semantic-ui-react";
 import {getOffset, removeDuplicates, refreshStoreData} from "../../myComponents";
-import axios from "axios";
 import "../../../kvkk.css";
 import {config} from '../../../../config'
+import axios from "axios";
 import {store} from "../../../../reducer"
 import { connect } from "react-redux";
 

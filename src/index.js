@@ -21,6 +21,8 @@ import PaylasimSekilleri from './kvkk/components/verbisTanimlar/paylasimSekiller
 import Sistemler from './kvkk/components/verbisTanimlar/sistemler';
 import Sureler from './kvkk/components/verbisTanimlar/sureler';
 import Ulkeler from './kvkk/components/verbisTanimlar/ulkeler';
+import Tedbirler from './kvkk/components/verbisTanimlar/tedbirler';
+import Bolumler from './kvkk/components/verbisTanimlar/bolumler';
 
 // Süreç Sahibi
 // import SSKurumlar from './kvkk/components/verbisSS/kurumlar';
@@ -37,7 +39,7 @@ import KVTalepler from './kvkk/components/verbis/kvtalepler'
 import { Provider } from 'react-redux';
 import { store } from './reducer'
 
-import LoginForm from './auth'
+import LoginForm from './auth/loginform'
 
 ReactDOM.render(
 <Provider store = {store}>
@@ -60,6 +62,8 @@ ReactDOM.render(
     <Route exact path='/kvkk/tanimlar/sistemler' component={Sistemler} />
     <Route exact path='/kvkk/tanimlar/sureler' component={Sureler} />
     <Route exact path='/kvkk/tanimlar/ulkeler' component={Ulkeler} />
+    <Route exact path='/kvkk/tanimlar/tedbirler' component={Tedbirler} />
+    <Route exact path='/kvkk/tanimlar/bolumler' component={Bolumler} />
 
    {/* Süreç Sahibi */}
     <Route exact path='/kvkk/ss/kurumlar' component={SSKurumlar} />

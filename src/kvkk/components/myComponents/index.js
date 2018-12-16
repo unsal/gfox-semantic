@@ -6,7 +6,7 @@ import { updateStoreData, updateErrorStatus } from "../../../reducer/actions";
 import {config} from '../../../config'
 
 import {store} from '../../../reducer';
-import { updateStoreCID } from '../../../reducer/actions';
+import { updateStoreCID, updateStoreURL } from '../../../reducer/actions';
 
 export const upperCase=string=>
 {
@@ -133,7 +133,8 @@ export const refreshStoreData = async (store, cid, URL_GET) => {
     try {
       const result = await axios.post(URL_GET, params, config.axios)
       const data = await  _.size(result.data)>0?result.data:[];
-      await store.dispatch(updateStoreData(data)); //store data güncelle
+      await store.dispatch(updateStoreData(data)) //store data güncelle
+      await store.dispatch(updateStoreURL(URL_GET))
     } catch (err) {
           console.log("mycomponents>refreshstoredata() hatası..",err);
     }
@@ -240,7 +241,7 @@ export const createYayindurumlariOptions = async () => {
   }
 
   //Loading Data with Spinner
-  export class LoadingSpinner extends PureComponent {
+  export class LoadingStoreData extends PureComponent {
     state = {isLoading: true, mounted: false}
 
     async componentDidMount() {

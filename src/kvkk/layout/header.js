@@ -17,6 +17,9 @@ import {store} from '../../reducer';
 import { updateStoreNewRequest } from '../../reducer/actions';
 import {DropboxCID} from '../components/myComponents'
 
+//Exce Export
+import { ExportButton } from '../components/export'
+
 
 const Logo = () => (
   <Image size="mini" src={logo} style={{ marginRight: "1.5em" }} />
@@ -60,9 +63,10 @@ class KVKKHeader extends PureComponent  {
             {/* TANIMLAR */}
             <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Genel Tanımlar</span>
               <Dropdown.Menu style={this.style }>
-                <Dropdown.Item as={Link} to='/kvkk/tanimlar/profiller'> <Icon name="sticky note outline" /> Profiller </Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/profiller'> <Icon name="sticky note outline" /> Kullanıcı Profilleri </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/birimler'> <Icon name="sticky note outline" /> Birimler </Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/tanimlar/kv'> <Icon name="sticky note outline" /> Kişisel Veriler </Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/bolumler'> <Icon name="sticky note outline" /> Bölümler </Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/kv'> <Icon name="sticky note outline" /> Veri Kategorileri</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/islemeamaclari'> <Icon name="sticky note outline" /> İşleme Amaçları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/kanallar'> <Icon name="sticky note outline" /> Toplama Kanalları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/sistemler'> <Icon name="sticky note outline" /> KV Sistemler </Dropdown.Item>
@@ -74,6 +78,7 @@ class KVKKHeader extends PureComponent  {
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/paylasimamaclari'> <Icon name="sticky note outline" /> Paylaşım Amaçları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/paylasimsekilleri'> <Icon name="sticky note outline" /> Paylaşım Şekilleri </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/ulkeler'> <Icon name="sticky note outline" /> Ülkeler </Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/tedbirler'> <Icon name="sticky note outline" /> Veri Güvenlik Tedbirleri </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
 
@@ -118,22 +123,30 @@ class KVKKHeader extends PureComponent  {
           Sorgula
         </Menu.Item>}
 
+
         {/* Firma Seç   */}
         <Menu.Item header position='right'>
             <DropboxCID cid={cid} cidOptions={cidOptions}/>
         </Menu.Item>
+
+        {/* Excel Export */}
+        {cid&&<Menu.Item header>
+          {/* <Icon name="save outline" size='large' /> */}
+                <ExportButton cid={cid}/>
+            </Menu.Item>}
 
         {/* Çıkış */}
         <Menu.Item header as={Link} to="/logout" onClick={this.handleExit}>
            <Icon name='sign-out' size='large' color='grey'/>
         </Menu.Item>
 
-
       </Container>
     </Menu>
     )
   }
 }
+
+
 
 const mapStateToProps = (state) => ({ newRequest: state.newRequest, cid: state.cid, cidOptions: state.cidOptions})
 export default connect(mapStateToProps)(KVKKHeader)

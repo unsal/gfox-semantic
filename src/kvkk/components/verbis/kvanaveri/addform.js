@@ -3,7 +3,7 @@ import { Button, Image, Modal, Icon, Form, Dropdown, Grid } from 'semantic-ui-re
 import { config } from "../../../../config";
 import axios from "axios";
 import ImageBanner from "../../../../assets/img/kvanaveri.jpg"
-import {refreshStoreData, createDropdownOptions, MyLoader} from "../../myComponents"
+import {refreshStoreData, createDropdownOptions, MyLittleLoader} from "../../myComponents"
 import {store} from "../../../../reducer"
 import { connect } from "react-redux";
 
@@ -42,10 +42,10 @@ class AddForm extends PureComponent {
   mounted: false
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {cid, uid} = this.props
-    this.loadDropdownComponents()
-    this.setState({ cid, uid, isLoading: false, mounted: true })
+    await this.loadDropdownComponents()
+    this.setState({ cid, uid, mounted: true })
 
   }
 
@@ -74,11 +74,12 @@ class AddForm extends PureComponent {
     const optionsSistemler   =  await createDropdownOptions(config.URL_GET_SISTEMLER, cid);
     const optionsDayanaklar  =  await createDropdownOptions(config.URL_GET_DAYANAKLAR, cid);
     const optionsOrtamlar    =  await createDropdownOptions(config.URL_GET_ORTAMLAR, cid);
+    const optionsTedbirler    =  await createDropdownOptions(config.URL_GET_TEDBIRLER, cid);
 
 
     await this.setState({ optionsBirimler, optionsKV, optionsSureler,
       optionsUlkeler, optionsKanallar, optionsDokumanlar,
-      optionsSistemler,optionsDayanaklar, optionsOrtamlar})
+      optionsSistemler,optionsDayanaklar, optionsOrtamlar, optionsTedbirler})
   }
 
 
@@ -110,15 +111,16 @@ class AddForm extends PureComponent {
     else if (id==="id_sistemler")  { const sistemler_pidms = data.value; this.setState({ sistemler_pidms, error, success, sistemlerChanged:true }) }
     else if (id==="id_dayanaklar")  { const dayanaklar_pidms = data.value; this.setState({ dayanaklar_pidms, error, success, dayanaklarChanged:true }) }
     else if (id==="id_ortamlar")  { const ortamlar_pidms = data.value; this.setState({ ortamlar_pidms, error, success, ortamlarChanged:true }) }
+    else if (id==="id_tedbirler")  { const tedbirler_pidms = data.value; this.setState({ tedbirler_pidms, error, success, tedbirlerChanged:true }) }
   }
 
   FormFields=()=> {
    const style = { overflow: 'visible', width: '300px' }
    const {optionsBirimler, optionsKV, optionsSureler, optionsUlkeler, optionsKanallar,
-          optionsDokumanlar, optionsSistemler, optionsDayanaklar, optionsOrtamlar} = this.state
+          optionsDokumanlar, optionsSistemler, optionsDayanaklar, optionsOrtamlar, optionsTedbirler} = this.state
    const {success,
-          birim_pidm, kv_pidm, sure_pidm, ulkeler_pidms, kanallar_pidms, dokumanlar_pidms, sistemler_pidms, dayanaklar_pidms, ortamlar_pidms,
-          birimChanged, kvChanged, sureChanged, ulkelerChanged, kanallarChanged, dokumanlarChanged, sistemlerChanged, dayanaklarChanged, ortamlarChanged
+          birim_pidm, kv_pidm, sure_pidm, ulkeler_pidms, kanallar_pidms, dokumanlar_pidms, sistemler_pidms, dayanaklar_pidms, ortamlar_pidms, tedbirler_pidms,
+          birimChanged, kvChanged, sureChanged, ulkelerChanged, kanallarChanged, dokumanlarChanged, sistemlerChanged, dayanaklarChanged, ortamlarChanged, tedbirlerChanged
          } = this.state
 
    return <Form>
@@ -144,21 +146,21 @@ class AddForm extends PureComponent {
                />
               </Form.Field>
 
-              <Form.Field>
-               <Dropdown id="id_sureler"
-                placeholder="Saklama Süresi (ay)"
-                fluid search selection
-                options={optionsSureler}
-                onChange={this.handleChange}
-                value = {success?null:sureChanged?sure_pidm:null}
-                style = {style}
-               />
-              </Form.Field>
-
               {/* Multiple Select Dropdowns */}
               <Grid columns={2}>
                 <Grid.Row>
                   <Grid.Column>
+
+                  <Form.Field>
+                  <Dropdown id="id_sureler"
+                    placeholder="Saklama Süresi (ay)"
+                    fluid search selection
+                    options={optionsSureler}
+                    onChange={this.handleChange}
+                    value = {success?null:sureChanged?sure_pidm:null}
+                    style = {style}
+                  />
+                  </Form.Field>
 
                     <Form.Field>
                       <Dropdown id="id_ulkeler"
@@ -226,6 +228,17 @@ class AddForm extends PureComponent {
                         style={style}
                       />
                     </Form.Field>
+
+                    <Form.Field>
+                      <Dropdown id="id_tedbirler"
+                        placeholder="Tedbirler"
+                        fluid multiple search selection
+                        options={optionsTedbirler}
+                        onChange={this.handleChange}
+                        value={success ? [] : tedbirlerChanged ? tedbirler_pidms : []}
+                        style={style}
+                      />
+                    </Form.Field>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
@@ -236,7 +249,7 @@ class AddForm extends PureComponent {
   handleSubmit= async (event)=>{
    event.preventDefault();
    const {cid, uid, birim_pidm, kv_pidm, sure_pidm, ulkeler_pidms,
-          kanallar_pidms, dokumanlar_pidms, sistemler_pidms, dayanaklar_pidms, ortamlar_pidms}= this.state;
+          kanallar_pidms, dokumanlar_pidms, sistemler_pidms, dayanaklar_pidms, ortamlar_pidms, tedbirler_pidms}= this.state;
 
    const ulkeler_data     = await ulkeler_pidms.map(item=>item) //convert [array] to [{json}] for data post
    const kanallar_data    = await kanallar_pidms.map(item=>item) //convert [array] to [{json}] for data post
@@ -244,9 +257,10 @@ class AddForm extends PureComponent {
    const sistemler_data   = await sistemler_pidms.map(item=>item) //convert [array] to [{json}] for data post
    const dayanaklar_data  = await dayanaklar_pidms.map(item=>item) //convert [array] to [{json}] for data post
    const ortamlar_data    = await ortamlar_pidms.map(item=>item) //convert [array] to [{json}] for data post
+   const tedbirler_data   = await tedbirler_pidms.map(item=>item) //convert [array] to [{json}] for data post
 
    const params  = await {birim_pidm, kv_pidm, sure_pidm,
-                          ulkeler_data, kanallar_data, dokumanlar_data, sistemler_data, dayanaklar_data, ortamlar_data, cid, uid}
+                          ulkeler_data, kanallar_data, dokumanlar_data, sistemler_data, dayanaklar_data, ortamlar_data, tedbirler_data, cid, uid}
    console.log('inserted successfully')
 
    //PYTHON SUBMIT PART
@@ -257,6 +271,7 @@ class AddForm extends PureComponent {
                              birim_pidm:0, kv_pidm:0, sure_pidm:0,
                              ulkeler_pidms:[], kanallar_pidms:[], dokumanlar_pidms:[],
                              sistemler_pidms:[], dayanaklar_pidms:[], ortamlar_pidms:[],
+                             tedbirler_pidms:[],
                              open: false //close modal
                             })
 
@@ -272,12 +287,13 @@ class AddForm extends PureComponent {
     const { open, dimmer } = this.state
 
     return (
-      this.state.isLoading?<MyLoader />:<div style={{ float: 'left'}}>
+      this.state.isLoading?<MyLittleLoader />:<div style={{ float: 'left'}}>
         <Icon name="add circle"
               link
               size="big"
               color="blue"
-              onClick={this.show(true)} />
+              onClick={this.show(true)}
+              />
 
         <Modal
               size="large"

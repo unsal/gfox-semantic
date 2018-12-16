@@ -1,6 +1,6 @@
 import {createStore} from 'redux';
 import {NEW_REQUEST, GFOX_STORE_DATA, GFOX_MODE,
-        GFOX_ERROR, GFOX_CID, GFOX_UID, GFOX_TOKEN, GFOX_CID_OPTIONS} from './actions';
+        GFOX_ERROR, GFOX_CID, GFOX_UID, GFOX_TOKEN, GFOX_CID_OPTIONS, GFOX_URL} from './actions';
 
 const initialState = {newRequest: true, data: [],  mode: 'DEFAULT', error: false}
 
@@ -14,6 +14,7 @@ const reducer = (state = initialState, action) => {
        case GFOX_UID  : return {...state, uid: action.uid}
        case GFOX_TOKEN  : return {...state, token: action.token}
        case GFOX_CID_OPTIONS  : return {...state, cidOptions: action.cidOptions}
+       case GFOX_URL  : return {...state, url: action.url}
        default: return state;
     }
 
@@ -21,4 +22,7 @@ const reducer = (state = initialState, action) => {
 
 export const store = createStore(reducer);
 // aşağıdaki virgülden sonraki 2nci kısım chrome devtools için eklendi
-// export const store = createStore(reducer, +  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+// export const store = createStore(
+//         reducer,
+//          +  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+//     );

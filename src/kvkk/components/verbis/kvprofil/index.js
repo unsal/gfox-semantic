@@ -13,7 +13,7 @@ import LabelBox from "./labelbox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {MyMessage,refreshStoreData, clearStoreData, createDropdownOptions, LoadingSpinner, MyLittleLoader}  from '../../myComponents'
+import {MyMessage,refreshStoreData, clearStoreData, createDropdownOptions, LoadingStoreData, MyLittleLoader}  from '../../myComponents'
 
 // import _ from 'lodash';
 
@@ -191,7 +191,7 @@ class KVProfil extends PureComponent {
             <Table.Row>
               <Table.HeaderCell style={{ width: "30%", backgroundColor:headerBGColor }}> PROFIL</Table.HeaderCell>
               <Table.HeaderCell style={{ width: "30%", backgroundColor:headerBGColor }}> SÜREÇ SAHİBİ</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: "40%", backgroundColor:headerBGColor }}> KİŞİSEL VERİ</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: "40%", backgroundColor:headerBGColor }}> VERİ KATEGORİLERİ</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
@@ -222,9 +222,9 @@ class KVProfil extends PureComponent {
     return (
 
       <KVKKLayout>
-          <LoadingSpinner cid={cid} url={url}>
+          <LoadingStoreData cid={cid} url={url}>
               <this.myRender />
-          </LoadingSpinner>
+          </LoadingStoreData>
       </KVKKLayout>
 
     );

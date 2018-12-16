@@ -92,6 +92,8 @@ class AddBox extends PureComponent {
         options = await createDropdownOptions(config.URL_GET_DAYANAKLAR, cid);
       } else if (id==='ortamlar') {
         options = await createDropdownOptions(config.URL_GET_ORTAMLAR, cid);
+      } else if (id==='tedbirler') {
+        options = await createDropdownOptions(config.URL_GET_TEDBIRLER, cid);
       } else options = null
 
       const addMode = true

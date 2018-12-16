@@ -13,7 +13,7 @@ import LabelBox from "./labelbox";
 
 import '../../../kvkk.css';
 import { config } from "../../../../config";
-import {refreshStoreData, LoadingSpinner}  from '../../myComponents'
+import {refreshStoreData, LoadingStoreData}  from '../../myComponents'
 
 import AddForm from "./addform"
 
@@ -172,9 +172,9 @@ class KVPaylasim extends PureComponent {
     return (
 
       <KVKKLayout>
-          <LoadingSpinner cid={cid} url={url}>
+          <LoadingStoreData cid={cid} url={url}>
               <this.myRender />
-          </LoadingSpinner>
+          </LoadingStoreData>
       </KVKKLayout>
 
     );
