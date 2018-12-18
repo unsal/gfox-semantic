@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { Table, Icon } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
+import Login from '../../../../auth/login'
 
 //Redux
 import { connect } from "react-redux";
@@ -173,13 +174,13 @@ class KVAnaveri extends PureComponent {
     const url = config.URL_GET_KVANAVERI
 
     return (
-
+    <Login>
       <KVKKLayout>
           <LoadingStoreData cid={cid} url={url}>
               <this.myRender />
           </LoadingStoreData>
       </KVKKLayout>
-
+    </Login>
     );
   }
 }

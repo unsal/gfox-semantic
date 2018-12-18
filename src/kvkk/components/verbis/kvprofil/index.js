@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { Table, Dropdown, Icon } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
+import Login from '../../../../auth/login'
 
 import axios from "axios";
 
@@ -220,13 +221,13 @@ class KVProfil extends PureComponent {
     const {cid} = this.props
     const url = config.URL_GET_KVPROFIL
     return (
-
-      <KVKKLayout>
-          <LoadingStoreData cid={cid} url={url}>
-              <this.myRender />
-          </LoadingStoreData>
-      </KVKKLayout>
-
+      <Login>
+        <KVKKLayout>
+            <LoadingStoreData cid={cid} url={url}>
+                <this.myRender />
+            </LoadingStoreData>
+        </KVKKLayout>
+      </Login>
     );
   }
 }

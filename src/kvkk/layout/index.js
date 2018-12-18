@@ -28,25 +28,12 @@ class KVKKLayout extends PureComponent {
 
     render() {
         const {cid} = this.props
-        return (
-                <KVKKHeader>
+        return <React.Fragment>
+                    <KVKKHeader />>
                     {cid?this.props.children:<this.MessageNotCid />}
-                </KVKKHeader>
-        )
+               </React.Fragment>
     }
 
-    // render() {
-    //     const {cid, token} = this.props
-    //     const validLogin = authenticated(token)
-    //     return (
-    //         validLogin?<div>
-    //                         <KVKKHeader />
-    //                             {cid?this.props.children:<this.MessageNotCid />}
-
-    //                         {/* <KVKKFooter /> ekranda splash yapıyor, kapattım!!! */}
-    //                         </div>:<this.MessageNotLogin />
-    //     )
-    // }
 }
 
 const mapStateToProps = state => ({ data: state.data, token: state.token, cid: state.cid });

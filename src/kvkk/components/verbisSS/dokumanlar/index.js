@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { Table } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
+import Login from '../../../../auth/login'
 
 import { config } from "../../../../config";
 
@@ -95,13 +96,14 @@ class SSDokumanlar extends PureComponent {
   render() {
     const { isLoading, apiIsOnline } = this.state;
     return (
+    <Login>
       <KVKKLayout>
         {!isLoading && apiIsOnline? this.myRender()
          : !isLoading&&!apiIsOnline? <MyMessage error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
          : <MyLoader /> // sayfa ilk yüklendiğinde ekranda birşey gözükmemesi için null yapıldı.. buraya loading koyabilirsin.
         }
-
       </KVKKLayout>
+    </Login>
     );
   }
 }

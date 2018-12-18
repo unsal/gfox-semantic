@@ -17,12 +17,12 @@ class Login extends PureComponent {
         }
 
         MessageFailed() {
-                return <Message warning>
-                    <Message.Header>Güvenlik Uyarısı</Message.Header>
-                    <p>İzinsiz erişiminiz kayıt altına alınmıştır!<br />
-                    Yetkili kullanıcı olarak bu hatayı alıyorsanız lütfen uygulamayı tarayıcınızdan "Refresh" yapmadan, sadece menüler üzerinde gezinerek kullanın.<br />
-                    <a href={settings.urlLogin}>Güvenli Giriş</a> yaparak kullanmaya devam edebilirsiniz!</p>
-                </Message>
+                return <Message color='brown' style={{ margin:'3em', width:'600px'}}>
+                            <Message.Header>Güvenlik Uyarısı</Message.Header>
+                            <p>İzinsiz erişiminiz kayıt altına alınmıştır!<br />
+                            Yetkili kullanıcı olarak bu hatayı alıyorsanız lütfen uygulamayı tarayıcınızdan "Refresh" yapmadan, sadece menüler üzerinde gezinerek kullanın.<br />
+                            <a href={settings.urlLogin}>Güvenli Giriş</a> yaparak kullanmaya devam edebilirsiniz!</p>
+                        </Message>
                 }
 
         render() {

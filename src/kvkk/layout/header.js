@@ -65,7 +65,8 @@ class KVKKHeader extends PureComponent  {
               <Dropdown.Menu style={this.style }>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/profiller'> <Icon name="sticky note outline" /> Kullanıcı Profilleri </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/birimler'> <Icon name="sticky note outline" /> Birimler </Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/tanimlar/bolumler'> <Icon name="sticky note outline" /> Bölümler </Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/bolumler'> <Icon name="sticky note outline" /> Birimler > Bölümler </Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/surecler'> <Icon name="sticky note outline" /> Birimler > Bölümler > Süreçler </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/kv'> <Icon name="sticky note outline" /> Veri Kategorileri</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/islemeamaclari'> <Icon name="sticky note outline" /> İşleme Amaçları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/kanallar'> <Icon name="sticky note outline" /> Toplama Kanalları </Dropdown.Item>

@@ -23,6 +23,7 @@ import Sureler from './kvkk/components/verbisTanimlar/sureler';
 import Ulkeler from './kvkk/components/verbisTanimlar/ulkeler';
 import Tedbirler from './kvkk/components/verbisTanimlar/tedbirler';
 import Bolumler from './kvkk/components/verbisTanimlar/bolumler';
+import Surecler from './kvkk/components/verbisTanimlar/surecler';
 
 // Süreç Sahibi
 // import SSKurumlar from './kvkk/components/verbisSS/kurumlar';
@@ -50,6 +51,8 @@ ReactDOM.render(
     <Route exact path='/kvkk' component={KVKK} />
     <Route exact path='/kvkk/tanimlar/profiller' component={Profiller} />
     <Route exact path='/kvkk/tanimlar/birimler' component={Birimler} />
+    <Route exact path='/kvkk/tanimlar/bolumler' component={Bolumler} />
+    <Route exact path='/kvkk/tanimlar/surecler' component={Surecler} />
     <Route exact path='/kvkk/tanimlar/dayanaklar' component={Dayanaklar} />
     <Route exact path='/kvkk/tanimlar/dokumanlar' component={Dokumanlar} />
     <Route exact path='/kvkk/tanimlar/islemeAmaclari' component={IslemeAmaclari} />
@@ -63,7 +66,6 @@ ReactDOM.render(
     <Route exact path='/kvkk/tanimlar/sureler' component={Sureler} />
     <Route exact path='/kvkk/tanimlar/ulkeler' component={Ulkeler} />
     <Route exact path='/kvkk/tanimlar/tedbirler' component={Tedbirler} />
-    <Route exact path='/kvkk/tanimlar/bolumler' component={Bolumler} />
 
    {/* Süreç Sahibi */}
     <Route exact path='/kvkk/ss/kurumlar' component={SSKurumlar} />

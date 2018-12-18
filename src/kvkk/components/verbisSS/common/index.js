@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { Table, Message } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
+import Login from '../../../../auth/login'
 
 //Redux
 import { connect } from "react-redux";
@@ -114,14 +115,14 @@ class Common extends PureComponent {
   render() {
     const { isLoading, apiIsOnline } = this.state;
     return (
-
+    <Login>
       <KVKKLayout>
         { !isLoading && apiIsOnline? this.myRender()
          : !isLoading&&!apiIsOnline? <Message error header='API Bağlantı Hatası' content='Veriye erişilemiyor' />
          :  <MyLoader />
         }
-
       </KVKKLayout>
+    </Login>
     );
   }
 }

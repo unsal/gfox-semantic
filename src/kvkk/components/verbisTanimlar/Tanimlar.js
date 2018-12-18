@@ -1,6 +1,9 @@
 import React, { PureComponent } from "react";
 import { Table, Icon, Header, Form, Input, Checkbox, Segment } from "semantic-ui-react";
+
+import Login from "../../../auth/login"
 import KVKKLayout from "../../layout";
+
 
 import axios from "axios";
 import { config } from "../../../config";
@@ -310,11 +313,13 @@ render() {
     const {cid, id} = this.props
     const url = config.URL_GetTanimlar+"/"+id
     return (
+      <Login>
         <KVKKLayout>
           <LoadingStoreData cid={cid} url={url}>
               <this.myRender />
           </LoadingStoreData>
-      </KVKKLayout>
+       </KVKKLayout>
+      </Login>
     );
   }
 }

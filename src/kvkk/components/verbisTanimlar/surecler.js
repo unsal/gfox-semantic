@@ -12,9 +12,9 @@ import Login from '../../../auth/login'
 import { connect } from "react-redux";
 import { LoadingStoreData, refreshStoreData} from "../myComponents"
 
-class Bolumler extends PureComponent {
+class Surecler extends PureComponent {
  state = {
-  URL_GET: config.URL_GET_BOLUMLER,
+  URL_GET: config.URL_GET_SURECLER,
   mounted: false,
   addMode: false, // eklem modunda bölüm ekleme fieldbox getirmesi için..
   onSubmitError: false
@@ -24,30 +24,29 @@ class Bolumler extends PureComponent {
    this.setState({mounted: true})
  }
 
- BolumlerListesi = ({selectedBirimPidm, data}) => (
-   data && data.map(({bolum_pidm, bolum_name}) =>
-          bolum_name!==null &&
-                <div key={bolum_pidm} style={{ display:'block', marginTop:'3px'}}>
-                      <Label key={bolum_pidm} as='a' content={bolum_name} onRemove={()=>this.setState({ deleteMode: true, selectedBirimPidm: selectedBirimPidm, selectedBolumPidm: bolum_pidm })} />
-                      { (bolum_pidm===this.state.selectedBolumPidm && this.state.deleteMode && !this.state.onSubmitError) &&<this.DeleteBox /> }
+ SureclerListesi = ({rowBolumPidm, data}) => (
+   data && data.map(({surec_pidm, surec_name}) =>
+          surec_name!==null &&
+                <div key={surec_pidm} style={{ display:'block', marginTop:'3px'}}>
+                      <Label key={surec_pidm} as='a' content={surec_name} onRemove={()=>this.setState({ deleteMode: true, deleteBolumPidm: rowBolumPidm, selectedSurecPidm: surec_pidm })} />
+                      { (surec_pidm===this.state.selectedSurecPidm && this.state.deleteMode && !this.state.onSubmitError) &&<this.DeleteBox /> }
                 </div>)
  )
 
 // (+)
-AddButton= ({pidm}) =>(
-  // (pidm===this.state.mouseOverPidm && !this.state.addMode) &&
+AddButton= ({addBolumPidm}) =>(
         <Icon  // listeleme modunda (+) butonu
             link
             name="add circle"
             // size="small"
             color="teal"
-            onClick={()=> this.setState({addMode: true, birim_pidm: pidm}) }
+            onClick={()=> this.setState({addMode: true, addBolumPidm}) }
           />
   )
 
 
-InputBox= ({pidm}) =>{
- return (pidm===this.state.mouseOverPidm && this.state.addMode && !this.state.onSubmitError) ?
+InputBox= ({rowBolumPidm}) =>{
+ return (rowBolumPidm===this.state.addBolumPidm && this.state.addMode && !this.state.onSubmitError) ?
          <Input
                 action={{
                       color: 'teal',
@@ -62,7 +61,7 @@ InputBox= ({pidm}) =>{
                 onChange={this.handleChange}
                 name = "name"
           />:
-           (pidm===this.state.mouseOverPidm && this.state.onSubmitError) &&
+           (rowBolumPidm===this.state.addBolumPidm && this.state.onSubmitError) &&
            <Message negative size='tiny' onDismiss={()=>this.setState({ onSubmitError: false })}>
                 Başarız İşlem! Mükerrer kayıt / veri servisinde hata olabilir..
            </Message>
@@ -96,14 +95,14 @@ handleDelete = async (event) => {
   event.preventDefault();
 
   const {cid} = this.props
-  const birim_pidm = this.state.selectedBirimPidm
-  const pidm = this.state.selectedBolumPidm
+  const bolum_pidm = this.state.bolum_pidm
+  const pidm = this.state.surec_pidm
 
-  const params = await {birim_pidm, pidm, cid}
+  const params = await {bolum_pidm, pidm, cid}
 
   try {
-      await axios.post(config.URL_DELETE_BOLUM, params, config.axios)
-      await refreshStoreData(store, this.props.cid, config.URL_GET_BOLUMLER)
+      await axios.post(config.URL_DELETE_SUREC, params, config.axios)
+      await refreshStoreData(store, this.props.cid, config.URL_GET_SURECLER)
       await this.setState({ deleteMode: false })
   } catch (err) {
         console.log("Bolum Delete Error",err);
@@ -129,16 +128,16 @@ handleChange = e => {
 
 handleSubmit = async() => {
 
-    const {name, birim_pidm} = this.state
+    const {name, bolum_pidm} = this.state
     const {cid, uid} = this.props
 
-    const params = {birim_pidm, name, cid, uid}
+    const params = {bolum_pidm, name, cid, uid}
 
     try {
-        await axios.post(config.URL_ADD_BOLUM, params, config.axios)
+        await axios.post(config.URL_ADD_SUREC, params, config.axios)
 
         await this.setState({ onSubitError:false, addMode: false, inputIsVisible: false  })
-        await refreshStoreData(store, cid, config.URL_GET_BOLUMLER)
+        await refreshStoreData(store, cid, config.URL_GET_SURECLER)
 
     } catch (err) {
           this.setState({ onSubmitError: true })
@@ -152,7 +151,16 @@ handleSubmit = async() => {
 
     return (
      <div className="kvkk-content">
-       <Header as='h2'>BİRİM > BÖLÜMLER</Header>
+       <Header as='h2'>BİRİMLER > BÖLÜMLER > SÜREÇLER</Header>
+
+       {/* Hata mesajı bölümü  */}
+       {(this.state.addBolumPidm === null && this.state.addMode && !this.state.onSubmitError) &&
+          <div style={{ width: "800px" }}>
+            <Message warning size='tiny' onDismiss={()=>this.setState({ addMode: false })}>
+                Önce Birim > Bölüm eklemelisiniz...
+            </Message>
+          </div>
+       }
 
        <Table
          sortable
@@ -166,16 +174,18 @@ handleSubmit = async() => {
            <Table.Row>
              <Table.HeaderCell> Birim </Table.HeaderCell>
              <Table.HeaderCell> Bölümler </Table.HeaderCell>
+             <Table.HeaderCell> Süreçler </Table.HeaderCell>
            </Table.Row>
          </Table.Header>
          <Table.Body>
-           {(this.state.mounted && data) && data.map((row) => (
-                 <Table.Row key={row.birim_pidm}>
+           {(this.state.mounted && data) && data.map((row, index) => (
+                <Table.Row key={index}>
                    <Table.Cell style={{textAlign:"left", verticalAlign:'top'}}> {row.birim_name} </Table.Cell>
-                   <Table.Cell style={{textAlign:"left"}} onMouseOver={()=>!this.state.addMode && setTimeout(()=>this.setState({ mouseOverPidm: row.birim_pidm }),50)}>
-                       <this.BolumlerListesi selectedBirimPidm={row.birim_pidm} data={row.bolumler_data}/>
-                       <this.InputBox pidm={row.birim_pidm} />
-                       <this.AddButton pidm={row.birim_pidm} />
+                   <Table.Cell style={{textAlign:"left", verticalAlign:'top'}}> {row.bolum_name} </Table.Cell>
+                   <Table.Cell style={{textAlign:"left"}} >
+                       <this.SureclerListesi rowBolumPidm={row.bolum_pidm} data={row.surecler_data}/>
+                       <this.InputBox rowBolumPidm={row.bolum_pidm===null?index*999:row.bolum_pidm} />
+                       <this.AddButton addBolumPidm={row.bolum_pidm} />
                    </Table.Cell>
                  </Table.Row>
                ))
@@ -189,7 +199,7 @@ handleSubmit = async() => {
 
  render() {
   const {cid} = this.props
-  const url = config.URL_GET_BOLUMLER
+  const url = config.URL_GET_SURECLER
   return (
     <Login>
       <KVKKLayout>
@@ -203,4 +213,4 @@ handleSubmit = async() => {
 }
 
 const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid});
-export default connect(mapStateToProps)(Bolumler);
+export default connect(mapStateToProps)(Surecler);

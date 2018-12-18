@@ -78,6 +78,11 @@ export const config = {
   URL_ADD_BOLUM: apiHost+'/tanimlar/bolumler/add',
   URL_DELETE_BOLUM: apiHost+'/tanimlar/bolumler/delete',
 
+   //Surecler
+   URL_GET_SURECLER: apiHost+'/tanimlar/surecler',
+   URL_ADD_SUREC: apiHost+'/tanimlar/surecler/add',
+   URL_DELETE_SUREC: apiHost+'/tanimlar/surecler/delete',
+
 
   //axios GET, OST header için config
   axios: { headers: {
