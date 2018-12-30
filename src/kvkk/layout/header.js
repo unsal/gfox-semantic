@@ -67,7 +67,8 @@ class KVKKHeader extends PureComponent  {
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/birimler'> <Icon name="sticky note outline" /> Birimler </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/bolumler'> <Icon name="sticky note outline" /> Birimler > Bölümler </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/surecler'> <Icon name="sticky note outline" /> Birimler > Bölümler > Süreçler </Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/tanimlar/kv'> <Icon name="sticky note outline" /> Veri Kategorileri</Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/kv'> <Icon name="sticky note outline" /> KV</Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/kvkategoriler'> <Icon name="sticky note outline" /> KV Kategorileri</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/islemeamaclari'> <Icon name="sticky note outline" /> İşleme Amaçları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/kanallar'> <Icon name="sticky note outline" /> Toplama Kanalları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/sistemler'> <Icon name="sticky note outline" /> KV Sistemler </Dropdown.Item>
@@ -102,6 +103,14 @@ class KVKKHeader extends PureComponent  {
                 <Dropdown.Item as={Link} to='/kvkk/verbis/profil'><Icon name="lock" /> Profil KV İlişkisi</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/verbis/paylasim'><Icon name="lock" /> KV Paylaşımları</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/verbis/anaveri'><Icon name="lock" /> Verbis Anaveri Girişi</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown.Item>
+
+
+              {/* ÖZDİLEK VERSION */}
+              <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Özdilek</span>
+              <Dropdown.Menu style={this.style }>
+                <Dropdown.Item as={Link} to='/kvkk/verbis/ozdilek/anaveriler'><Icon name="lock" /> Anaveri Girişi</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
 

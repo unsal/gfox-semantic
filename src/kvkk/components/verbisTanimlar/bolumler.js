@@ -96,10 +96,9 @@ handleDelete = async (event) => {
   event.preventDefault();
 
   const {cid} = this.props
-  const birim_pidm = this.state.selectedBirimPidm
   const pidm = this.state.selectedBolumPidm
 
-  const params = await {birim_pidm, pidm, cid}
+  const params = await {pidm, cid}
 
   try {
       await axios.post(config.URL_DELETE_BOLUM, params, config.axios)

@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Table, Icon, Header, Form, Input, Checkbox, Segment } from "semantic-ui-react";
+import { Table, Icon, Header, Form, Input, Checkbox, Segment, Dropdown } from "semantic-ui-react";
 
 import Login from "../../../auth/login"
 import KVKKLayout from "../../layout";
@@ -7,6 +7,8 @@ import KVKKLayout from "../../layout";
 
 import axios from "axios";
 import { config } from "../../../config";
+
+import {createDropdownOptions} from "../myComponents"
 
 //Redux
 import { connect } from "react-redux";
@@ -34,7 +36,13 @@ class Tanimlar extends PureComponent {
       formSecure: false,
 
       selectedTanimPidm: 0,   //Seçilmiş tanımı silmek için
+      mounted: false
     };
+
+    async componentDidMount() {
+      const optionsKVKategoriler =  await createDropdownOptions(config.URL_GET_KVKATEGORILER, this.props.cid)
+      await this.setState({ mounted: true, optionsKVKategoriler})
+    }
 
   handleSubmit =(event)=> {
     event.preventDefault();
@@ -46,6 +54,7 @@ class Tanimlar extends PureComponent {
     form.set("local",this.state.formLocal);
     form.set("phone_area",this.state.formPhoneArea);
     form.set("secure",this.state.formSecure);
+    form.set("kategori", this.state.formKategori);
     //auth
     form.set("cid", this.props.cid)
     form.set("uid", this.props.uid)
@@ -93,12 +102,19 @@ class Tanimlar extends PureComponent {
     this.setState({ formLocal: checked});
   }
 
+  // KV Kategori
+  handleChangeKVKategori = (event, data) => {
+    event.preventDefault();
+    const formKategori = data.value; // burdaki data dropdownun özel propertiesidir, karıştırma..
+    this.setState({ formKategori });
+  }
+
   handleKeyDown = (event) => {
     if (event.keyCode===27) {
           refreshStoreData(store, this.props.cid, this.state.URL_GET)
           console.log("Escape pressed...")
     } else if (event.keyCode===13) {
-           this.handleSubmit()
+           this.handleSubmit(event)
     }
   }
 
@@ -112,6 +128,7 @@ class Tanimlar extends PureComponent {
     const { id, inputIcon } = props;
     const isSistemler = id ==="sistemler";
     const isUlkeler = id === "ulkeler";
+    const isKV = id === "kv";
 
     return <Segment basic compact className="segment-form" >
 
@@ -133,13 +150,14 @@ class Tanimlar extends PureComponent {
                   }
 
                   {/* Input: Name alani */}
-                  <Form.Field width="12">
+                  <Form.Field width="10">
                     <Input
                         value={this.state.formName}
                         type= "text"
                         icon={inputIcon}
                         size="large"
                         name="name"
+                        ref={input => input && input.focus()}
                         placeholder={id+" ekle"}
                         className='input'
                         onChange={this.handleChangeName}
@@ -147,6 +165,19 @@ class Tanimlar extends PureComponent {
                         autoComplete = "off"
                     />
                   </Form.Field>
+
+
+                    {isKV&&
+                      <Form.Field width="10">
+                      <Dropdown
+                              compact
+                              fluid // sağa doğru uzar
+                              placeholder='KV Kategorisi'
+                              search selection
+                              options={this.state.optionsKVKategoriler}
+                              onChange = {this.handleChangeKVKategori}
+                          />
+                      </Form.Field>}
 
 
                     {isUlkeler&&
@@ -210,6 +241,7 @@ class Tanimlar extends PureComponent {
     let dataFiltered =  data;
     const isSistemler = id === "sistemler";
     const isUlkeler = id === "ulkeler";
+    const isKV = id === "kv"
 
     // Data.Filter> Ekleme yapılarken tablo filtre ile girileni getirsin diye..
     const searchString = this.state.searchString.trim().toLowerCase();
@@ -248,8 +280,14 @@ class Tanimlar extends PureComponent {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
-                    Başlık
+                    Kişisel Veri
               </Table.HeaderCell>
+              {isKV && (
+                <Table.HeaderCell className="headercellKV">
+                  {" "}
+                  KV Kategori{" "}
+                </Table.HeaderCell>
+              )}
               {isSistemler && (
                 <Table.HeaderCell className="headercell">
                   {" "}
@@ -271,8 +309,8 @@ class Tanimlar extends PureComponent {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {dataFiltered && dataFiltered.map(item => (
-                  <Table.Row key={item.pidm}>
+            {(this.state.mounted && dataFiltered) && dataFiltered.map((item, index) => (
+                  <Table.Row key={index}>
                     <Table.Cell style={{textAlign:"left"}}>
 
                     <LabelBox
@@ -283,6 +321,11 @@ class Tanimlar extends PureComponent {
 
                     </Table.Cell>
 
+                    {isKV && (
+                      <Table.Cell style={{ textAlign: "left" }}>
+                        {item.kategori_name}
+                      </Table.Cell>
+                    )}
                     {isSistemler && (
                       <Table.Cell style={{ textAlign: "center" }}>
                         {item.local? ( <Icon name="hdd" color="orange" /> )

@@ -41,7 +41,7 @@ class LabelBox extends PureComponent {
         refreshStoreData(store, cid, URL_GET );
       })
       .then(
-          this.setState({ error:false })
+          this.setState({ error:false, deleteMode: false })
         )
       .catch(error => {
         this.setState({ error: true });

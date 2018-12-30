@@ -15,6 +15,7 @@ import IslemeAmaclari from './kvkk/components/verbisTanimlar/islemeAmaclari';
 import Kanallar from './kvkk/components/verbisTanimlar/kanallar';
 import Kurumlar from './kvkk/components/verbisTanimlar/kurumlar';
 import KV from './kvkk/components/verbisTanimlar/kv';
+import KVKategoriler from './kvkk/components/verbisTanimlar/kvKategoriler';
 import Ortamlar from './kvkk/components/verbisTanimlar/ortamlar';
 import PaylasimAmaclari from './kvkk/components/verbisTanimlar/paylasimAmaclari';
 import PaylasimSekilleri from './kvkk/components/verbisTanimlar/paylasimSekilleri';
@@ -34,6 +35,8 @@ import SSDokumanlar from './kvkk/components/verbisSS/dokumanlar';
 import KVProfil from './kvkk/components/verbis/kvprofil'
 import KVPaylasim from './kvkk/components/verbis/kvpaylasim'
 import KVAnaveri from './kvkk/components/verbis/kvanaveri'
+
+import Anaveriler from './kvkk/components/verbis/ozdilek/anaveriler'
 
 import KVTalepler from './kvkk/components/verbis/kvtalepler'
 
@@ -59,6 +62,7 @@ ReactDOM.render(
     <Route exact path='/kvkk/tanimlar/kanallar' component={Kanallar} />
     <Route exact path='/kvkk/tanimlar/kurumlar' component={Kurumlar} />
     <Route exact path='/kvkk/tanimlar/kv' component={KV} />
+    <Route exact path='/kvkk/tanimlar/kvkategoriler' component={KVKategoriler} />
     <Route exact path='/kvkk/tanimlar/ortamlar' component={Ortamlar} />
     <Route exact path='/kvkk/tanimlar/paylasimAmaclari' component={PaylasimAmaclari} />
     <Route exact path='/kvkk/tanimlar/paylasimSekilleri' component={PaylasimSekilleri} />
@@ -77,6 +81,9 @@ ReactDOM.render(
     <Route exact path='/kvkk/verbis/profil' component={KVProfil} />
     <Route exact path='/kvkk/verbis/paylasim' component={KVPaylasim} />
     <Route exact path='/kvkk/verbis/anaveri' component={KVAnaveri} />
+
+     {/* Özdilek*/}
+    <Route exact path='/kvkk/verbis/ozdilek/anaveriler' component={Anaveriler} />
 
      {/* Verbis KVTalepler */}
     <Route exact path='/kvkk/verbis/kvtalepler' component={KVTalepler} />

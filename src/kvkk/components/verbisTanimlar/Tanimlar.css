@@ -5,6 +5,12 @@
   text-align: center !important;
 }
 
+.headercellKV {
+  width: 40% !important;
+  background: #F0F0F0 !important;
+  text-align: left !important;
+}
+
 .input {
   width: 100% !important;
   text-align: center !important;

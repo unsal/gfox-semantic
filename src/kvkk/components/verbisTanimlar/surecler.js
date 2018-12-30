@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Table,  Header, Label, Input, Icon, Message} from "semantic-ui-react";
+import { Table,  Header, Label, Input, Icon, Message, Item} from "semantic-ui-react";
 import KVKKLayout from "../../layout";
 
 import { config } from "../../../config";
@@ -11,6 +11,9 @@ import Login from '../../../auth/login'
 //Redux
 import { connect } from "react-redux";
 import { LoadingStoreData, refreshStoreData} from "../myComponents"
+
+import { Link } from "react-router-dom";
+
 
 class Surecler extends PureComponent {
  state = {
@@ -95,10 +98,9 @@ handleDelete = async (event) => {
   event.preventDefault();
 
   const {cid} = this.props
-  const bolum_pidm = this.state.bolum_pidm
-  const pidm = this.state.surec_pidm
+  const pidm = this.state.selectedSurecPidm
 
-  const params = await {bolum_pidm, pidm, cid}
+  const params = await {pidm, cid}
 
   try {
       await axios.post(config.URL_DELETE_SUREC, params, config.axios)
@@ -128,10 +130,10 @@ handleChange = e => {
 
 handleSubmit = async() => {
 
-    const {name, bolum_pidm} = this.state
+    const {name, addBolumPidm} = this.state
     const {cid, uid} = this.props
 
-    const params = {bolum_pidm, name, cid, uid}
+    const params = {bolum_pidm: addBolumPidm, name, cid, uid}
 
     try {
         await axios.post(config.URL_ADD_SUREC, params, config.axios)
@@ -180,7 +182,7 @@ handleSubmit = async() => {
          <Table.Body>
            {(this.state.mounted && data) && data.map((row, index) => (
                 <Table.Row key={index}>
-                   <Table.Cell style={{textAlign:"left", verticalAlign:'top'}}> {row.birim_name} </Table.Cell>
+                   <Table.Cell style={{textAlign:"left", verticalAlign:'top'}}><Item as={Link} to='/kvkk/tanimlar/bolumler'>{row.birim_name}</Item> </Table.Cell>
                    <Table.Cell style={{textAlign:"left", verticalAlign:'top'}}> {row.bolum_name} </Table.Cell>
                    <Table.Cell style={{textAlign:"left"}} >
                        <this.SureclerListesi rowBolumPidm={row.bolum_pidm} data={row.surecler_data}/>

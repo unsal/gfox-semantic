@@ -25,6 +25,8 @@ export const config = {
   URL_GET_ISLEMDURUMLARI: apiHost+'/tanimlar/islemdurumlari',
   URL_GET_YAYINDURUMLARI: apiHost+'/tanimlar/yayindurumlari',
   URL_GET_TEDBIRLER: apiHost+'/tanimlar/tedbirler',
+  URL_GET_KVKATEGORILER: apiHost+'/tanimlar/kvkategoriler',
+
 
   // Tanımlar ******************************************
   URL_GetTanimlar: apiHost+'/tanimlar',
@@ -78,10 +80,15 @@ export const config = {
   URL_ADD_BOLUM: apiHost+'/tanimlar/bolumler/add',
   URL_DELETE_BOLUM: apiHost+'/tanimlar/bolumler/delete',
 
-   //Surecler
-   URL_GET_SURECLER: apiHost+'/tanimlar/surecler',
-   URL_ADD_SUREC: apiHost+'/tanimlar/surecler/add',
-   URL_DELETE_SUREC: apiHost+'/tanimlar/surecler/delete',
+  //Surecler
+  URL_GET_SURECLER: apiHost+'/tanimlar/surecler',
+  URL_GET_SURECLERDD: apiHost+'/tanimlar/sureclerdd', //for Dropdown on anaveriler.js
+  URL_ADD_SUREC: apiHost+'/tanimlar/surecler/add',
+  URL_DELETE_SUREC: apiHost+'/tanimlar/surecler/delete',
+
+  //Surecler
+  URL_GET_ANAVERILER: apiHost+'/verbis/anaveriler',
+  URL_UPDATE_ANAVERILER: apiHost+'/verbis/anaveriler/update',
 
 
   //axios GET, OST header için config
