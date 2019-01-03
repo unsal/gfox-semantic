@@ -42,6 +42,7 @@ export const getOffset = (element)=> {
 
 // MyMessage
   export class MyMessage extends PureComponent {
+    // props: success, error, header, content
     constructor(props) {
       super(props);
         this.state = { visible: true }
@@ -63,7 +64,7 @@ export const getOffset = (element)=> {
          this.props.error?
             <Message error onDismiss={this.handleDismiss} header={this.props.header} content={this.props.content} size='tiny' attached='top' />
           :this.props.success?
-            <Message success onDismiss={this.handleDismiss} header={this.props.header} content={this.props.content} ize='tiny' attached='top' />
+            <Message success onDismiss={this.handleDismiss} header={this.props.header} content={this.props.content} size='tiny' attached='top' />
           : <Message onDismiss={this.handleDismiss} header={this.props.header} content={this.props.content} ize='tiny' attached='top' />
             )
       }

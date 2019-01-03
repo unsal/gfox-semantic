@@ -89,6 +89,7 @@ export const config = {
   //Surecler
   URL_GET_ANAVERILER: apiHost+'/verbis/anaveriler',
   URL_UPDATE_ANAVERILER: apiHost+'/verbis/anaveriler/update',
+  URL_ADD_ANAVERILER: apiHost+'/verbis/anaveriler/add',
 
 
   //axios GET, OST header için config
