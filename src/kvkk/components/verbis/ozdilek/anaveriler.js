@@ -16,7 +16,11 @@ class Anaveriler extends PureComponent {
     mounted: false,
     addMode: false,
     deleteMode: false,
-    editMode: false
+    editMode: false,
+    copyMode: false,
+    fields: ['profil_pidm', 'surec_pidm', 'kv_pidm', 'sure_pidm',
+                    'kanallar_data','sistemler_data', 'dayanaklar_data', 'isleme_amaclari_data',
+                    'ortamlar_data', 'tedbirler_data']
   }
 
 
@@ -45,73 +49,75 @@ class Anaveriler extends PureComponent {
     const Required = () => <Icon name="asterisk" size="small" color="red" />
     return <Table.Header>
       <Table.Row>
-        <Table.HeaderCell style={{ width: "14%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }} > KİŞİ GRUBU  <Required /></Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "13%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> İLGİLİ SÜREÇ <Required /></Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "14%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }} > PROFİL <Required /></Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "13%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SÜREÇ <Required /></Table.HeaderCell>
         <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KV <Required /></Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "3%",  verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SAKLAMA SÜRESİ</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> GİRİŞ KANALI</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KULLANILAN SİSTEM</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> HUKUKİ DAYANAK</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> İŞLEME AMACI</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SAKLAMA ORTAMLARI</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> GÜVENLİK TEDBİRLERİ</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "3%",  verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SÜRESİ</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KANALLAR</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SİSTEMLER</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> DAYANAKLAR</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> İŞL.AMAÇLARI</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> ORTAMLAR</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> TEDBİRLER</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
   }
 
-  handleChange = (event, data) => {
-    event.preventDefault()
-    const {name, value} =  data
-
-    this.setState({ [name]: value, [name+'Changed']: true })
+  //convert data to array:[{pidm, name}] -> [x,y] for dropdown component
+  convert=(value)=> {
+     let newValue = []
+     value && value.map( key => newValue.push(key.pidm))
+     return newValue
   }
 
-  MyDropdown = ({name, value, options, multiple, error}) => (
-    <Dropdown
-      name = {name}
-      value={value}
-      multiple={multiple}
-      minCharacters = "10"
-      search selection
-      fluid // sağa doğru uzar
-      options={options}
-      onChange={this.handleChange}
-      error = {error}
-    />
-  )
-
-  cellStyle = { verticalAlign: 'top'}
-
-  TableForm = () => {
-  const MyDropdown = this.MyDropdown
-  return <Table.Row  key="0">
-      <Table.Cell style={this.cellStyle} > <MyDropdown name="profil_pidm" options={this.state.OPTIONS_PROFILLER} multiple={false} error={this.state.message}/> </Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="surec_pidm" options={this.state.OPTIONS_SURECLER} multiple={false} error={this.state.message} /></Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="kv_pidm" options={this.state.OPTIONS_KV} multiple={false} error={this.state.message} /></Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="sure_pidm" options={this.state.OPTIONS_SURELER} multiple={false} error={false}/></Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="kanal_pidm" options={this.state.OPTIONS_KANALLAR} multiple={false} error={false}/></Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="sistem_pidm" options={this.state.OPTIONS_SISTEMLER} multiple={false} error={false}/></Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="dayanak_pidm" options={this.state.OPTIONS_DAYANAKLAR} multiple={false} error={false}/></Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="isleme_amaclari_pidm" options={this.state.OPTIONS_ISLEMEAMACLARI} multiple={false} error={false}/></Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="ortamlar_data" options={this.state.OPTIONS_ORTAMLAR} multiple={true} error={false}/></Table.Cell>
-      <Table.Cell style={this.cellStyle}><MyDropdown name="tedbirler_data" options={this.state.OPTIONS_TEDBIRLER} multiple={true} error={false}/></Table.Cell>
-    </Table.Row>
+  handleEdit =  (row) => {
+    const selectedPidm = row.pidm
+    const {convert} = this
+    this.setState({ editMode: true, addMode: false,
+                    selectedPidm})
+    //data içeren alanları dropdowna uygun arraye convert ederek atar diğerlerine normal olarak.
+    this.state.fields.map(item => item.includes('_data')?this.setState({[item]:convert(row[item])}):
+                                                         this.setState({[item]:row[item]}))
   }
+  // handleEdit =  (row) => {
+  //   const selectedPidm = row.pidm
+  //   const {profil_pidm, surec_pidm, kv_pidm, sure_pidm} = row
+
+  //   const {convert} = this
+  //   const kanallar_data = convert(row.kanallar_data)
+  //   const sistemler_data = convert(row.sistemler_data)
+  //   const dayanaklar_data = convert(row.dayanaklar_data)
+  //   const isleme_amaclari_data = convert(row.isleme_amaclari_data)
+  //   const ortamlar_data = convert(row.ortamlar_data)
+  //   const tedbirler_data = convert(row.tedbirler_data)
+
+  //   this.setState({ editMode: true, addMode: false,
+  //                   selectedPidm,
+  //                   profil_pidm, surec_pidm, kv_pidm,
+  //                   sure_pidm,
+  //                   kanallar_data, sistemler_data , dayanaklar_data, isleme_amaclari_data, ortamlar_data, tedbirler_data })
+  // }
+
+  DataTitle = (props) =>
+    <Header
+        as='h5'
+        onClick={()=>this.handleEdit(props.row)}
+    >{props.children}</Header>
+
 
 //id-> selected data id (ortamlar, tedbirler), anaveri pidm->silmek için, data
-  ParseData = ({ id, pidm, data, color }) => {
+  DataTitles = ({ id, pidm, data, color }) => {
 
     const style = { display: 'block', marginTop: '3px' }
 
     return data && data.map((row, index) => {
 
-      const content = row.name.substring(0, 10) + ".."
+      const content = row.name ? row.name.substring(0, 10) + "..":<Icon name='ellipsis horizontal' />
       const onDelete = (this.state.deleteMode && (this.state.selectedDataPidm === row.pidm) && (this.state.selectedPidm === pidm) && (this.state.selectedID === id))
       const onRemove = () => this.setState({ deleteMode: true, selectedID: id, selectedPidm: pidm, selectedDataPidm: row.pidm, selectedData: data })
 
       return <div key={index} style={style}>
                 <Label
-                  // basic
                   content={content}
                   color={onDelete?'red':color}
                   onRemove={onRemove}
@@ -122,55 +128,85 @@ class Anaveriler extends PureComponent {
     )
   }
 
-  Title = (props) => <Header
-                        color={props.color}
-                        as='h5'
-                        content={props.content && props.content.substring(0, 15) + ".."}
-                        onClick={()=>this.setState({editMode: true, addMode: false, selectedPidm: props.pidm })}
-                        />
-  // Title = (props) => <Label
-  //                       basic={props.basic}
-  //                       color={props.color}
-  //                       as='a'
-  //                       content={props.content && props.content.substring(0, 10) + ".."}
-  //                       onClick={()=>this.setState({editMode: true, addMode: false, selectedPidm: props.pidm })}
-  //                       />
+  handleChange = (event, data) => {
+    event.preventDefault()
+    const {name, value} =  data
+    this.setState({ [name]: value, [name+'Changed']: true })
+  }
 
-  TableRows= ({data})=> {
-    const Title = this.Title
-    const MyDropdown = this.MyDropdown
+  MyDropdown =  ({name, error}) => {
 
-    return <React.Fragment>
-           {data&&data.map((key, index) => (
-                  this.state.editMode && (this.state.selectedPidm === key.pidm)?
-                  // EDIT MODE
-                  <Table.Row  key={index} >
-                      <Table.Cell style={this.cellStyle}><MyDropdown name="profil_pidm" value={key.profil_pidm} options={this.state.OPTIONS_PROFILLER} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><MyDropdown name="surec_pidm" value={key.surec_pidm} options={this.state.OPTIONS_SURECLER} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><MyDropdown name="kv_pidm" value={key.kv_pidm} options={this.state.OPTIONS_KV} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><MyDropdown name="sure_pidm" value={key.sure_pidm} options={this.state.OPTIONS_SURELER} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><MyDropdown name="kanal_pidm" value={key.kanal_pidm} options={this.state.OPTIONS_KANALLAR} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><MyDropdown name="sistem_pidm" value={key.sistem_pidm} options={this.state.OPTIONS_SISTEMLER} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><MyDropdown name="dayanak_pidm" value={key.dayanak_pidm} options={this.state.OPTIONS_DAYANAKLAR} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><MyDropdown name="isleme_amaclari_pidm" value={key.isleme_amaclari_pidm} options={this.state.OPTIONS_ISLEMEAMACLARI} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><this.ParseData color='grey' id="ortamlar" pidm= {key.pidm} data={key.ortamlar_data}/></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><this.ParseData color='grey' id="tedbirler" pidm= {key.pidm} data={key.tedbirler_data}/></Table.Cell>
-                  </Table.Row>:
-                  // LIST MODE
-                  <Table.Row  key={index} >
-                      <Table.Cell style={this.cellStyle}><Title content={key.profil_name} pidm={key.pidm} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><Title content={key.surec_name} pidm={key.pidm} /></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><Title content={key.kv_name} pidm={key.pidm}/></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><Title color="grey" basic content={key.sure_name} pidm={key.pidm}/></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><Title color="grey" basic content={key.kanal_name} pidm={key.pidm}/></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><Title color="grey" basic content={key.sistem_name} pidm={key.pidm}/></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><Title color="grey" basic content={key.dayanak_name} pidm={key.pidm}/></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><Title color="grey" content={key.isleme_amaclari_name} pidm={key.pidm}/></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><this.ParseData color ='green' id="ortamlar" pidm= {key.pidm} data={key.ortamlar_data}/></Table.Cell>
-                      <Table.Cell style={this.cellStyle}><this.ParseData color='olive' id="tedbirler" pidm= {key.pidm} data={key.tedbirler_data}/></Table.Cell>
-                  </Table.Row>
-                ))}
-    </React.Fragment>
+    const options = {'profil_pidm': this.state.OPTIONS_PROFILLER,
+                 'surec_pidm': this.state.OPTIONS_SURECLER,
+                 'kv_pidm': this.state.OPTIONS_KV,
+                 'sure_pidm': this.state.OPTIONS_SURELER ,
+                 'kanallar_data': this.state.OPTIONS_KANALLAR,
+                 'sistemler_data': this.state.OPTIONS_SISTEMLER,
+                 'dayanaklar_data': this.state.OPTIONS_DAYANAKLAR,
+                 'isleme_amaclari_data': this.state.OPTIONS_ISLEMEAMACLARI,
+                 'ortamlar_data': this.state.OPTIONS_ORTAMLAR,
+                 'tedbirler_data': this.state.OPTIONS_TEDBIRLER
+              }
+
+    return <Dropdown
+                  name = {name}
+                  value={this.state[name]}
+                  multiple={name.includes("_data")}
+                  search selection
+                  fluid // sağa doğru uzar
+                  options={options[name]}
+                  onChange={this.handleChange}
+                  error = {error}
+            />
+  }
+
+  EditRow = ({row}) => {
+    const {MyDropdown} = this
+
+    return <Table.Row >
+      <Table.Cell style={this.cellStyle}><MyDropdown name="profil_pidm" /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="surec_pidm" /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="kv_pidm" /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="sure_pidm" /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="kanallar_data" /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="sistemler_data" /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="dayanaklar_data" /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="isleme_amaclari_data" /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="ortamlar_data"  /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><MyDropdown name="tedbirler_data"  /></Table.Cell>
+    </Table.Row>
+  }
+
+  // getStateData=(value)=>{
+  //   let data = []
+  //   value.map( key => data.push(key.pidm) )
+  //   return data
+  // }
+
+  ViewRow = ({ row }) => {
+    const {DataTitle, DataTitles} = this
+
+    return <Table.Row >
+      <Table.Cell style={this.cellStyle}><DataTitle row={row}>{row.profil_name}</DataTitle></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitle row={row}>{row.surec_name}</DataTitle></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitle row={row}>{row.kv_name}</DataTitle></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitle row={row}>{row.sure_name}</DataTitle></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitles color='blue' id="kanallar" pidm={row.pidm} data={row.kanallar_data} /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitles color='teal' id="sistemler" pidm={row.pidm} data={row.sistemler_data} /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitles color='green' id="dayanaklar" pidm={row.pidm} data={row.dayanaklar_data} /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitles color='olive' id="isleme_amaclari" pidm={row.pidm} data={row.isleme_amaclari_data} /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitles color='yellow' id="ortamlar" pidm={row.pidm} data={row.ortamlar_data} /></Table.Cell>
+      <Table.Cell style={this.cellStyle}><DataTitles color='orange' id="tedbirler" pidm={row.pidm} data={row.tedbirler_data} /></Table.Cell>
+    </Table.Row>
+
+  }
+
+  TableRows = ({ data }) => {
+    return data && data.map((row, index) => (
+        this.state.editMode && (this.state.selectedPidm === row.pidm) ?
+          <this.EditRow row={row} key={index}/> :
+          <this.ViewRow row={row} key={index} />
+      ))
   }
 
      //(x)(v)
@@ -193,6 +229,25 @@ class Anaveriler extends PureComponent {
             </div>
   }
 
+    // FORM **********************************
+    cellStyle = { verticalAlign: 'top'}
+
+    TableForm = () => {
+    const MyDropdown = this.MyDropdown
+    return <Table.Row  key="0">
+        <Table.Cell style={this.cellStyle} > <MyDropdown name="profil_pidm" error={this.state.message}/> </Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="surec_pidm" error={this.state.message} /></Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="kv_pidm" error={this.state.message} /></Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="sure_pidm"  error={false}/></Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="kanallar_data"  error={false}/></Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="sistemler_data" error={false}/></Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="dayanaklar_data" error={false}/></Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="isleme_amaclari_data" error={false}/></Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="ortamlar_data" error={false}/></Table.Cell>
+        <Table.Cell style={this.cellStyle}><MyDropdown name="tedbirler_data" error={false}/></Table.Cell>
+      </Table.Row>
+    }
+
 handleClose = ()=>{
     this.setState({ deleteMode: false })
 }
@@ -203,7 +258,7 @@ removedData = async ()=>{
     let newData = []
 
     await selectedData && selectedData.map (
-             ({pidm, name}) => (selectedDataPidm !== pidm) && newData.push(pidm)
+             ({pidm}) => (selectedDataPidm !== pidm) && newData.push(pidm)
     )
 
     return await (newData)
@@ -237,24 +292,24 @@ removedData = async ()=>{
           surec_pidm: null,
           kv_pidm: null,
           sure_pidm: null,
-          kanal_pidm: null,
-          sistem_pidm: null,
-          dayanak_pidm: null,
-          isleme_amaclari_pidm: null,
-          ortamlar_data: null,
-          tedbirler_data: null
+          kanallar_data: [],
+          sistemler_data: [],
+          dayanaklar_data: [],
+          isleme_amaclari_data: [],
+          ortamlar_data: [],
+          tedbirler_data: []
       }
     )
 
 
   handleSubmit = async() => {
 
-    const {profil_pidm, surec_pidm, kv_pidm, sure_pidm, kanal_pidm, sistem_pidm, dayanak_pidm,
-            isleme_amaclari_pidm, ortamlar_data, tedbirler_data} = this.state
+    const {profil_pidm, surec_pidm, kv_pidm, sure_pidm, kanallar_data, sistemler_data, dayanaklar_data,
+            isleme_amaclari_data, ortamlar_data, tedbirler_data} = this.state
     const {cid, uid} = this.props
 
-    const params = {profil_pidm, surec_pidm, kv_pidm, sure_pidm, kanal_pidm, sistem_pidm, dayanak_pidm,
-                    isleme_amaclari_pidm, ortamlar_data, tedbirler_data, cid, uid}
+    const params = {profil_pidm, surec_pidm, kv_pidm, sure_pidm, kanallar_data, sistemler_data, dayanaklar_data,
+                    isleme_amaclari_data, ortamlar_data, tedbirler_data, cid, uid}
 
     try {
         await axios.post(config.URL_ADD_ANAVERILER, params, config.axios)
@@ -269,19 +324,45 @@ removedData = async ()=>{
     }
   };
 
+  handleYeni = (event) => {
+    event.preventDefault()
+    this.resetValues()
+    this.setState({addMode: true, editMode:false, message: null})
+
+  }
+
+  handleKopyala = (event) => {
+    event.preventDefault()
+    this.setState({copy: this.state, copyMode: true})
+  }
+
+  handleYapistir = (event) => {
+    event.preventDefault()
+    const {copy, fields} = this.state
+
+    fields.map(item => this.setState({[item]:copy[item]}))
+
+  }
+
 
   AddButton=()=>{
     const VazgecButon = () =>  <Button size='mini' content='VAZGEÇ' onClick={()=>this.setState({addMode: false, editMode: false, message: null})} />
     const EkleButon = () =>  <Button color='blue' size='mini' content='EKLE' onClick={this.handleSubmit}/>
-    const YeniKayitButon = () => <Button color='teal' size='mini' content='YENİ KAYIT' onClick={()=>this.setState({addMode: true, editMode:false, message: null})} />
+    const YeniKayitButon = () => <Button color='teal' size='mini' content='YENİ KAYIT' onClick={this.handleYeni} />
+    const KopyalaButon = () =>  <Button basic style={{marginRight:"20px"}} color='black' size='mini'  onClick={this.handleKopyala}><Icon name='copy outline' />KOPYALA</Button>
+    const YapistirButon = () =>  <Button basic style={{marginRight:"20px"}} color='black' size='mini' onClick={this.handleYapistir}><Icon name='paste' />YAPIŞTIR </Button>
+
     return  this.state.addMode?
             <div>
+                {this.state.copyMode && <YapistirButon />}
                 <VazgecButon />
                 <EkleButon />
             </div>
-            :this.state.editMode?<VazgecButon />
+            :this.state.editMode?<div><KopyalaButon /><VazgecButon /></div>
             :<YeniKayitButon />
   }
+
+
 
   Content = () => {
     const { data } = this.props; //data > from reducer
