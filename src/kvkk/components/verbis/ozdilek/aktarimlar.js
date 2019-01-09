@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Table, Dropdown, Header, Button, Label, Icon, Modal } from "semantic-ui-react";
+import { Table, Dropdown, Header, Button, Label, Icon, Modal, Input, Checkbox } from "semantic-ui-react";
 import KVKKLayout from "../../../layout";
 import Login from '../../../../auth/login'
 import axios from "axios";
@@ -11,19 +11,19 @@ import { store } from "../../../../reducer";
 import { config } from "../../../../config";
 import {LoadingStoreData, createDropdownOptions, refreshStoreData, MyMessage}  from '../../myComponents'
 
-class Anaveriler extends PureComponent {
+class Aktarimlar extends PureComponent {
   state = {
-    URL_GET: config.URL_ANAVERILER+"/get",
-    URL_COMMIT: config.URL_ANAVERILER,
+    URL_GET: config.URL_AKTARIMLAR+"/get",
+    URL_COMMIT: config.URL_AKTARIMLAR,
 
     mounted: false,
     addMode: false,
     deleteMode: false,
     editMode: false,
-    fields: ['profil_pidm', 'surec_pidm', 'kv_pidm', 'sure_pidm',
-                    'kanallar_data','sistemler_data', 'dayanaklar_data', 'isleme_amaclari_data',
-                    'ortamlar_data', 'tedbirler_data'],
-    primary: ['profil_pidm','surec_pidm','kv_pidm'], //boş geçilemez alanların error kontrolü için
+    fields: ['surec_pidm', 'kv_pidm', 'kurum_pidm',
+                    'ulkeler_data','dayanaklar_data', 'paylasim_amaclari_data', 'paylasim_sekilleri_data',
+                    'yurtdisi', 'aciklama','bilgiveren'],
+    primary: ['surec_pidm','kv_pidm','kurum_pidm'], //boş geçilemez alanların error kontrolü için
 
     //content table properties
     singleLine: true, //content>table>tek satır kontrolü için
@@ -32,22 +32,18 @@ class Anaveriler extends PureComponent {
 
 
   async componentDidMount() {
-    const OPTIONS_PROFILLER = await createDropdownOptions(config.URL_GET_PROFILLER, this.props.cid)
     const OPTIONS_SURECLER = await createDropdownOptions(config.URL_GET_SURECLERDD, this.props.cid)
     const OPTIONS_KV = await createDropdownOptions(config.URL_GET_KV, this.props.cid)
-    const OPTIONS_SURELER = await createDropdownOptions(config.URL_GET_SURELER, this.props.cid)
-    const OPTIONS_KANALLAR = await createDropdownOptions(config.URL_GET_KANALLAR, this.props.cid)
-    const OPTIONS_SISTEMLER = await createDropdownOptions(config.URL_GET_SISTEMLER, this.props.cid)
+    const OPTIONS_KURUMLAR = await createDropdownOptions(config.URL_GET_KURUMLAR, this.props.cid)
+    const OPTIONS_ULKELER = await createDropdownOptions(config.URL_GET_ULKELER, this.props.cid)
     const OPTIONS_DAYANAKLAR = await createDropdownOptions(config.URL_GET_DAYANAKLAR, this.props.cid)
-    const OPTIONS_ORTAMLAR = await createDropdownOptions(config.URL_GET_ORTAMLAR, this.props.cid)
-    const OPTIONS_TEDBIRLER = await createDropdownOptions(config.URL_GET_TEDBIRLER, this.props.cid)
-    const OPTIONS_ISLEMEAMACLARI = await createDropdownOptions(config.URL_GET_ISLEMEAMACLARI, this.props.cid)
+    const OPTIONS_PAYLASIMAMACLARI = await createDropdownOptions(config.URL_GET_PAYLASIMAMACLARI, this.props.cid)
+    const OPTIONS_PAYLASIMSEKILLERI = await createDropdownOptions(config.URL_GET_PAYLASIMSEKILLERI, this.props.cid)
 
     await this.setState({
       mounted: true,
-      OPTIONS_PROFILLER,
-      OPTIONS_SURECLER,  OPTIONS_KV, OPTIONS_SURELER, OPTIONS_KANALLAR,
-      OPTIONS_SISTEMLER, OPTIONS_DAYANAKLAR, OPTIONS_ORTAMLAR, OPTIONS_TEDBIRLER, OPTIONS_ISLEMEAMACLARI
+      OPTIONS_SURECLER,  OPTIONS_KV, OPTIONS_KURUMLAR,
+      OPTIONS_ULKELER, OPTIONS_DAYANAKLAR, OPTIONS_PAYLASIMAMACLARI, OPTIONS_PAYLASIMSEKILLERI
     })
 
   }
@@ -57,16 +53,16 @@ class Anaveriler extends PureComponent {
     const Required = () => <Icon name="asterisk" size="small" color="red" />
     return <Table.Header>
       <Table.Row>
-        <Table.HeaderCell style={{ width: "13%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }} > PROFİL <Required /></Table.HeaderCell>
         <Table.HeaderCell style={{ width: "12%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SÜREÇ <Required /></Table.HeaderCell>
         <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KV <Required /></Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "5%",  verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SÜRESİ</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KANALLAR</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SİSTEMLER</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "5%",  verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KURUM</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> ÜLKELER</Table.HeaderCell>
         <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> DAYANAKLAR</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> İŞL.AMAÇLARI</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> ORTAMLAR</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> TEDBİRLER</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> PAYLAŞIM AMAÇLARI</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> PAYLAŞIM ŞEKİLLERİ</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> YURT DIŞI</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> AÇIKLAMA</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> BİLGİ VEREN</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
   }
@@ -95,7 +91,7 @@ class Anaveriler extends PureComponent {
     >{props.children}</Header>
 
 
-//id-> selected data id (ortamlar, tedbirler), anaveri pidm->silmek için, data
+//id-> selected data id (ortamlar, tedbirler), aktarim pidm->silmek için, data
   DataTitles = ({ row, data, color }) => {
     const style = { display:'block', marginTop: '2px', marginLeft:'3px'  }
     return data && data.map((item, index) => {
@@ -112,65 +108,94 @@ class Anaveriler extends PureComponent {
                       )
   }
 
-  handleChange = (event, data) => {
+  handleChange = (event, element) => {
     event.preventDefault()
-    const {name, value} =  data
+    const {name, value} =  element
     this.setState({ [name]: value })
   }
 
-  MyDropdown =  ({name, error}) => {
+  // Yurtdışı checkbox için
+  handleChecked=(event, { checked }) => {
+    this.setState({ yurtdisi: checked});
+  }
 
-    const options = {'profil_pidm': this.state.OPTIONS_PROFILLER,
-                 'surec_pidm': this.state.OPTIONS_SURECLER,
-                 'kv_pidm': this.state.OPTIONS_KV,
-                 'sure_pidm': this.state.OPTIONS_SURELER ,
-                 'kanallar_data': this.state.OPTIONS_KANALLAR,
-                 'sistemler_data': this.state.OPTIONS_SISTEMLER,
-                 'dayanaklar_data': this.state.OPTIONS_DAYANAKLAR,
-                 'isleme_amaclari_data': this.state.OPTIONS_ISLEMEAMACLARI,
-                 'ortamlar_data': this.state.OPTIONS_ORTAMLAR,
-                 'tedbirler_data': this.state.OPTIONS_TEDBIRLER
-              }
 
-    //primary key alanlar için hata kontrolü yapar
-    const isPrimary = this.state.primary.indexOf(name)>=0
 
-    return <Dropdown
-                  name = {name}
-                  value={this.state[name]}
-                  multiple={name.includes("_data")}
-                  search selection
-                  fluid // sağa doğru uzar
-                  options={options[name]}
-                  onChange={this.handleChange}
-                  error = { isPrimary && error}
-            />
+  MyDropdown = ({name, error}) => {
+  const options = {
+      'surec_pidm': this.state.OPTIONS_SURECLER,
+      'kv_pidm': this.state.OPTIONS_KV,
+      'kurum_pidm': this.state.OPTIONS_KURUMLAR ,
+      'ulkeler_data': this.state.OPTIONS_ULKELER,
+      'dayanaklar_data': this.state.OPTIONS_DAYANAKLAR,
+      'paylasim_amaclari_data': this.state.OPTIONS_PAYLASIMAMACLARI,
+      'paylasim_sekilleri_data': this.state.OPTIONS_PAYLASIMSEKILLERI,
+   }
+
+   const isPrimary = this.state.primary.indexOf(name)>=0
+
+  return <Dropdown
+    name={name}
+    value={this.state[name]}
+    multiple={name.includes("_data")}
+    search selection
+    fluid // sağa doğru uzar
+    options={options[name]}
+    onChange={this.handleChange}
+    error={isPrimary && error}
+  />
+  }
+
+  handleKeyDown = (event) => {
+    const type= this.state.addMode ==="add"?"add":"update"
+    if (event.keyCode===13) {
+          this.handleCommit(type)
+    } else if (event.keyCode===27) {
+           this.handleVazgec()
+    }
+  }
+
+  MyInput = ({name}) => <Input name={name}
+    type='text'
+    value={this.state[name] ? this.state[name] : ''}
+    onChange={this.handleChange}
+    onKeyDown={this.handleKeyDown}
+  />
+
+  MyCheckbox = ({name})=> <Checkbox name={name} checked={this.state[name]} toggle onChange={this.handleChecked} />
+
+  MyFormField =  ({name, error}) => {
+    switch (name) {
+      case "aciklama": return <this.MyInput name={name}/>;
+      case "bilgiveren": return <this.MyInput name={name}/>;
+      case "yurtdisi": return <this.MyCheckbox name={name}/>
+      default: return <this.MyDropdown name={name} error={error}/>
+    }
   }
 
 
   styleEdit = { verticalAlign: 'top', margin:'0px', padding:'2px'}
-  EditRow = () =>
+  TableEdit = () =>
           <Table.Row>
-              {this.state.fields.map( (item, index) => <Table.Cell key={index} style={this.styleEdit} selectable warning><this.MyDropdown name={item} /></Table.Cell> )}
+              {this.state.fields.map( (item, index) => <Table.Cell key={index} style={this.styleEdit} selectable warning><this.MyFormField name={item} /></Table.Cell> )}
           </Table.Row>
 
 
   styleView = { verticalAlign: 'top', margin:'0px'}
-  ViewRow = ({ row }) => {
+  TableView = ({ row }) => {
     const {DataTitle, DataTitles} = this
-    // console.log('tedbirler', row.tedbirler_data)
-
+    const yurtdisi = row.yurtdisi && <Icon name='flag checkered' color='green' />
     return <Table.Row >
-      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.profil_name}</DataTitle></Table.Cell>
       <Table.Cell style={this.styleView}><DataTitle row={row}>{row.surec_name}</DataTitle></Table.Cell>
       <Table.Cell style={this.styleView}><DataTitle row={row}>{row.kv_name}</DataTitle></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.sure_name}</DataTitle></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='blue' data={row.kanallar_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='teal' data={row.sistemler_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='green' data={row.dayanaklar_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='olive' data={row.isleme_amaclari_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='yellow' data={row.ortamlar_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='orange' data={row.tedbirler_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.kurum_name}</DataTitle></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitles row={row} color='orange' data={row.ulkeler_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitles row={row} color='yellow' data={row.dayanaklar_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitles row={row} color='olive' data={row.paylasim_amaclari_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitles row={row} color='green' data={row.paylasim_sekilleri_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{yurtdisi}</DataTitle></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.aciklama}</DataTitle></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.bilgiveren}</DataTitle></Table.Cell>
     </Table.Row>
 
   }
@@ -178,16 +203,15 @@ class Anaveriler extends PureComponent {
   TableRows = ({ data }) => {
     return data && data.map((row, index) => (
         this.state.editMode && (this.state.pidm === row.pidm) ?
-          <this.EditRow row={row} key={index}/> :
-          <this.ViewRow row={row} key={index} />
-        // !this.state.editMode && <this.ViewRow row={row} key={index} />
+          <this.TableEdit row={row} key={index}/> :
+          <this.TableView row={row} key={index} />
       ))
   }
 
 TableForm = () =>
     <Table.Row key="0">
       {this.state.fields.map( (item, index) =>
-        <Table.Cell key={index} style={this.styleView} ><this.MyDropdown name={item} error={this.state.message} /> </Table.Cell>
+        <Table.Cell key={index} style={this.styleView} ><this.MyFormField name={item} error={this.state.message} /> </Table.Cell>
       )}
     </Table.Row>
 
@@ -202,15 +226,17 @@ TableForm = () =>
               )
 
   handleCommit = async(type) => {
-    const {pidm, profil_pidm, surec_pidm, kv_pidm, sure_pidm, kanallar_data, sistemler_data, dayanaklar_data,
-            isleme_amaclari_data, ortamlar_data, tedbirler_data} = this.state
+    //type = add, update
+    const {pidm, surec_pidm, kv_pidm, kurum_pidm, ulkeler_data, dayanaklar_data,
+            paylasim_amaclari_data, paylasim_sekilleri_data, yurtdisi, aciklama, bilgiveren} = this.state
     const {cid, uid} = this.props
 
-    const params = {pidm, profil_pidm, surec_pidm, kv_pidm, sure_pidm, kanallar_data, sistemler_data, dayanaklar_data,
-                    isleme_amaclari_data, ortamlar_data, tedbirler_data, cid, uid}
+    const params = {pidm, surec_pidm, kv_pidm, kurum_pidm, ulkeler_data, dayanaklar_data,
+      paylasim_amaclari_data, paylasim_sekilleri_data, yurtdisi, aciklama, bilgiveren, cid, uid}
 
     try {
         const URL_COMMIT = this.state.URL_COMMIT+"/"+type  // /add or /update
+        // console.log('yurtdışı: ',yurtdisi)
 
         await axios.post(URL_COMMIT, params, config.axios)
 
@@ -244,6 +270,10 @@ TableForm = () =>
 
   }
 
+  handleVazgec=(event)=>{
+    this.setState({addMode: false, editMode: false, message: null, fixed: true, singleLine: true})
+  }
+
 
   AddButton=()=>{
 
@@ -254,12 +284,12 @@ TableForm = () =>
     const GuncelleButon = () =>  <Button style={style} color='teal' size='mini' onClick={()=>this.handleCommit("update")}>GÜNCELLE </Button>
     // const SilButon = () =>  <Button style={style} color='red' size='mini' onClick={()=>this.handleCommit("delete")}>SİL </Button>
     const {SilButon} = this
-    const VazgecButon = () =>  <Button style={style} size='mini' content='VAZGEÇ' onClick={()=>this.setState({addMode: false, editMode: false, message: null, fixed: true, singleLine: true})} />
+    const VazgecButon = () =>  <Button style={style} size='mini' content='VAZGEÇ' onClick={this.handleVazgec} />
     const YeniKayitButon = () => <Button style={style} color='teal' size='mini' content='YENİ KAYIT' onClick={this.handleYeni} />
     const KopyalaButon = () =>  <Button style={style} basic color='teal' circular icon="copy outline" size='mini'  onClick={this.handleKopyala} />
     const YapistirButon = () =>  <Button style={style} basic color='teal' circular icon="paste" size='mini' onClick={this.handleYapistir} />
-    const ResetButon = () =>  <Button style={style} basic color='teal' circular icon="cut" size='mini' onClick={this.handleReset} />
-    const SingleLineButon = () =>  <Button style={style} basic color='teal' circular icon={this.state.singleLine?"eye":"eye slash outline"} size='mini' onClick={()=>this.setState({singleLine: !this.state.singleLine})} />
+    const ResetButon = () =>  <Button style={style} basic circular color='teal' icon="cut" size='mini' onClick={this.handleReset} />
+    const SingleLineButon = () =>  <Button style={style} basic circular color='teal' icon={this.state.singleLine?"eye":"eye slash outline"} size='mini' onClick={()=>this.setState({singleLine: !this.state.singleLine})} />
 
     return  <div>
                 {this.state.addMode? <div> <EkleButon /> <VazgecButon /> </div>
@@ -303,7 +333,7 @@ TableForm = () =>
       <div className="kvkk-content">
 
           <div>
-              <Header size='large' style={{float: 'left', width:'20%'}}><Icon name="shield alternate" color="teal" />Ana Veriler</Header>
+              <Header size='large' style={{float: 'left', width:'20%'}}><Icon name="paper plane outline" color="teal" />Kurum Paylaşımları</Header>
               <div style={{float: 'right', width:'80%'}}><this.AddButton /></div>
           </div>
           <div>{this.state.message && <MyMessage error content={this.state.message} />}</div>
@@ -336,4 +366,4 @@ TableForm = () =>
 
 
 const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid });
-export default connect(mapStateToProps)(Anaveriler);
+export default connect(mapStateToProps)(Aktarimlar);

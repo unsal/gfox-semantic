@@ -36,7 +36,10 @@ import KVProfil from './kvkk/components/verbis/kvprofil'
 import KVPaylasim from './kvkk/components/verbis/kvpaylasim'
 import KVAnaveri from './kvkk/components/verbis/kvanaveri'
 
+
+// OZDILEK
 import Anaveriler from './kvkk/components/verbis/ozdilek/anaveriler'
+import Aktarimlar from './kvkk/components/verbis/ozdilek/aktarimlar'
 
 import KVTalepler from './kvkk/components/verbis/kvtalepler'
 
@@ -83,7 +86,8 @@ ReactDOM.render(
     <Route exact path='/kvkk/verbis/anaveri' component={KVAnaveri} />
 
      {/* Özdilek*/}
-    <Route exact path='/kvkk/verbis/ozdilek/anaveriler' component={Anaveriler} />
+    <Route exact path='/kvkk/verbis/v2/anaveriler' component={Anaveriler} />
+    <Route exact path='/kvkk/verbis/v2/aktarimlar' component={Aktarimlar} />
 
      {/* Verbis KVTalepler */}
     <Route exact path='/kvkk/verbis/kvtalepler' component={KVTalepler} />

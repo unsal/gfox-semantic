@@ -86,10 +86,10 @@ export const config = {
   URL_ADD_SUREC: apiHost+'/tanimlar/surecler/add',
   URL_DELETE_SUREC: apiHost+'/tanimlar/surecler/delete',
 
-  //Surecler
-  URL_GET_ANAVERILER: apiHost+'/verbis/anaveriler',
-  URL_UPDATE_ANAVERILER: apiHost+'/verbis/anaveriler/update',
-  URL_ADD_ANAVERILER: apiHost+'/verbis/anaveriler/add',
+  //ANAVERILER
+  URL_ANAVERILER: apiHost+'/verbis/anaveriler',
+  //AKTARIMLAR
+  URL_AKTARIMLAR: apiHost+'/verbis/aktarimlar',
 
 
   //axios GET, OST header için config
