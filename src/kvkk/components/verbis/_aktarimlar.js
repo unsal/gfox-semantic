@@ -11,14 +11,19 @@ import { store } from "../../../reducer";
 import { config } from "../../../config";
 import {LoadingStoreData, createDropdownOptions, refreshStoreData, MyMessage}  from '../myComponents'
 
-class Framework extends PureComponent {
-
+class Aktarimlar extends PureComponent {
   state = {
+    URL_GET: config.URL_AKTARIMLAR+"/get",
+    URL_COMMIT: config.URL_AKTARIMLAR,
 
     mounted: false,
     addMode: false,
     deleteMode: false,
     editMode: false,
+    fields: ['surec_pidm', 'kv_pidm', 'kurum_pidm',
+                    'paylasim_amaclari_data','dayanaklar_data','paylasim_sekilleri_data',
+                    'ulkeler_data', 'yurtdisi','aciklama','bilgiveren'],
+    primary: ['surec_pidm','kv_pidm','kurum_pidm'], //boş geçilemez alanların error kontrolü için
 
     //content table properties
     singleLine: true, //content>table>tek satır kontrolü için
@@ -26,25 +31,38 @@ class Framework extends PureComponent {
   }
 
 
-   componentDidMount() {
-    const {fields} = this.props.template
-    fields.map( async ({field, optionsURL})=>
-        optionsURL &&  this.setState({ ['options_'+field]: await createDropdownOptions(optionsURL, this.props.cid) })
-    )
+  async componentDidMount() {
+    const OPTIONS_SURECLER = await createDropdownOptions(config.URL_GET_SURECLERDD, this.props.cid)
+    const OPTIONS_KV = await createDropdownOptions(config.URL_GET_KV, this.props.cid)
+    const OPTIONS_KURUMLAR = await createDropdownOptions(config.URL_GET_KURUMLAR, this.props.cid)
+    const OPTIONS_ULKELER = await createDropdownOptions(config.URL_GET_ULKELER, this.props.cid)
+    const OPTIONS_DAYANAKLAR = await createDropdownOptions(config.URL_GET_DAYANAKLAR, this.props.cid)
+    const OPTIONS_PAYLASIMAMACLARI = await createDropdownOptions(config.URL_GET_PAYLASIMAMACLARI, this.props.cid)
+    const OPTIONS_PAYLASIMSEKILLERI = await createDropdownOptions(config.URL_GET_PAYLASIMSEKILLERI, this.props.cid)
 
-   this.setState({ mounted: true})
+    await this.setState({
+      mounted: true,
+      OPTIONS_SURECLER,  OPTIONS_KV, OPTIONS_KURUMLAR,
+      OPTIONS_ULKELER, OPTIONS_DAYANAKLAR, OPTIONS_PAYLASIMAMACLARI, OPTIONS_PAYLASIMSEKILLERI
+    })
 
   }
 
 
   TableHeader=()=> {
     const Required = () => <Icon name="asterisk" size="small" color="red" />
-    const {fields} = this.props.template
     return <Table.Header>
       <Table.Row>
-         {fields.map(({title, field, width, required}, index)=>
-            <Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f3f3f3" }} > {title} {required && <Required />}</Table.HeaderCell>
-          )}
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SÜREÇ <Required /></Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KV <Required /></Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%",  verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KURUM<Required /></Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> AKTARIM AMACI</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> DAYANAKLAR</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> AKTARIM ŞEKLİ</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> AKTARILAN ÜLKE</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "5%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> YURT DIŞI</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "15%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> AÇIKLAMA</Table.HeaderCell>
+        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> BİLGİYİ VEREN</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
   }
@@ -59,13 +77,11 @@ class Framework extends PureComponent {
   handleEdit =  (row) => {
     const pidm = row.pidm
     const {convert} = this
-    const {fields} = this.props.template
-
     this.setState({ editMode: true, addMode: false, fixed: false, singleLine: false,
                     pidm})
     //data içeren alanları dropdowna uygun arraye convert ederek atar diğerlerine normal olarak.
-    fields.map( ({field}) => field.includes('_data')?this.setState({[field]:convert(row[field])}):
-                                                         this.setState({[field]:row[field]}))
+    this.state.fields.map(item => item.includes('_data')?this.setState({[item]:convert(row[item])}):
+                                                         this.setState({[item]:row[item]}))
   }
 
   DataTitle = (props) =>
@@ -100,20 +116,29 @@ class Framework extends PureComponent {
 
 
   MyDropdown = ({name, error}) => {
+  const options = {
+      'surec_pidm': this.state.OPTIONS_SURECLER,
+      'kv_pidm': this.state.OPTIONS_KV,
+      'kurum_pidm': this.state.OPTIONS_KURUMLAR ,
+      'ulkeler_data': this.state.OPTIONS_ULKELER,
+      'dayanaklar_data': this.state.OPTIONS_DAYANAKLAR,
+      'paylasim_amaclari_data': this.state.OPTIONS_PAYLASIMAMACLARI,
+      'paylasim_sekilleri_data': this.state.OPTIONS_PAYLASIMSEKILLERI,
+   }
 
-   const isPrimary = this.props.template.primary.indexOf(name)>=0
-   const options =  this.state['options_'+name]
+   const isPrimary = this.state.primary.indexOf(name)>=0
+  //  console.log('Options: ',options[name])
 
-    return <Dropdown
-              name={name}
-              value={this.state[name]}
-              multiple={name.includes("_data")}
-              search selection
-              fluid // sağa doğru uzar
-              options={options}
-              onChange={this.handleChange}
-              error={isPrimary && error}
-            />
+  return <Dropdown
+    name={name}
+    value={this.state[name]}
+    multiple={name.includes("_data")}
+    search selection
+    fluid // sağa doğru uzar
+    options={options[name]}
+    onChange={this.handleChange}
+    error={isPrimary && error}
+  />
   }
 
   handleKeyDown = (event) => {
@@ -132,11 +157,12 @@ class Framework extends PureComponent {
     onKeyDown={this.handleKeyDown}
   />
 
-  MyField =  ({name, type, error}) => {
-    switch (type) {
-      case "input": return <this.MyInput name={name}/>;
-      case "dropdown": return <this.MyDropdown name={name} error={error}/>;
-      default: return null
+  MyFormField =  ({name, error}) => {
+    switch (name) {
+      case "aciklama": return <this.MyInput name={name}/>;
+      case "bilgiveren": return <this.MyInput name={name}/>;
+      case "yurtdisi": return null
+      default: return <this.MyDropdown name={name} error={error}/>
     }
   }
 
@@ -144,22 +170,25 @@ class Framework extends PureComponent {
   styleEdit = { verticalAlign: 'top', margin:'0px', padding:'2px'}
   TableEdit = () =>
           <Table.Row>
-              {this.props.template.fields.map( ({field, type}, index) => <Table.Cell key={index} style={this.styleEdit} selectable warning><this.MyField name={field} type={type}/></Table.Cell> )}
+              {this.state.fields.map( (item, index) => <Table.Cell key={index} style={this.styleEdit} selectable warning><this.MyFormField name={item} /></Table.Cell> )}
           </Table.Row>
 
 
   styleView = { verticalAlign: 'top', margin:'0px'}
   TableView = ({ row }) => {
     const {DataTitle, DataTitles} = this
-    const {view} = this.props.template
+    const yurtdisi = row.yurtdisi && <Icon name='flag checkered' color='green' />
     return <Table.Row >
-
-      {view.map( ({field, type, color},index) =>
-          type === "text"?<Table.Cell key= {index} style={this.styleView}><DataTitle row={row}>{row[field]}</DataTitle></Table.Cell>:
-          type==="json"?<Table.Cell key= {index} style={this.styleView}><DataTitles row={row} color={color} data={row[field]} /></Table.Cell>:
-          type==="bool" && <Table.Cell key= {index} style={this.styleView}><DataTitle row={row}>{row[field]&&<Icon name='flag checkered' color='green' />}</DataTitle></Table.Cell>
-      )}
-
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.surec_name}</DataTitle></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.kv_name}</DataTitle></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.kurum_name}</DataTitle></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitles row={row} color='orange' data={row.paylasim_amaclari_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitles row={row} color='yellow' data={row.dayanaklar_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitles row={row} color='olive' data={row.paylasim_sekilleri_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitles row={row} color='green' data={row.ulkeler_data} /></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{yurtdisi}</DataTitle></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.aciklama}</DataTitle></Table.Cell>
+      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.bilgiveren}</DataTitle></Table.Cell>
     </Table.Row>
 
   }
@@ -172,10 +201,10 @@ class Framework extends PureComponent {
       ))
   }
 
- TableForm =  () =>
+TableForm = () =>
     <Table.Row key="0">
-      {this.props.template.fields.map( ({field, type}, index) =>
-        <Table.Cell key={index} style={this.styleView} ><this.MyField name={field} type={type} error={this.state.message} /> </Table.Cell>
+      {this.state.fields.map( (item, index) =>
+        <Table.Cell key={index} style={this.styleView} ><this.MyFormField name={item} error={this.state.message} /> </Table.Cell>
       )}
     </Table.Row>
 
@@ -185,29 +214,28 @@ class Framework extends PureComponent {
   }
 
   handleReset = () =>
-                  this.props.template.fields.map( ({field}) =>
-                      field.includes('_data')?this.setState({[field]:[]}):this.setState({[field]:null})
+                  this.state.fields.map(item =>
+                      item.includes('_data')?this.setState({[item]:[]}):this.setState({[item]:null})
               )
 
   handleCommit = async(type) => {
     //type = add, update
-
-    const {pidm} = this.state
+    const {pidm, surec_pidm, kv_pidm, kurum_pidm, ulkeler_data, dayanaklar_data,
+            paylasim_amaclari_data, paylasim_sekilleri_data, aciklama, bilgiveren} = this.state
     const {cid, uid} = this.props
-    const {fields} = this.props.template
 
-    let params = {pidm, cid, uid}
-    fields.map( ({field})=>params[field] = this.state[field] )
+    const params = {pidm, surec_pidm, kv_pidm, kurum_pidm, ulkeler_data, dayanaklar_data,
+      paylasim_amaclari_data, paylasim_sekilleri_data, aciklama, bilgiveren, cid, uid}
 
     try {
-        const URL_COMMIT = this.props.template.url.commit+"/"+type  // /add or /update
+        const URL_COMMIT = this.state.URL_COMMIT+"/"+type  // /add or /update
         // console.log('yurtdışı: ',yurtdisi)
 
         await axios.post(URL_COMMIT, params, config.axios)
 
         await this.setState({ addMode: false, editMode: false, message: null, open: false , fixed: true, singleLine:true }) //open SilBox mesaj kutusu sildikten sonra açılmasın içindir.
         await this.handleReset()
-        await refreshStoreData(store, cid, this.props.template.url.get)
+        await refreshStoreData(store, cid, this.state.URL_GET)
 
     } catch (err) {
           this.setState({ message: 'Kırmızı ile işaretlenmiş zorunlu alanları girmelisiniz!'})
@@ -229,10 +257,9 @@ class Framework extends PureComponent {
 
   handleYapistir = (event) => {
     event.preventDefault()
-    const {copy} = this.state
-    const {fields} = this.props.template
+    const {copy, fields} = this.state
 
-    fields.map( ({field}) => this.setState({[field]:copy[field]}))
+    fields.map(item => this.setState({[item]:copy[item]}))
 
   }
 
@@ -299,7 +326,7 @@ class Framework extends PureComponent {
       <div className="kvkk-content">
 
           <div>
-              <Header size='large' style={{float: 'left', width:'20%'}}><Icon name={this.props.template.pageicon} color="teal" />{this.props.template.pagetitle}</Header>
+              <Header size='large' style={{float: 'left', width:'20%'}}><Icon name="paper plane outline" color="teal" />Kurum Aktarımları</Header>
               <div style={{float: 'right', width:'80%'}}><this.AddButton /></div>
           </div>
           <div>{this.state.message && <MyMessage error content={this.state.message} />}</div>
@@ -316,7 +343,7 @@ class Framework extends PureComponent {
 
   render() {
     const {cid} = this.props
-    const url = this.props.template.url.get
+    const url = this.state.URL_GET
     return (
       <Login>
         <KVKKLayout>
@@ -332,4 +359,4 @@ class Framework extends PureComponent {
 
 
 const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid });
-export default connect(mapStateToProps)(Framework);
+export default connect(mapStateToProps)(Aktarimlar);

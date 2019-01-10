@@ -89,7 +89,6 @@ class KVKKHeader extends PureComponent  {
               <Dropdown.Menu style={this.style }>
                 <Dropdown.Item as={Link} to='/kvkk/verbis/v2/anaveriler'><Icon name="shield alternate" /> Anaveriler</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/verbis/v2/aktarimlar'><Icon name="paper plane outline" /> Aktarımlar</Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/verbis/v2/framework'><Icon name="paper plane outline" /> Framework</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
 

@@ -29,7 +29,6 @@ import Surecler from './kvkk/components/verbisTanimlar/surecler';
 // v2
 import Anaveriler from './kvkk/components/verbis/anaveriler'
 import Aktarimlar from './kvkk/components/verbis/aktarimlar'
-import Framework from './kvkk/components/verbis/framework'
 
 import KVTalepler from './kvkk/components/verbis/kvtalepler'
 
@@ -67,7 +66,6 @@ ReactDOM.render(
      {/* v2*/}
     <Route exact path='/kvkk/verbis/v2/anaveriler' component={Anaveriler} />
     <Route exact path='/kvkk/verbis/v2/aktarimlar' component={Aktarimlar} />
-    <Route exact path='/kvkk/verbis/v2/framework' component={Framework} />
 
      {/* Verbis KVTalepler */}
     <Route exact path='/kvkk/verbis/kvtalepler' component={KVTalepler} />
