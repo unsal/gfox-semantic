@@ -1,17 +1,17 @@
 import React, { PureComponent } from "react";
-import { Table, Dropdown, Header, Button, Label, Icon, Modal, Input, Checkbox } from "semantic-ui-react";
-import KVKKLayout from "../../../layout";
-import Login from '../../../../auth/login'
+import { Table, Dropdown, Header, Button, Label, Icon, Modal, Input } from "semantic-ui-react";
+import KVKKLayout from "../../layout";
+import Login from '../../../auth/login'
 import axios from "axios";
 
 //Redux
 import { connect } from "react-redux";
-import { store } from "../../../../reducer";
+import { store } from "../../../reducer";
 
-import { config } from "../../../../config";
-import {LoadingStoreData, createDropdownOptions, refreshStoreData, MyMessage}  from '../../myComponents'
+import { config } from "../../../config";
+import {LoadingStoreData, createDropdownOptions, refreshStoreData, MyMessage}  from '../myComponents'
 
-class Aktarimlar extends PureComponent {
+class Framework extends PureComponent {
   state = {
     URL_GET: config.URL_AKTARIMLAR+"/get",
     URL_COMMIT: config.URL_AKTARIMLAR,
@@ -20,10 +20,33 @@ class Aktarimlar extends PureComponent {
     addMode: false,
     deleteMode: false,
     editMode: false,
-    fields: ['surec_pidm', 'kv_pidm', 'kurum_pidm',
-                    'ulkeler_data','dayanaklar_data', 'paylasim_amaclari_data', 'paylasim_sekilleri_data',
-                    'yurtdisi', 'aciklama','bilgiveren'],
-    primary: ['surec_pidm','kv_pidm','kurum_pidm'], //boş geçilemez alanların error kontrolü için
+
+    template: {
+      fields: [{ title: 'SÜREÇ', field: 'surec_pidm', type: 'dropdown', optionsURL: config.URL_GET_SURECLERDD, width: '10%', required: true },
+      { title: 'KV', field: 'kv_pidm', type: 'dropdown', optionsURL: config.URL_GET_KV, width: '10%', required: true },
+      { title: 'KURUM', field: 'kurum_pidm', type: 'dropdown', optionsURL: config.URL_GET_KURUMLAR, width: '10%', required: true },
+      { title: 'AKTARIM AMACI', field: 'paylasim_amaclari_data', type: 'dropdown', optionsURL: config.URL_GET_PAYLASIMAMACLARI, width: '10%' },
+      { title: 'DAYANAKLAR', field: 'dayanaklar_data', type: 'dropdown', optionsURL: config.URL_GET_DAYANAKLAR, width: '10%' },
+      { title: 'AKTARIM ŞEKLİ', field: 'paylasim_sekilleri_data', type: 'dropdown', optionsURL: config.URL_GET_PAYLASIMSEKILLERI, width: '10%' },
+      { title: 'AKTARILAN ÜLKE', field: 'ulkeler_data', type: 'dropdown', optionsURL: config.URL_GET_ULKELER, width: '10%' },
+      { title: 'YURTDIŞI', field: 'yurtdisi', width: '5%' },
+      { title: 'AÇIKLAMA', field: 'aciklama', type: 'input', width: '15%' },
+      { title: 'BİLGİYİ VEREN', field: 'bilgiveren', type: 'input', width: '10%' }],
+
+      primary: ['surec_pidm', 'kv_pidm', 'kurum_pidm'], //boş geçilemez alanların error kontrolü için
+
+      view: [
+        { field: 'surec_name', type: 'text' },
+        { field: 'kv_name', type: 'text' },
+        { field: 'kurum_name', type: 'text' },
+        { field: 'paylasim_amaclari_data', type: 'json', color: 'orange' },
+        { field: 'dayanaklar_data', type: 'json', color: 'yellow' },
+        { field: 'paylasim_sekilleri_data', type: 'json', color: 'olive' },
+        { field: 'ulkeler_data', type: 'json', color: 'green' },
+        { field: 'yurtdisi', type: 'bool' },
+        { field: 'aciklama', type: 'text' },
+        { field: 'bilgiveren', type: 'text' }],
+    },
 
     //content table properties
     singleLine: true, //content>table>tek satır kontrolü için
@@ -31,38 +54,26 @@ class Aktarimlar extends PureComponent {
   }
 
 
-  async componentDidMount() {
-    const OPTIONS_SURECLER = await createDropdownOptions(config.URL_GET_SURECLERDD, this.props.cid)
-    const OPTIONS_KV = await createDropdownOptions(config.URL_GET_KV, this.props.cid)
-    const OPTIONS_KURUMLAR = await createDropdownOptions(config.URL_GET_KURUMLAR, this.props.cid)
-    const OPTIONS_ULKELER = await createDropdownOptions(config.URL_GET_ULKELER, this.props.cid)
-    const OPTIONS_DAYANAKLAR = await createDropdownOptions(config.URL_GET_DAYANAKLAR, this.props.cid)
-    const OPTIONS_PAYLASIMAMACLARI = await createDropdownOptions(config.URL_GET_PAYLASIMAMACLARI, this.props.cid)
-    const OPTIONS_PAYLASIMSEKILLERI = await createDropdownOptions(config.URL_GET_PAYLASIMSEKILLERI, this.props.cid)
 
-    await this.setState({
-      mounted: true,
-      OPTIONS_SURECLER,  OPTIONS_KV, OPTIONS_KURUMLAR,
-      OPTIONS_ULKELER, OPTIONS_DAYANAKLAR, OPTIONS_PAYLASIMAMACLARI, OPTIONS_PAYLASIMSEKILLERI
-    })
+   componentDidMount() {
+    const {fields} = this.state.template
+    fields.map( async ({field, optionsURL})=>
+        optionsURL &&  this.setState({ ['options_'+field]: await createDropdownOptions(optionsURL, this.props.cid) })
+    )
+
+   this.setState({ mounted: true})
 
   }
 
 
   TableHeader=()=> {
     const Required = () => <Icon name="asterisk" size="small" color="red" />
+    const {fields} = this.state.template
     return <Table.Header>
       <Table.Row>
-        <Table.HeaderCell style={{ width: "12%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> SÜREÇ <Required /></Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KV <Required /></Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "5%",  verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> KURUM</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> ÜLKELER</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> DAYANAKLAR</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> PAYLAŞIM AMAÇLARI</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> PAYLAŞIM ŞEKİLLERİ</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> YURT DIŞI</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> AÇIKLAMA</Table.HeaderCell>
-        <Table.HeaderCell style={{ width: "10%", verticalAlign: "TOP", backgroundColor:"#f3f3f3" }}> BİLGİ VEREN</Table.HeaderCell>
+         {fields.map(({title, field, width, required}, index)=>
+            <Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f3f3f3" }} > {title} {required && <Required />}</Table.HeaderCell>
+          )}
       </Table.Row>
     </Table.Header>
   }
@@ -77,11 +88,13 @@ class Aktarimlar extends PureComponent {
   handleEdit =  (row) => {
     const pidm = row.pidm
     const {convert} = this
+    const {fields} = this.state.template
+
     this.setState({ editMode: true, addMode: false, fixed: false, singleLine: false,
                     pidm})
     //data içeren alanları dropdowna uygun arraye convert ederek atar diğerlerine normal olarak.
-    this.state.fields.map(item => item.includes('_data')?this.setState({[item]:convert(row[item])}):
-                                                         this.setState({[item]:row[item]}))
+    fields.map( ({field}) => field.includes('_data')?this.setState({[field]:convert(row[field])}):
+                                                         this.setState({[field]:row[field]}))
   }
 
   DataTitle = (props) =>
@@ -114,36 +127,22 @@ class Aktarimlar extends PureComponent {
     this.setState({ [name]: value })
   }
 
-  // Yurtdışı checkbox için
-  handleChecked=(event, { checked }) => {
-    this.setState({ yurtdisi: checked});
-  }
-
-
 
   MyDropdown = ({name, error}) => {
-  const options = {
-      'surec_pidm': this.state.OPTIONS_SURECLER,
-      'kv_pidm': this.state.OPTIONS_KV,
-      'kurum_pidm': this.state.OPTIONS_KURUMLAR ,
-      'ulkeler_data': this.state.OPTIONS_ULKELER,
-      'dayanaklar_data': this.state.OPTIONS_DAYANAKLAR,
-      'paylasim_amaclari_data': this.state.OPTIONS_PAYLASIMAMACLARI,
-      'paylasim_sekilleri_data': this.state.OPTIONS_PAYLASIMSEKILLERI,
-   }
 
-   const isPrimary = this.state.primary.indexOf(name)>=0
+   const isPrimary = this.state.template.primary.indexOf(name)>=0
+   const options =  this.state['options_'+name]
 
-  return <Dropdown
-    name={name}
-    value={this.state[name]}
-    multiple={name.includes("_data")}
-    search selection
-    fluid // sağa doğru uzar
-    options={options[name]}
-    onChange={this.handleChange}
-    error={isPrimary && error}
-  />
+    return <Dropdown
+              name={name}
+              value={this.state[name]}
+              multiple={name.includes("_data")}
+              search selection
+              fluid // sağa doğru uzar
+              options={options}
+              onChange={this.handleChange}
+              error={isPrimary && error}
+            />
   }
 
   handleKeyDown = (event) => {
@@ -162,14 +161,11 @@ class Aktarimlar extends PureComponent {
     onKeyDown={this.handleKeyDown}
   />
 
-  MyCheckbox = ({name})=> <Checkbox name={name} checked={this.state[name]} toggle onChange={this.handleChecked} />
-
-  MyFormField =  ({name, error}) => {
-    switch (name) {
-      case "aciklama": return <this.MyInput name={name}/>;
-      case "bilgiveren": return <this.MyInput name={name}/>;
-      case "yurtdisi": return <this.MyCheckbox name={name}/>
-      default: return <this.MyDropdown name={name} error={error}/>
+  MyField =  ({name, type, error}) => {
+    switch (type) {
+      case "input": return <this.MyInput name={name}/>;
+      case "dropdown": return <this.MyDropdown name={name} error={error}/>;
+      default: return null
     }
   }
 
@@ -177,25 +173,22 @@ class Aktarimlar extends PureComponent {
   styleEdit = { verticalAlign: 'top', margin:'0px', padding:'2px'}
   TableEdit = () =>
           <Table.Row>
-              {this.state.fields.map( (item, index) => <Table.Cell key={index} style={this.styleEdit} selectable warning><this.MyFormField name={item} /></Table.Cell> )}
+              {this.state.template.fields.map( ({field, type}, index) => <Table.Cell key={index} style={this.styleEdit} selectable warning><this.MyField name={field} type={type}/></Table.Cell> )}
           </Table.Row>
 
 
   styleView = { verticalAlign: 'top', margin:'0px'}
   TableView = ({ row }) => {
     const {DataTitle, DataTitles} = this
-    const yurtdisi = row.yurtdisi && <Icon name='flag checkered' color='green' />
+    const {view} = this.state.template
     return <Table.Row >
-      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.surec_name}</DataTitle></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.kv_name}</DataTitle></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.kurum_name}</DataTitle></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='orange' data={row.ulkeler_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='yellow' data={row.dayanaklar_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='olive' data={row.paylasim_amaclari_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitles row={row} color='green' data={row.paylasim_sekilleri_data} /></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitle row={row}>{yurtdisi}</DataTitle></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.aciklama}</DataTitle></Table.Cell>
-      <Table.Cell style={this.styleView}><DataTitle row={row}>{row.bilgiveren}</DataTitle></Table.Cell>
+
+      {view.map( ({field, type, color},index) =>
+          type === "text"?<Table.Cell key= {index} style={this.styleView}><DataTitle row={row}>{row[field]}</DataTitle></Table.Cell>:
+          type==="json"?<Table.Cell key= {index} style={this.styleView}><DataTitles row={row} color={color} data={row[field]} /></Table.Cell>:
+          type==="bool" && <Table.Cell key= {index} style={this.styleView}><DataTitle row={row}>{row[field]&&<Icon name='flag checkered' color='green' />}</DataTitle></Table.Cell>
+      )}
+
     </Table.Row>
 
   }
@@ -208,10 +201,10 @@ class Aktarimlar extends PureComponent {
       ))
   }
 
-TableForm = () =>
+ TableForm =  () =>
     <Table.Row key="0">
-      {this.state.fields.map( (item, index) =>
-        <Table.Cell key={index} style={this.styleView} ><this.MyFormField name={item} error={this.state.message} /> </Table.Cell>
+      {this.state.template.fields.map( ({field, type}, index) =>
+        <Table.Cell key={index} style={this.styleView} ><this.MyField name={field} type={type} error={this.state.message} /> </Table.Cell>
       )}
     </Table.Row>
 
@@ -221,18 +214,19 @@ TableForm = () =>
   }
 
   handleReset = () =>
-                  this.state.fields.map(item =>
-                      item.includes('_data')?this.setState({[item]:[]}):this.setState({[item]:null})
+                  this.state.template.fields.map( ({field}) =>
+                      field.includes('_data')?this.setState({[field]:[]}):this.setState({[field]:null})
               )
 
   handleCommit = async(type) => {
     //type = add, update
-    const {pidm, surec_pidm, kv_pidm, kurum_pidm, ulkeler_data, dayanaklar_data,
-            paylasim_amaclari_data, paylasim_sekilleri_data, yurtdisi, aciklama, bilgiveren} = this.state
-    const {cid, uid} = this.props
 
-    const params = {pidm, surec_pidm, kv_pidm, kurum_pidm, ulkeler_data, dayanaklar_data,
-      paylasim_amaclari_data, paylasim_sekilleri_data, yurtdisi, aciklama, bilgiveren, cid, uid}
+    const {pidm} = this.state
+    const {cid, uid} = this.props
+    const {fields} = this.state.template
+
+    let params = {pidm, cid, uid}
+    fields.map( ({field})=>params[field] = this.state[field] )
 
     try {
         const URL_COMMIT = this.state.URL_COMMIT+"/"+type  // /add or /update
@@ -264,9 +258,10 @@ TableForm = () =>
 
   handleYapistir = (event) => {
     event.preventDefault()
-    const {copy, fields} = this.state
+    const {copy} = this.state
+    const {fields} = this.state.template
 
-    fields.map(item => this.setState({[item]:copy[item]}))
+    fields.map( ({field}) => this.setState({[field]:copy[field]}))
 
   }
 
@@ -333,7 +328,7 @@ TableForm = () =>
       <div className="kvkk-content">
 
           <div>
-              <Header size='large' style={{float: 'left', width:'20%'}}><Icon name="paper plane outline" color="teal" />Kurum Paylaşımları</Header>
+              <Header size='large' style={{float: 'left', width:'20%'}}><Icon name="paper plane outline" color="teal" />Framework</Header>
               <div style={{float: 'right', width:'80%'}}><this.AddButton /></div>
           </div>
           <div>{this.state.message && <MyMessage error content={this.state.message} />}</div>
@@ -366,4 +361,4 @@ TableForm = () =>
 
 
 const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid });
-export default connect(mapStateToProps)(Aktarimlar);
+export default connect(mapStateToProps)(Framework);

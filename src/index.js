@@ -26,20 +26,10 @@ import Tedbirler from './kvkk/components/verbisTanimlar/tedbirler';
 import Bolumler from './kvkk/components/verbisTanimlar/bolumler';
 import Surecler from './kvkk/components/verbisTanimlar/surecler';
 
-// Süreç Sahibi
-// import SSKurumlar from './kvkk/components/verbisSS/kurumlar';
-import {SSKurumlar, SSKanallar, SSSistemler} from './kvkk/components/verbisSS/common/related';
-import SSDokumanlar from './kvkk/components/verbisSS/dokumanlar';
-
-//Verbis ANAVERILER
-import KVProfil from './kvkk/components/verbis/kvprofil'
-import KVPaylasim from './kvkk/components/verbis/kvpaylasim'
-import KVAnaveri from './kvkk/components/verbis/kvanaveri'
-
-
-// OZDILEK
-import Anaveriler from './kvkk/components/verbis/ozdilek/anaveriler'
-import Aktarimlar from './kvkk/components/verbis/ozdilek/aktarimlar'
+// v2
+import Anaveriler from './kvkk/components/verbis/anaveriler'
+import Aktarimlar from './kvkk/components/verbis/aktarimlar'
+import Framework from './kvkk/components/verbis/framework'
 
 import KVTalepler from './kvkk/components/verbis/kvtalepler'
 
@@ -74,20 +64,10 @@ ReactDOM.render(
     <Route exact path='/kvkk/tanimlar/ulkeler' component={Ulkeler} />
     <Route exact path='/kvkk/tanimlar/tedbirler' component={Tedbirler} />
 
-   {/* Süreç Sahibi */}
-    <Route exact path='/kvkk/ss/kurumlar' component={SSKurumlar} />
-    <Route exact path='/kvkk/ss/kanallar' component={SSKanallar} />
-    <Route exact path='/kvkk/ss/sistemler' component={SSSistemler} />
-    <Route exact path='/kvkk/ss/dokumanlar' component={SSDokumanlar} />
-
-     {/* Verbis Anaveriler */}
-    <Route exact path='/kvkk/verbis/profil' component={KVProfil} />
-    <Route exact path='/kvkk/verbis/paylasim' component={KVPaylasim} />
-    <Route exact path='/kvkk/verbis/anaveri' component={KVAnaveri} />
-
-     {/* Özdilek*/}
+     {/* v2*/}
     <Route exact path='/kvkk/verbis/v2/anaveriler' component={Anaveriler} />
     <Route exact path='/kvkk/verbis/v2/aktarimlar' component={Aktarimlar} />
+    <Route exact path='/kvkk/verbis/v2/framework' component={Framework} />
 
      {/* Verbis KVTalepler */}
     <Route exact path='/kvkk/verbis/kvtalepler' component={KVTalepler} />

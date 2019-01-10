@@ -159,7 +159,8 @@ export const createDropdownOptions = async (URL_OPTIONS, cid) => {
 
   try {
     const result = await axios.post(URL_OPTIONS, params, config.axios)
-    const data = await _.size(result.data)>0?result.data:[];
+    // const data = await _.size(result.data)>0?result.data:[];
+    const data = await result.data?result.data:[];
     await data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
 
   } catch (err) {

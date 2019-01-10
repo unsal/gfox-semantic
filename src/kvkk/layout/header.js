@@ -80,34 +80,20 @@ class KVKKHeader extends PureComponent  {
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/paylasimamaclari'> <Icon name="sticky note outline" /> Paylaşım Amaçları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/paylasimsekilleri'> <Icon name="sticky note outline" /> Paylaşım Şekilleri </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kvkk/tanimlar/ulkeler'> <Icon name="sticky note outline" /> Ülkeler </Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/tanimlar/tedbirler'> <Icon name="sticky note outline" /> Veri Güvenlik Tedbirleri </Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/tanimlar/tedbirler'> <Icon name="sticky note outline" /> Güvenlik Tedbirleri </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
 
               {/* Verbis V2.o */}
-              <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Verbis v2.o</span>
+              <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Verbis</span>
               <Dropdown.Menu style={this.style }>
                 <Dropdown.Item as={Link} to='/kvkk/verbis/v2/anaveriler'><Icon name="shield alternate" /> Anaveriler</Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/verbis/v2/aktarimlar'><Icon name="paper plane outline" /> Kurum Paylaşımları</Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/verbis/v2/aktarimlar'><Icon name="paper plane outline" /> Aktarımlar</Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkk/verbis/v2/framework'><Icon name="paper plane outline" /> Framework</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
 
-            <Dropdown.Divider />
-            {/* --------------------------------------------------------------------- */}
-
-            {/* VERBİS KV ANAVERILER */}
-            <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Verbis v1.o</span>
-              <Dropdown.Menu style={this.style }>
-                <Dropdown.Item as={Link} to='/kvkk/ss/kurumlar'><Icon name="user outline" /> KV Paylaşılan Kurumlar</Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/ss/kanallar'><Icon name="user outline" /> KV Toplama Kanalları</Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/ss/sistemler'><Icon name="user outline" /> KV Kullanan Sistemler</Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/ss/dokumanlar'><Icon name="user outline" /> KV Içeren Dokümanlar</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item as={Link} to='/kvkk/verbis/profil'><Icon name="lock" /> Profil KV İlişkisi</Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/verbis/paylasim'><Icon name="lock" /> KV Paylaşımları</Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkk/verbis/anaveri'><Icon name="lock" /> Verbis Anaveri Girişi</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown.Item>
+            {/* <Dropdown.Divider /> */}
 
           </Dropdown.Menu>
         </Dropdown>}
