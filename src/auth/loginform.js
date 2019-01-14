@@ -38,7 +38,7 @@ class LoginForm extends PureComponent {
           let options =[]
 
           try {
-            const result = await axios.post(config.URL_GET_AUTH_CIDS, params, config.axios)
+            const result = await axios.post(config.URL_AUTH_CIDS, params, config.axios)
             const data = await result.data?result.data:[]
             await data.map( ({cid, name}) =>  options = options.concat({'key':cid, 'text':name, 'value':cid}) )
           } catch (err) {

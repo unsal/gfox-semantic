@@ -7,90 +7,49 @@ const apiHost = 'http://127.0.0.1:8000' // nginx gunicorn local
 
 // Python API configs
 export const config = {
-  // ss > common > related > dropdownlar için
-  URL_GET_KURUMLAR: apiHost+'/tanimlar/kurumlar',
-  URL_GET_SISTEMLER: apiHost+'/tanimlar/sistemler',
-  URL_GET_KANALLAR: apiHost+'/tanimlar/kanallar',
-  URL_GET_PROFILLER: apiHost+'/tanimlar/profiller',
-  URL_GET_BIRIMLER: apiHost+'/tanimlar/birimler',
-  URL_GET_KV: apiHost+'/tanimlar/kv',
-  URL_GET_ISLEMEAMACLARI: apiHost+'/tanimlar/islemeamaclari',
-  URL_GET_PAYLASIMAMACLARI: apiHost+'/tanimlar/paylasimamaclari',
-  URL_GET_PAYLASIMSEKILLERI: apiHost+'/tanimlar/paylasimsekilleri',
-  URL_GET_ULKELER: apiHost+'/tanimlar/ulkeler',
-  URL_GET_DOKUMANLAR: apiHost+'/tanimlar/dokumanlar',
-  URL_GET_DAYANAKLAR: apiHost+'/tanimlar/dayanaklar',
-  URL_GET_ORTAMLAR: apiHost+'/tanimlar/ortamlar',
-  URL_GET_SURELER: apiHost+'/tanimlar/sureler',
-  URL_GET_ISLEMDURUMLARI: apiHost+'/tanimlar/islemdurumlari',
-  URL_GET_YAYINDURUMLARI: apiHost+'/tanimlar/yayindurumlari',
-  URL_GET_TEDBIRLER: apiHost+'/tanimlar/tedbirler',
-  URL_GET_KVKATEGORILER: apiHost+'/tanimlar/kvkategoriler',
+  // dropdownlar için
+  URL_OPTIONS_PROFILLER: apiHost+'/options/profiller',
+  URL_OPTIONS_BIRIMLER: apiHost+'/options/birimler',
+  URL_OPTIONS_BOLUMLER: apiHost+'/options/bolumler', //Özel liste getirdiği için ayrı..
+  URL_OPTIONS_SURECLER: apiHost+'/options/surecler', //Özel liste getirdiği için ayrı..
+  URL_OPTIONS_KURUMLAR: apiHost+'/options/kurumlar',
+  URL_OPTIONS_KANALLAR: apiHost+'/options/kanallar',
+  URL_OPTIONS_ISLEMEAMACLARI: apiHost+'/options/islemeamaclari',
+  URL_OPTIONS_PAYLASIMAMACLARI: apiHost+'/options/paylasimamaclari',
+  URL_OPTIONS_PAYLASIMSEKILLERI: apiHost+'/options/paylasimsekilleri',
+  URL_OPTIONS_DAYANAKLAR: apiHost+'/options/dayanaklar',
+  URL_OPTIONS_ORTAMLAR: apiHost+'/options/ortamlar',
+  URL_OPTIONS_ISLEMLER: apiHost+'/options/islemler',
+  URL_OPTIONS_TEDBIRLER: apiHost+'/options/tedbirler',
+  URL_OPTIONS_KVKATEGORILER: apiHost+'/options/kvkategoriler',
+  URL_OPTIONS_SURELER: apiHost+'/options/sureler',
 
-
-  // Tanımlar ******************************************
-  URL_GetTanimlar: apiHost+'/tanimlar',
-  URL_AddTanimlar: apiHost+'/tanimlar/add',
-  URL_DelTanimlar: apiHost+'/tanimlar/del',
-
-  // SS ******************************************
-  URL_GetSSCommon: apiHost+'/ss/common',
-  URL_AddSSCommon: apiHost+'/ss/common/add',
-  URL_DeleteSSCommon: apiHost+'/ss/common/delete',
-
-  // *****************************KV Dokumanlar*****************************
-  URL_GetSSDokumanlar: apiHost+'/ss/dokumanlar',
-  URL_AddSSDokumanlar: apiHost+'/ss/dokumanlar/add',
-  URL_DeleteSSDokumanlar: apiHost+'/ss/dokumanlar/del',
-
-    // ***************KV Profil*****************************
-  URL_GET_KVPROFIL: apiHost+'/verbis/kvprofil',
-  URL_ADD_KVPROFIL: apiHost+'/verbis/kvprofil/add',
-  URL_UPDATE_KVPROFIL: apiHost+'/verbis/kvprofil/update',
-  URL_DELETE_KVPROFIL: apiHost+'/verbis/kvprofil/delete',
-
-  // *************** KV Paylasim *****************************
-  URL_GET_KVPAYLASIM: apiHost+'/verbis/kvpaylasim',
-  URL_ADD_KVPAYLASIM: apiHost+'/verbis/kvpaylasim/add',
-  URL_UPDATE_KVPAYLASIM: apiHost+'/verbis/kvpaylasim/update',
-  URL_DELETE_KVPAYLASIM: apiHost+'/verbis/kvpaylasim/delete',
-
-  // *************** KV Anaveri *****************************
-  URL_GET_KVANAVERI: apiHost+'/verbis/kvanaveri',
-  URL_ADD_KVANAVERI: apiHost+'/verbis/kvanaveri/add',
-  URL_UPDATE_KVANAVERI: apiHost+'/verbis/kvanaveri/update',
-  URL_DELETE_KVANAVERI: apiHost+'/verbis/kvanaveri/delete',
-
-  // *************** KV TALEPLER *****************************
-  URL_GET_KVTALEPLER: apiHost+'/verbis/kvtalepler',
-  URL_ADD_KVTALEPLER: apiHost+'/verbis/kvtalepler/add',
-  URL_UPDATE_KVTALEPLER: apiHost+'/verbis/kvtalepler/update',
-  URL_DELETE_KVTALEPLER: apiHost+'/verbis/kvtalepler/delete',
-
+  // in change progress..
+  URL_OPTIONS_KV: apiHost+'/tanimlar/kv/get',
+  URL_OPTIONS_SISTEMLER: apiHost+'/tanimlar/sistemler/get',
+  URL_OPTIONS_ULKELER: apiHost+'/tanimlar/ulkeler/get',
 
   //************* AUTH ************************
-  URL_GET_AUTH_CIDS: apiHost+'/auth/cids',
+  URL_AUTH_CIDS: apiHost+'/auth/cids',
   URL_LOGIN: apiHost+'/auth/login',
 
   //export excel download
   URL_EXPORT: apiHost +'/download',
 
-  //Bolumler
-  URL_GET_BOLUMLER: apiHost+'/tanimlar/bolumler',
-  URL_ADD_BOLUM: apiHost+'/tanimlar/bolumler/add',
-  URL_DELETE_BOLUM: apiHost+'/tanimlar/bolumler/delete',
-
-  //Surecler
-  URL_GET_SURECLER: apiHost+'/tanimlar/surecler',
-  URL_GET_SURECLERDD: apiHost+'/tanimlar/sureclerdd', //for Dropdown on anaveriler.js
-  URL_ADD_SUREC: apiHost+'/tanimlar/surecler/add',
-  URL_DELETE_SUREC: apiHost+'/tanimlar/surecler/delete',
-
   //ANAVERILER
-  URL_ANAVERILER: apiHost+'/verbis/anaveriler',
+  URL_ANAVERILER: apiHost+'/anaveriler',
   //AKTARIMLAR
-  URL_AKTARIMLAR: apiHost+'/verbis/aktarimlar',
+  URL_AKTARIMLAR: apiHost+'/aktarimlar',
+   //TALEPLER
+  URL_TALEPLER: apiHost+'/talepler',
 
+   //TANIMLAR
+  URL_TANIMLAR: apiHost+'/tanimlar',
+  URL_TANIMLAR_BOLUMLER: apiHost+'/bolumler',
+  URL_TANIMLAR_SURECLER: apiHost+'/surecler',
+  URL_TANIMLAR_KV: apiHost+'/kv',
+  URL_TANIMLAR_ULKELER: apiHost+'/ulkeler',
+  URL_TANIMLAR_SISTEMLER: apiHost+'/sistemler',
 
   //axios GET, OST header için config
   axios: { headers: {

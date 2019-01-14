@@ -1,14 +1,9 @@
 .kvkk-content {
-  margin: 70px 10px 0px 40px;
+  margin: 100px 10px 0px 40px;
   width: 95%;
+  max-width: 95%;
+  display: inline-block;
 }
-
-.kvkk-content-kv {
-  margin: 70px 20px 10px 20px;
-  padding: 20px;
-  width: 90%;
-}
-
 
 .notify {
   width: 50%;

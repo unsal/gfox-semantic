@@ -18,7 +18,7 @@ import {
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import ImageBanner from "./assets/img/cid.jpg"
-import {DropboxCID} from './kvkk/components/myComponents'
+import {CIDDropbox} from './kvkk/components/myComponents'
 import { connect } from 'react-redux';
 import ImageBackground from "./assets/img/bground.jpg" //1125 x 630px
 import Logo from './assets/img/logo2.png'
@@ -103,7 +103,7 @@ class DesktopContainer extends PureComponent {
             <Header>Şirket</Header>
             <p>Tüm işlemleriniz seçmiş olduğunuz şirket üzerinden gerçekleştirilecektir.</p>
             <p>Uygulama ekranlarından dilediğiniz zaman seçiminizi değiştirebilirsiniz</p>
-            <DropboxCID cid={this.props.cid} uid={this.props.uid} />
+            <CIDDropbox cid={this.props.cid} uid={this.props.uid} />
             {/* <Button style={{display: 'block', marginTop:'60px'}} basic content='Devam' /> */}
           </Modal.Description>
         </Modal.Content>
@@ -366,7 +366,7 @@ const Homepage = () => (
                 İletişim
               </Header>
               <p>
-                <Icon name='mail outline' />info@kvkk.org
+                <Icon name='envelope outline' />info@kvkk.org
               </p>
             </Grid.Column>
           </Grid.Row>

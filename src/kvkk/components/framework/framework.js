@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Table, Dropdown, Header, Button, Label, Icon, Modal, Input } from "semantic-ui-react";
+import { Table, Dropdown, Header, Button, Label, Icon, Modal, Input, Checkbox } from "semantic-ui-react";
 import KVKKLayout from "../../layout";
 import Login from '../../../auth/login'
 import axios from "axios";
@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { store } from "../../../reducer";
 
 import { config } from "../../../config";
-import {LoadingStoreData, createDropdownOptions, refreshStoreData, MyMessage}  from '../myComponents'
+import {LoadingStoreData, getOptions, refreshStoreData, MyMessage}  from '../myComponents'
 
 class Framework extends PureComponent {
 
@@ -22,14 +22,14 @@ class Framework extends PureComponent {
 
     //content table properties
     singleLine: true, //content>table>tek satır kontrolü için
-    fixed: true,
+
   }
 
 
    componentDidMount() {
     const {fields} = this.props.template
     fields.map( async ({field, optionsURL})=>
-        optionsURL &&  this.setState({ ['options_'+field]: await createDropdownOptions(optionsURL, this.props.cid) })
+        optionsURL &&  this.setState({ ['options_'+field]: await getOptions(optionsURL, this.props.cid) })
     )
 
    this.setState({ mounted: true})
@@ -39,11 +39,11 @@ class Framework extends PureComponent {
 
   TableHeader=()=> {
     const Required = () => <Icon name="asterisk" size="small" color="red" />
-    const {fields} = this.props.template
+    const {titles} = this.props.template
     return <Table.Header>
       <Table.Row>
-         {fields.map(({title, field, width, required}, index)=>
-            <Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f3f3f3" }} > {title} {required && <Required />}</Table.HeaderCell>
+         {titles.map(({title, width, required}, index)=>
+            <Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} > {title} {required && <Required />}</Table.HeaderCell>
           )}
       </Table.Row>
     </Table.Header>
@@ -61,8 +61,7 @@ class Framework extends PureComponent {
     const {convert} = this
     const {fields} = this.props.template
 
-    this.setState({ editMode: true, addMode: false, fixed: false, singleLine: false,
-                    pidm})
+    this.setState({ editMode: true, addMode: false, pidm})
     //data içeren alanları dropdowna uygun arraye convert ederek atar diğerlerine normal olarak.
     fields.map( ({field}) => field.includes('_data')?this.setState({[field]:convert(row[field])}):
                                                          this.setState({[field]:row[field]}))
@@ -96,12 +95,27 @@ class Framework extends PureComponent {
     event.preventDefault()
     const {name, value} =  element
     this.setState({ [name]: value })
+    // console.log('value:', value)
   }
 
+  handleCheckbox = (event, element) => {
+    event.preventDefault()
+    const {name, checked} =  element
+    this.setState({ [name]: checked })
+  }
+
+  handleKeyDown = (event) => {
+    const type= this.state.addMode?"add":"update"
+    if (event.keyCode===13) {
+          this.handleCommit(type)
+    } else if (event.keyCode===27) {
+           this.handleVazgec()
+    }
+  }
 
   MyDropdown = ({name, error}) => {
 
-   const isPrimary = this.props.template.primary.indexOf(name)>=0
+   const isPrimary = this.props.template.primary.indexOf(name)>-1
    const options =  this.state['options_'+name]
 
     return <Dropdown
@@ -116,32 +130,35 @@ class Framework extends PureComponent {
             />
   }
 
-  handleKeyDown = (event) => {
-    const type= this.state.addMode ==="add"?"add":"update"
-    if (event.keyCode===13) {
-          this.handleCommit(type)
-    } else if (event.keyCode===27) {
-           this.handleVazgec()
-    }
+  MyInput = ({ name, error }) => {
+    const isPrimary = this.props.template.primary.indexOf(name) > -1
+    return <Input name={name}
+      type='text'
+      value={this.state[name] ? this.state[name] : ''}
+      onChange={this.handleChange}
+      onKeyDown={this.handleKeyDown}
+      error={isPrimary && error}
+    />
   }
 
-  MyInput = ({name}) => <Input name={name}
-    type='text'
-    value={this.state[name] ? this.state[name] : ''}
-    onChange={this.handleChange}
-    onKeyDown={this.handleKeyDown}
-  />
+  MyCheckbox = ({name}) => <Checkbox
+                                toggle
+                                name={name}
+                                onChange={this.handleCheckbox}
+                                checked={this.state[name]}
+                              />
 
   MyField =  ({name, type, error}) => {
     switch (type) {
-      case "input": return <this.MyInput name={name}/>;
+      case "input": return <this.MyInput name={name} error={error}/>;
       case "dropdown": return <this.MyDropdown name={name} error={error}/>;
+      case "checkbox": return <this.MyCheckbox name={name}/>;
       default: return null
     }
   }
 
 
-  styleEdit = { verticalAlign: 'top', margin:'0px', padding:'2px'}
+  styleEdit = { overflow: 'visible',  verticalAlign: 'top', margin:'0px', padding:'2px'}
   TableEdit = () =>
           <Table.Row>
               {this.props.template.fields.map( ({field, type}, index) => <Table.Cell key={index} style={this.styleEdit} selectable warning><this.MyField name={field} type={type}/></Table.Cell> )}
@@ -175,7 +192,7 @@ class Framework extends PureComponent {
  TableForm =  () =>
     <Table.Row key="0">
       {this.props.template.fields.map( ({field, type}, index) =>
-        <Table.Cell key={index} style={this.styleView} ><this.MyField name={field} type={type} error={this.state.message} /> </Table.Cell>
+        <Table.Cell key={index} style={this.styleEdit} ><this.MyField name={field} type={type} error={this.state.message} /> </Table.Cell>
       )}
     </Table.Row>
 
@@ -189,23 +206,28 @@ class Framework extends PureComponent {
                       field.includes('_data')?this.setState({[field]:[]}):this.setState({[field]:null})
               )
 
-  handleCommit = async(type) => {
+  handleCommit = async(commitType) => {
     //type = add, update
 
     const {pidm} = this.state
     const {cid, uid} = this.props
     const {fields} = this.props.template
 
-    let params = {pidm, cid, uid}
-    fields.map( ({field})=>params[field] = this.state[field] )
+    let params = {cid, uid}
+
+    const sendPidmTypes = ["update","delete"] // add için pidm gönermemeli, sadece bu ikisi için göndermeli
+    if (sendPidmTypes.indexOf(commitType) > -1) { params['pidm'] = pidm }
+
+    // sadece viewde bulunan post ederken gitmemesi gereken alanlar için type kontrolü yapılıyor. çünkü fields -> type boş geçiliyor şablonda
+    fields.map( ({field, type})=> type && ( params[field] = this.state[field]) )
 
     try {
-        const URL_COMMIT = this.props.template.url.commit+"/"+type  // /add or /update
+        const URL_COMMIT = this.props.template.url.commit+"/"+commitType  // /add or /update
         // console.log('yurtdışı: ',yurtdisi)
 
         await axios.post(URL_COMMIT, params, config.axios)
 
-        await this.setState({ addMode: false, editMode: false, message: null, open: false , fixed: true, singleLine:true }) //open SilBox mesaj kutusu sildikten sonra açılmasın içindir.
+        await this.setState({ addMode: false, editMode: false, message: null, open: false , singleLine:true }) //open SilBox mesaj kutusu sildikten sonra açılmasın içindir.
         await this.handleReset()
         await refreshStoreData(store, cid, this.props.template.url.get)
 
@@ -218,7 +240,7 @@ class Framework extends PureComponent {
   handleYeni = (event) => {
     event.preventDefault()
     this.handleReset()
-    this.setState({addMode: true, editMode:false, message: null, fixed:false, singleLine: false})
+    this.setState({addMode: true, editMode:false, message: null})
 
   }
 
@@ -237,7 +259,7 @@ class Framework extends PureComponent {
   }
 
   handleVazgec=(event)=>{
-    this.setState({addMode: false, editMode: false, message: null, fixed: true, singleLine: true})
+    this.setState({addMode: false, editMode: false, message: null, singleLine: true})
   }
 
 
@@ -245,23 +267,27 @@ class Framework extends PureComponent {
 
     const style = { float: 'right'}
     const styleGroup = { float: 'right', marginRight:"50px"}
+    const {color} = this.props.template.page
 
     const EkleButon = () =>  <Button style={style} color='blue' size='mini' onClick={()=>this.handleCommit("add")}>EKLE</Button>
-    const GuncelleButon = () =>  <Button style={style} color='teal' size='mini' onClick={()=>this.handleCommit("update")}>GÜNCELLE </Button>
+    const GuncelleButon = () =>  <Button style={style} color={color} size='mini' onClick={()=>this.handleCommit("update")}>GÜNCELLE </Button>
     // const SilButon = () =>  <Button style={style} color='red' size='mini' onClick={()=>this.handleCommit("delete")}>SİL </Button>
     const {SilButon} = this
     const VazgecButon = () =>  <Button style={style} size='mini' content='VAZGEÇ' onClick={this.handleVazgec} />
-    const YeniKayitButon = () => <Button style={style} color='teal' size='mini' content='YENİ KAYIT' onClick={this.handleYeni} />
-    const KopyalaButon = () =>  <Button style={style} basic color='teal' circular icon="copy outline" size='mini'  onClick={this.handleKopyala} />
-    const YapistirButon = () =>  <Button style={style} basic color='teal' circular icon="paste" size='mini' onClick={this.handleYapistir} />
-    const ResetButon = () =>  <Button style={style} basic circular color='teal' icon="cut" size='mini' onClick={this.handleReset} />
-    const SingleLineButon = () =>  <Button style={style} basic circular color='teal' icon={this.state.singleLine?"eye":"eye slash outline"} size='mini' onClick={()=>this.setState({singleLine: !this.state.singleLine})} />
+    const YeniKayitButon = () => <Button style={style} color={color} size='mini' content='YENİ KAYIT' onClick={this.handleYeni} />
+
+    const KopyalaButon = () =>  this.state.editMode && <Button style={style} basic color={color} circular icon="copy outline" size='mini'  onClick={this.handleKopyala} />
+    const YapistirButon = () => this.state.editMode && <Button style={style} basic color={color} circular icon="paste" size='mini' onClick={this.handleYapistir} />
+    const ResetButon = () =>  this.state.editMode &&<Button style={style} basic circular color={color} icon="eraser" size='mini' onClick={this.handleReset} />
+
+    const SingleLineButon = () =>  <Button style={style} basic circular color={color} icon={this.state.singleLine?"eye":"eye slash outline"} size='mini' onClick={()=>this.setState({singleLine: !this.state.singleLine})} />
 
     return  <div>
                 {this.state.addMode? <div> <EkleButon /> <VazgecButon /> </div>
                                    :this.state.editMode?<div> <GuncelleButon /><VazgecButon /><div style={styleGroup}><SilButon /></div></div>
                                                        :<YeniKayitButon />
                 }
+
                 <div style={styleGroup}><YapistirButon /><KopyalaButon /><ResetButon /><SingleLineButon /></div>
             </div>
   }
@@ -294,16 +320,16 @@ class Framework extends PureComponent {
 
   Content = () => {
     const { data } = this.props; //data > from reducer
+    const {title, color} = this.props.template.page
 
     return (
       <div className="kvkk-content">
-
           <div>
-              <Header size='large' style={{float: 'left', width:'20%'}}><Icon name={this.props.template.pageicon} color="teal" />{this.props.template.pagetitle}</Header>
+              <Header size='large' style={{float: 'left', width:'20%'}}><Icon name={this.props.template.page.icon} color={color} />{title}</Header>
               <div style={{float: 'right', width:'80%'}}><this.AddButton /></div>
           </div>
           <div>{this.state.message && <MyMessage error content={this.state.message} />}</div>
-            <Table celled striped color="teal" fixed={this.state.fixed} stackable selectable singleLine={this.state.singleLine} >
+            <Table celled striped color={color} fixed stackable selectable singleLine={this.state.singleLine} >
               <this.TableHeader />
               <Table.Body>
                 {this.state.addMode && <this.TableForm />}

@@ -94,19 +94,6 @@ export const MyLittleLoader = () => {
   // get Options for Dropdown components. !!! only works for pidm, name included Tanimlar tables..
 
 
-   export const getOptions =  async (URL) => {
-    let options = []
-
-    const response = await axios.get(URL)
-        try {
-            await response.data.map( ({pidm, name}) => options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
-        } catch (err) {
-          console.log(err)
-        }
-        return options
-
-    }
-
 //Remove Duplicates from an Array
 export const removeDuplicates=(arr)=> {
     var cleaned = [];
@@ -152,48 +139,29 @@ export const updateStoreError = (errorStatus, store) => {
 }
 
 
-export const createDropdownOptions = async (URL_OPTIONS, cid) => {
+export const getOptions = async (url, cid) => {
 //{pidm:, text:, value:} for Semantic Dropdown Component. cid=> her kurum için ayrı ayrı
+//python > framework.py > getOptions
   const params  = {cid}
   let options =[]
 
   try {
-    const result = await axios.post(URL_OPTIONS, params, config.axios)
-    // const data = await _.size(result.data)>0?result.data:[];
+    const result = await axios.post(url, params, config.axios)
     const data = await result.data?result.data:[];
     await data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
 
   } catch (err) {
-        console.log("myComponents->createDropdownOptions() hatası..",err);
+        console.log("myComponents->getOptions() hatası..",err);
         options = []
   }
+
+  // if (url.indexOf('/options/sureler') >-1) { console.log('Options:', options) }
 
   return options
 }
 
-
-export const createYayindurumlariOptions = async () => {
-  //{pidm:, text:, value:} for Semantic Dropdown Component. cid=> her kurum için ayrı ayrı
-    const URL_GET = config.URL_GET_YAYINDURUMLARI
-    const params  = {cid:'0'} //yayın durumları için  cid'ye ihtiyaç duyulmadığından
-    let options =[]
-
-    try {
-      const result = await axios.post(URL_GET, params, config)
-      const data = await _.size(result.data)>0?result.data:[];
-      await data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
-
-    } catch (err) {
-          console.log("myComponents->createYayindurumlariOptions() hatası..",err);
-          options = []
-    }
-
-    return options
-  }
-
-
    // Change Cid Dropbox for using everywhere
-   export class DropboxCID extends PureComponent {
+   export class CIDDropbox extends PureComponent {
     state = {
       isLoading: true,
       mounted: false
