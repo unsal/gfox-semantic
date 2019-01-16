@@ -15,19 +15,22 @@ import KVKK from './kvkk';
 
 
 // v2
-import Anaveriler from './kvkk/components/framework/anaveriler'
-import Aktarimlar from './kvkk/components/framework/aktarimlar'
+import Anaveriler from './kvkk/components/anaveriler'
+import Aktarimlar from './kvkk/components/aktarimlar'
 
-import Talepler from './kvkk/components/framework/talepler'
+import Talepler from './kvkk/components/talepler'
 
-import {Profiller,Dayanaklar, Birimler, KVKategoriler, IslemeAmaclari, Kanallar, Ortamlar,
-   Kurumlar, Sureler, PaylasimAmaclari, PaylasimSekilleri, Tedbirler} from './kvkk/components/framework/tanimlar'
+import {Profiller,Dayanaklar, KVKategoriler, IslemeAmaclari, Kanallar, Ortamlar,
+   Kurumlar, Sureler, PaylasimAmaclari, PaylasimSekilleri, Tedbirler} from './kvkk/components/tanimlar'
 
-import Bolumler from './kvkk/components/framework/tanimlarBolumler'
-import Surecler from './kvkk/components/framework/tanimlarSurecler'
-import KV from './kvkk/components/framework/tanimlarKV'
-import Ulkeler from './kvkk/components/framework/tanimlarUlkeler'
-import Sistemler from './kvkk/components/framework/tanimlarSistemler'
+import Bolumler from './kvkk/components/tanimlarBolumler'
+import Surecler from './kvkk/components/tanimlarSurecler'
+import KV from './kvkk/components/tanimlarKV'
+import Ulkeler from './kvkk/components/tanimlarUlkeler'
+import Sistemler from './kvkk/components/tanimlarSistemler'
+import Birimler from './kvkk/components/tanimlarBirimler'
+import Sorumlular from './kvkk/components/tanimlarSorumlular'
+import Panel from './kvkk/components/panel'
 
 import LoginForm from './auth/loginform'
 
@@ -65,6 +68,9 @@ ReactDOM.render(
      <Route exact path='/kv' component={KV} />
      <Route exact path='/ulkeler' component={Ulkeler} />
      <Route exact path='/sistemler' component={Sistemler} />
+     <Route exact path='/sorumlular' component={Sorumlular} />
+
+     <Route exact path='/panel' component={Panel} />
 
 
  </Switch>

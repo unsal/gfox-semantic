@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 //Reducer
 import { connect } from 'react-redux';
-import {CIDDropbox} from '../components/myComponents'
+import {CIDDropbox} from '../components/mycomponents'
 
 //Exce Export
 import { ExportButton } from '../components/export'
@@ -51,7 +51,7 @@ class KVKKHeader extends PureComponent  {
           <Logo /> GFOX
         </Menu.Item>
 
-        {cid && <Menu.Item header as={Link} to='xxx'>
+        {cid && <Menu.Item header as={Link} to='/panel'>
                         <Icon name="chart pie" color="teal" size="large"  />Panel
                 </Menu.Item>}
 
@@ -69,11 +69,12 @@ class KVKKHeader extends PureComponent  {
             <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Genel Tanımlar</span>
               <Dropdown.Menu style={this.style }>
                 <Dropdown.Item as={Link} to='/profiller'> <TanimlarIcon /> Kullanıcı Profilleri </Dropdown.Item>
+                <Dropdown.Item as={Link} to='/kvkategoriler'> <TanimlarIcon /> KV Kategorileri</Dropdown.Item>
+                <Dropdown.Item as={Link} to='/sorumlular'> <TanimlarIcon /> Veri Sorumluları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/birimler'> <TanimlarIcon /> Birimler </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/bolumler'> <TanimlarIcon /> Birim > Bölümler</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/surecler'> <TanimlarIcon /> Birim > Bölüm > Süreçler</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kv'> <TanimlarIcon /> Kişisel Veriler</Dropdown.Item>
-                <Dropdown.Item as={Link} to='/kvkategoriler'> <TanimlarIcon /> KV Kategorileri</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/dayanaklar'> <TanimlarIcon /> Dayanaklar </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/islemeamaclari'> <TanimlarIcon /> İşleme Amaçları </Dropdown.Item>
                 <Dropdown.Item as={Link} to='/kanallar'> <TanimlarIcon /> Toplama Kanalları </Dropdown.Item>
@@ -87,6 +88,7 @@ class KVKKHeader extends PureComponent  {
                 <Dropdown.Item as={Link} to='/sistemler'> <TanimlarIcon /> Kullanılan Sistemler</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
+
 
               {/* Verbis V2.o */}
               <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Verbis</span>

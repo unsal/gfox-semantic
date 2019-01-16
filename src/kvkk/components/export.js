@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import axios from "axios";
-import {config} from '../../../config'
+import {config} from '../../config'
 import { Icon, Modal, Button } from "semantic-ui-react"
 import FileSaver from 'file-saver';
 

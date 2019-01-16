@@ -2,11 +2,11 @@ import React, { PureComponent } from 'react'
 import { Message, Segment, Icon, Dropdown, Button } from 'semantic-ui-react'
 import axios from "axios";
 import _ from 'lodash';
-import { updateStoreData, updateErrorStatus } from "../../../reducer/actions";
-import {config} from '../../../config'
+import { updateStoreData, updateErrorStatus } from "../../reducer/actions";
+import {config} from '../../config'
 
-import {store} from '../../../reducer';
-import { updateStoreCID, updateStoreURL } from '../../../reducer/actions';
+import {store} from '../../reducer';
+import { updateStoreCID, updateStoreURL } from '../../reducer/actions';
 
 export const upperCase=string=>
 {

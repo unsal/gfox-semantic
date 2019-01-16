@@ -1,6 +1,6 @@
 import React from "react";
 import Framework from './framework.js';
-import {config} from '../../../config'
+import {config} from '../../config'
 
 const template = {
     page: {title:"Aktarımlar", icon:"paper plane outline", color:"orange"},

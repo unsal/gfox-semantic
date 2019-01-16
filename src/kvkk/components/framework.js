@@ -1,15 +1,15 @@
 import React, { PureComponent } from "react";
 import { Table, Dropdown, Header, Button, Label, Icon, Modal, Input, Checkbox } from "semantic-ui-react";
-import KVKKLayout from "../../layout";
-import Login from '../../../auth/login'
+import KVKKLayout from "../layout";
+import Login from '../../auth/login'
 import axios from "axios";
 
 //Redux
 import { connect } from "react-redux";
-import { store } from "../../../reducer";
+import { store } from "../../reducer";
 
-import { config } from "../../../config";
-import {LoadingStoreData, getOptions, refreshStoreData, MyMessage}  from '../myComponents'
+import { config } from "../../config";
+import {LoadingStoreData, getOptions, refreshStoreData, MyMessage}  from './mycomponents'
 
 class Framework extends PureComponent {
 
@@ -138,6 +138,7 @@ class Framework extends PureComponent {
       onChange={this.handleChange}
       onKeyDown={this.handleKeyDown}
       error={isPrimary && error}
+      style={{ width:"100%"}}
     />
   }
 

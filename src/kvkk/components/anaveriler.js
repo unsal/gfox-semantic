@@ -1,6 +1,6 @@
 import React from "react";
 import Framework from './framework.js';
-import {config} from '../../../config'
+import {config} from '../../config'
 
 const template = {
   page: {title:"Ana Veriler", icon:"shield alternate", color:"teal"},
@@ -17,16 +17,16 @@ const template = {
       { title: 'SİSTEMLER',  width: '10%' },
       { title: 'ORTAMLAR',  width: '10%' }],
 
-  fields: [{ title: 'PROFİL', field: 'profil_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_PROFILLER, width: '10%', required: true },
-      { title: 'SÜREÇ', field: 'surec_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_SURECLER, width: '10%', required: true },
-      { title: 'KV', field: 'kv_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_KV, width: '10%', required: true },
-      { title: 'İŞL.AMAÇLARI', field: 'isleme_amaclari_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_ISLEMEAMACLARI, width: '10%' },
-      { title: 'DAYANAKLAR', field: 'dayanaklar_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_DAYANAKLAR, width: '10%' },
-      { title: 'KANALLAR', field: 'kanallar_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_KANALLAR, width: '10%' },
-      { title: 'SÜRE', field: 'sure_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_SURELER, width: '10%' },
-      { title: 'TEDBİRLER', field: 'tedbirler_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_TEDBIRLER, width: '10%' },
-      { title: 'SİSTEMLER', field: 'sistemler_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_SISTEMLER, width: '10%' },
-      { title: 'ORTAMLAR', field: 'ortamlar_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_ORTAMLAR, width: '10%' }],
+  fields: [{ field: 'profil_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_PROFILLER },
+      { field: 'surec_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_SURECLER },
+      { field: 'kv_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_KV},
+      { field: 'isleme_amaclari_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_ISLEMEAMACLARI},
+      { field: 'dayanaklar_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_DAYANAKLAR },
+      { field: 'kanallar_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_KANALLAR},
+      { field: 'sure_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_SURELER},
+      { field: 'tedbirler_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_TEDBIRLER},
+      { field: 'sistemler_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_SISTEMLER},
+      { field: 'ortamlar_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_ORTAMLAR}],
 
   primary: ['profil_pidm', 'surec_pidm', 'kv_pidm'], //boş geçilemez alanların error kontrolü için
 

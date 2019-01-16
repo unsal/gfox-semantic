@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import {updateStoreToken, updateStoreUID, updateStoreCIDOptions} from '../reducer/actions'
 import {store} from "../reducer"
 import KVKK from '../kvkk'
-import {spinnerIcon} from "../kvkk/components/myComponents"
+import {spinnerIcon} from "../kvkk/components/mycomponents"
 
 class LoginForm extends PureComponent {
       state = {

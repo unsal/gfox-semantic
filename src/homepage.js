@@ -18,7 +18,7 @@ import {
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import ImageBanner from "./assets/img/cid.jpg"
-import {CIDDropbox} from './kvkk/components/myComponents'
+import {CIDDropbox} from './kvkk/components/mycomponents'
 import { connect } from 'react-redux';
 import ImageBackground from "./assets/img/bground.jpg" //1125 x 630px
 import Logo from './assets/img/logo2.png'

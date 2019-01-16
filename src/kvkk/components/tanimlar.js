@@ -1,6 +1,6 @@
 import React from "react";
 import Framework from './framework.js';
-import {config} from '../../../config'
+import {config} from '../../config'
 
 
 const TanimlarBase = (props) => {
@@ -22,7 +22,7 @@ const TanimlarBase = (props) => {
 }
 
 export const Profiller = () => <TanimlarBase id="profiller" />
-export const Birimler = () => <TanimlarBase id="birimler" />
+// export const Birimler = () => <TanimlarBase id="birimler" />
 export const Dayanaklar = () => <TanimlarBase id="dayanaklar" />
 export const KVKategoriler = () => <TanimlarBase id="kvkategoriler" />
 export const IslemeAmaclari = () => <TanimlarBase id="islemeamaclari" />

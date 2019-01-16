@@ -9,7 +9,6 @@ const apiHost = 'http://127.0.0.1:8000' // nginx gunicorn local
 export const config = {
   // dropdownlar için
   URL_OPTIONS_PROFILLER: apiHost+'/options/profiller',
-  URL_OPTIONS_BIRIMLER: apiHost+'/options/birimler',
   URL_OPTIONS_BOLUMLER: apiHost+'/options/bolumler', //Özel liste getirdiği için ayrı..
   URL_OPTIONS_SURECLER: apiHost+'/options/surecler', //Özel liste getirdiği için ayrı..
   URL_OPTIONS_KURUMLAR: apiHost+'/options/kurumlar',
@@ -23,6 +22,8 @@ export const config = {
   URL_OPTIONS_TEDBIRLER: apiHost+'/options/tedbirler',
   URL_OPTIONS_KVKATEGORILER: apiHost+'/options/kvkategoriler',
   URL_OPTIONS_SURELER: apiHost+'/options/sureler',
+  URL_OPTIONS_BIRIMLER: apiHost+'/options/birimler',
+  URL_OPTIONS_SORUMLULAR: apiHost+'/options/sorumlular',
 
   // in change progress..
   URL_OPTIONS_KV: apiHost+'/tanimlar/kv/get',
@@ -50,6 +51,8 @@ export const config = {
   URL_TANIMLAR_KV: apiHost+'/kv',
   URL_TANIMLAR_ULKELER: apiHost+'/ulkeler',
   URL_TANIMLAR_SISTEMLER: apiHost+'/sistemler',
+  URL_TANIMLAR_BIRIMLER: apiHost+'/birimler',
+  URL_TANIMLAR_SORUMLULAR: apiHost+'/sorumlular',
 
   //axios GET, OST header için config
   axios: { headers: {
