@@ -1,13 +1,13 @@
 import React from "react";
-import Framework from './_framework2.js';
+import Framework from './framework.js';
 import {config} from '../../config'
 
 const template = {
     page: {title:"Aktarımlar", icon:"paper plane outline", color:"orange"},
     url: { get: config.URL_AKTARIMLAR + "/get", commit: config.URL_AKTARIMLAR },
 
-
-  titles: [{ title: 'SÜREÇ', width: '10%', required: true, searchable: true, field: 'surec_name' },
+  titles: [
+            { title: 'SÜREÇ', width: '10%', required: true, searchable: true, field: 'surec_name' },
             { title: 'KV', width: '10%', required: true, searchable: true, field: 'kv_name' },
             { title: 'KURUM', width: '10%', required: true, searchable: true, field: 'kurum_name' },
             { title: 'AKTARIM AMACI', width: '10%' },
@@ -18,7 +18,8 @@ const template = {
             { title: 'AÇIKLAMA', width: '15%' },
             { title: 'BİLGİYİ VEREN', width: '10%' }],
 
-  fields: [{ field: 'surec_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_SURECLER },
+  fields: [
+          { field: 'surec_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_SURECLER },
           { field: 'kv_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_KV },
           { field: 'kurum_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_KURUMLAR},
           { field: 'paylasim_amaclari_data', type: 'dropdown', optionsURL: config.URL_OPTIONS_PAYLASIMAMACLARI },

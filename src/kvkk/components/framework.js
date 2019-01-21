@@ -74,13 +74,14 @@ class Framework extends PureComponent {
   TableHeader=()=> {
     const Required = () => <Icon name="asterisk" size="small" color="red" />
     const {titles} = this.props.template
+    const enableSearchMode = () => store.dispatch(updateStoreSearchMode(true))
 
     return <Table.Header>
       <Table.Row>
          {titles.map(({title, width, required, searchable, field}, index)=>
             (this.props.searchMode && searchable) ?
             <Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} > <this.MyInputSearch name={field} placeholder={title} /></Table.HeaderCell>
-            :<Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} > {title} {required && <Required />}</Table.HeaderCell>
+            :<Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} onClick={enableSearchMode}> {title} {required && <Required />}</Table.HeaderCell>
           )}
       </Table.Row>
     </Table.Header>
@@ -325,7 +326,7 @@ class Framework extends PureComponent {
     return  <div>
                 {this.state.addMode? <div> <EkleButon /> <VazgecButon /> </div>
                                    :this.state.editMode?<div> <GuncelleButon /><VazgecButon /><div style={styleGroup}><SilButon /></div></div>
-                                   :this.props.searchMode?<VazgecButon />
+                                   :this.props.searchMode?<div><YeniKayitButon /><VazgecButon /></div>
                                    :<YeniKayitButon />
                 }
 
