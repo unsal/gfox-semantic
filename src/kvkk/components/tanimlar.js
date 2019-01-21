@@ -12,7 +12,7 @@ const TanimlarBase = (props) => {
   const template = {
     page: { title: id, icon: "list alternate outline", color: "green" },
     url: { get: URL_GET, commit: URL_COMMIT },
-    titles: [{ title: "BAŞLIK", width: '80%', required: true }],
+    titles: [{ title: "BAŞLIK", width: '80%', required: true, searchable: true, field:'name' }],
     fields: [{ field: 'name', type: 'input' }],
     primary: ['name'], //boş geçilemez alanların görsel uyarı error kontrolü için
     view: [{ field: 'name', type: 'text' }],

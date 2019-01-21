@@ -12,8 +12,8 @@ const Component = (props) => {
     page: { title: "Ülkeler", icon: "list alternate outline", color: "green" },
     url: { get: URL_GET, commit: URL_COMMIT },
     titles: [
-      { title: "ÜLKE ADI", width: '80%', required: true },
-      { title: "TEL KODU", width: '10%'},
+      { title: "ÜLKE ADI", width: '80%', required: true , searchable: true, field:'name'},
+      { title: "TEL KODU", width: '10%', searchable: true, field:'phone_area'},
       { title: "GÜVENLİ", width: '10%' }
     ],
     fields: [

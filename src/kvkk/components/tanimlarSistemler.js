@@ -12,7 +12,7 @@ const Component = (props) => {
     page: { title: "Kullanılan Sistemler", icon: "list alternate outline", color: "green" },
     url: { get: URL_GET, commit: URL_COMMIT },
     titles: [
-      { title: "SİSTEM ADI", width: '80%', required: true },
+      { title: "SİSTEM ADI", width: '80%', required: true, searchable: true, field:'name' },
       { title: "LOKAL", width: '10%' }
     ],
     fields: [

@@ -7,16 +7,16 @@ const template = {
   url: { get: config.URL_TALEPLER + "/get", commit: config.URL_TALEPLER },
 
   titles: [
-    { title: 'İSİM', width: '10%', required: true },
-    { title: 'BİLGİ TALEBİ', width: '15%' },
+    { title: 'İSİM', width: '10%', required: true, searchable: true, field: 'isim' },
+    { title: 'BİLGİ TALEBİ', width: '15%', searchable: true, field: 'bilgitalebi' },
     { title: 'PROFİLLER', width: '10%' },
-    { title: 'E-POSTA',  width: '10%', required: true },
-    { title: 'TEL', width: '5%', required: true },
-    { title: 'TCKNO',  width: '5%' },
-    { title: 'D.TARİHİ',  width: '5%' },
-    { title: 'İŞLEM DURUMU',  width: '5%' },
-    { title: 'AÇIKLAMA', width: '15%' },
-    { title: 'KURUMU', width: '10%' }
+    { title: 'E-POSTA',  width: '10%', required: true ,searchable: true, field: 'eposta'},
+    { title: 'TEL', width: '5%', required: true,searchable: true, field: 'tel' },
+    { title: 'TCKNO',  width: '5%',searchable: true, field: 'tckno' },
+    { title: 'D.TARİHİ',  width: '5%',searchable: true, field: 'dogumtarihi' },
+    { title: 'İŞLEM DURUMU',  width: '5%', searchable: true, field: 'islem_name' },
+    { title: 'AÇIKLAMA', width: '15%',searchable: true, field: 'aciklama' },
+    { title: 'KURUMU', width: '10%',searchable: true, field: 'kurumu' }
   ],
 
   fields: [

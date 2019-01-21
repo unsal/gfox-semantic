@@ -12,8 +12,8 @@ const Component = (props) => {
     page: { title: "Bölümler", icon: "list alternate outline", color: "green" },
     url: { get: URL_GET, commit: URL_COMMIT },
     titles: [
-      { title: "BİRİMİ", width: '40%', required: true },
-      { title: "BÖLÜMÜ", width: '40%', required: true }
+      { title: "BİRİMİ", width: '40%', required: true,searchable: true, field:'birim_name' },
+      { title: "BÖLÜMÜ", width: '40%', required: true, searchable: true, field:'name' }
     ],
     fields: [
       { field: 'birim_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_BIRIMLER },

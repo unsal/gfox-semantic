@@ -7,10 +7,9 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { store } from "../../reducer";
-import {updateStoreData, updateStoreSearchMode} from "../../reducer/actions"
 
 import { config } from "../../config";
-import {LoadingStoreData, clearStoreData,  getOptions, refreshStoreData, MyMessage}  from './mycomponents'
+import {LoadingStoreData, getOptions, refreshStoreData, MyMessage}  from './mycomponents'
 
 class Framework extends PureComponent {
 
@@ -38,49 +37,14 @@ class Framework extends PureComponent {
 
   }
 
-  componentWillUnmount() {
-    clearStoreData(store)
-  }
-
-  filterData =  (name, value) => {
-    const search =  value.trim().toLowerCase()
-    let data =  this.props.initialData
-
-    if (search.length > 0) {
-      data = data.filter(key => {
-        return key[name]?key[name].toLowerCase().match(search):false //false: null olan kayıtlar hata verdiği için false döndürdüm.
-      });
-    }
-    return data
-  }
-
-  MyInputSearch = ({ name, placeholder }) => {
-    const handleChangeSearch = (event, element) => {
-            event.preventDefault()
-            const { name, value } = element
-            this.setState({ [name]: value })
-            const data = this.filterData(name, value)
-            data && store.dispatch(updateStoreData(data))
-          }
-    return <Input name={name} placeholder={placeholder}
-      type='text'
-      value={this.state[name] ? this.state[name] : ''}
-      onChange={handleChangeSearch}
-      onKeyDown={this.handleKeyDown}
-      style={{ width: "100%" }}
-    />
-  }
 
   TableHeader=()=> {
     const Required = () => <Icon name="asterisk" size="small" color="red" />
     const {titles} = this.props.template
-
     return <Table.Header>
       <Table.Row>
-         {titles.map(({title, width, required, searchable, field}, index)=>
-            (this.props.searchMode && searchable) ?
-            <Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} > <this.MyInputSearch name={field} placeholder={title} /></Table.HeaderCell>
-            :<Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} > {title} {required && <Required />}</Table.HeaderCell>
+         {titles.map(({title, width, required}, index)=>
+            <Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} > {title} {required && <Required />}</Table.HeaderCell>
           )}
       </Table.Row>
     </Table.Header>
@@ -143,7 +107,7 @@ class Framework extends PureComponent {
 
   handleKeyDown = (event) => {
     const type= this.state.addMode?"add":"update"
-    if (event.keyCode===13 && !this.props.searchMode) {
+    if (event.keyCode===13) {
           this.handleCommit(type)
     } else if (event.keyCode===27) {
            this.handleVazgec()
@@ -298,8 +262,6 @@ class Framework extends PureComponent {
 
   handleVazgec=(event)=>{
     this.setState({addMode: false, editMode: false, toolsON: false, message: null, singleLine: true})
-    store.dispatch(updateStoreData(this.props.initialData))
-    store.dispatch(updateStoreSearchMode(false))
   }
 
 
@@ -325,7 +287,7 @@ class Framework extends PureComponent {
     return  <div>
                 {this.state.addMode? <div> <EkleButon /> <VazgecButon /> </div>
                                    :this.state.editMode?<div> <GuncelleButon /><VazgecButon /><div style={styleGroup}><SilButon /></div></div>
-                                   :this.props.searchMode?<VazgecButon />
+                                   :this.state.searchMode?<VazgecButon />
                                    :<YeniKayitButon />
                 }
 
@@ -398,11 +360,5 @@ class Framework extends PureComponent {
 }
 
 
-const mapStateToProps = state => ({
-        data: state.data,
-        initialData: state.initialData,
-        searchMode: state.searchMode,
-        cid: state.cid,
-        uid: state.uid
-      });
+const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid });
 export default connect(mapStateToProps)(Framework);

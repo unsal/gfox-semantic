@@ -17,6 +17,10 @@ import {CIDDropbox} from '../components/mycomponents'
 //Exce Export
 import { ExportButton } from '../components/export'
 
+//handle SearchMode
+import {store} from "../../reducer"
+import {updateStoreSearchMode} from '../../reducer/actions'
+
 
 const Logo = () => (
   <Image size="mini" src={logo} style={{ marginRight: "1.5em" }} />
@@ -43,10 +47,11 @@ class KVKKHeader extends PureComponent  {
   render() {
     const {cid, cidOptions} = this.props
     const TanimlarIcon = () => <Icon name="sticky note outline" color="green" />
+    const handleSearchMode = () => store.dispatch(updateStoreSearchMode(!this.props.searchMode))
 
     return (
     <Menu fixed="top" inverted>
-      <Container>
+      <Container style={{width:'80%'}}>
         <Menu.Item header as={Link} to="/">
           <Logo /> GFOX
         </Menu.Item>
@@ -55,11 +60,15 @@ class KVKKHeader extends PureComponent  {
                         <Icon name="chart pie" color="teal" size="large"  />Panel
                 </Menu.Item>}
 
-        {cid&&<Menu.Item header as={Link} to="/">
-          <Icon name="search" size="large" color="teal" /> Sorgula </Menu.Item>}
+        {cid&&<Menu.Item header as={Link} to="#" onClick={handleSearchMode} >
+              {this.props.searchMode?
+              <Icon name="search minus" size="large" color="olive" inverted />
+              :<Icon name="search" size="large" color="teal" />} Sorgula
+
+        </Menu.Item>}
 
         {cid&&<Menu.Item header as={Link} to='/talepler'>
-                <Icon name="mail" color="red" size="large" inverted/>Talepler
+                <Icon name="mail" color="teal" size="large"/>Talepler
               </Menu.Item>}
 
         {cid&&<Dropdown item simple text="Veri Girişi">
@@ -131,5 +140,5 @@ class KVKKHeader extends PureComponent  {
 
 
 
-const mapStateToProps = (state) => ({ cid: state.cid, cidOptions: state.cidOptions})
+const mapStateToProps = (state) => ({ cid: state.cid, cidOptions: state.cidOptions, searchMode: state.searchMode})
 export default connect(mapStateToProps)(KVKKHeader)

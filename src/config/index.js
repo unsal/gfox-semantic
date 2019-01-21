@@ -7,6 +7,23 @@ const apiHost = 'http://127.0.0.1:8000' // nginx gunicorn local
 
 // Python API configs
 export const config = {
+
+    //axios GET, OST header için config
+    axios: { headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'}
+    },
+
+    export: {
+      'responseType': 'blob',
+      headers: {
+      'Content-Type': 'application/json',
+      // 'responseType': 'application/vnd.ms-excel',
+      // 'responseType': 'arraybuffer',
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Access-Control-Allow-Origin': '*'}
+    },
+
   // dropdownlar için
   URL_OPTIONS_PROFILLER: apiHost+'/options/profiller',
   URL_OPTIONS_BOLUMLER: apiHost+'/options/bolumler', //Özel liste getirdiği için ayrı..
@@ -54,21 +71,14 @@ export const config = {
   URL_TANIMLAR_BIRIMLER: apiHost+'/birimler',
   URL_TANIMLAR_SORUMLULAR: apiHost+'/sorumlular',
 
-  //axios GET, OST header için config
-  axios: { headers: {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'}
-  },
+// CHARTS
+  URL_CHART_MAX_KV: apiHost+'/chart/01',
+  URL_CHART_MAX_KURUMLAR: apiHost+'/chart/02',
+  URL_CHART_MAX_PROFILLER: apiHost+'/chart/03',
+  URL_CHART_MAX_SURECLER: apiHost+'/chart/04',
+  URL_CHART_TALEPLER: apiHost+'/chart/05',
 
-  export: {
-    'responseType': 'blob',
-    headers: {
-    'Content-Type': 'application/json',
-    // 'responseType': 'application/vnd.ms-excel',
-    // 'responseType': 'arraybuffer',
-    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'Access-Control-Allow-Origin': '*'}
-  },
+
 }
 
 

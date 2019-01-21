@@ -6,9 +6,9 @@ const template = {
   page: {title:"Ana Veriler", icon:"shield alternate", color:"teal"},
   url: { get: config.URL_ANAVERILER + "/get", commit: config.URL_ANAVERILER },
 
-  titles: [{ title: 'PROFİL',  width: '10%', required: true, searchable: true, field:'profil_name' },
-      { title: 'SÜREÇ',  width: '10%', required: true , searchable: true, field: 'surec_name'},
-      { title: 'KV',  width: '10%', required: true, searchable: true, field: 'kv_name' },
+  titles: [{ title: 'PROFİL',  width: '10%', required: true },
+      { title: 'SÜREÇ',  width: '10%', required: true },
+      { title: 'KV',  width: '10%', required: true },
       { title: 'İŞL.AMAÇLARI',  width: '10%' },
       { title: 'DAYANAKLAR',  width: '10%' },
       { title: 'KANALLAR', width: '10%' },

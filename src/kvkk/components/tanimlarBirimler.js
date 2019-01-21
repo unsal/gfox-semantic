@@ -6,7 +6,7 @@ const template = {
   page: {title:"Birimler", icon:"shield alternate", color:"green"},
   url: { get: config.URL_TANIMLAR_BIRIMLER + "/get", commit: config.URL_TANIMLAR_BIRIMLER },
 
-  titles: [{ title: 'BİRİM ADI',  width: '40%', required: true },
+  titles: [{ title: 'BİRİM ADI',  width: '40%', required: true,searchable: true, field:'name' },
       { title: 'VERİ SORUMLUSU',  width: '30%', required: true }],
 
   fields: [{ field: 'name', type: 'input'},

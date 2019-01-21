@@ -28,10 +28,12 @@ class KVKKLayout extends PureComponent {
 
     render() {
         const {cid} = this.props
-        return <React.Fragment>
-                    <KVKKHeader />>
-                    {cid?this.props.children:<this.MessageNotCid />}
-               </React.Fragment>
+        return <div>
+                    <KVKKHeader />
+                    <div style={{ width:'80%', margin:'7em auto' }}>
+                        {cid?this.props.children:<this.MessageNotCid />}
+                    </div>
+               </div>
     }
 
 }

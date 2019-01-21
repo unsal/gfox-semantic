@@ -5,8 +5,8 @@ import {config} from '../config'
 import { connect } from "react-redux";
 import {updateStoreToken, updateStoreUID, updateStoreCIDOptions} from '../reducer/actions'
 import {store} from "../reducer"
-import KVKK from '../kvkk'
 import {spinnerIcon} from "../kvkk/components/mycomponents"
+import Panel from "../kvkk/components/panel"
 
 class LoginForm extends PureComponent {
       state = {
@@ -155,7 +155,7 @@ class LoginForm extends PureComponent {
         )
 
         render() {
-          return this.state.authenticated?<KVKK />:<this.RenderLoginForm />
+          return this.state.authenticated?<Panel />:<this.RenderLoginForm />
           }
 }
 

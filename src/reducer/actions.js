@@ -1,17 +1,22 @@
-export const GFOX_STORE_DATA = "GFOX_STORE_DATA";
-export const GFOX_MODE = "GFOX_MODE"; // ADD, DELETE, UPDATE, DEFAULT
+export const GFOX_STORE_DATA = "GFOX_STORE_DATA"
+export const GFOX_STORE_INITIAL_DATA = "GFOX_STORE_INITIAL_DATA"
 export const GFOX_ERROR = "GFOX_ERROR"
 export const GFOX_CID = "GFOX_CID"
 export const GFOX_UID = "GFOX_UID"
 export const GFOX_TOKEN = "GFOX_TOKEN"
 export const GFOX_CID_OPTIONS = "GFOX_CID_OPTIONS"
 export const GFOX_URL = "GFOX_URL"
+export const GFOX_SEARCH_MODE = "GFOX_SEARCH_MODE";
 
 
 export const updateStoreData = data => {
   return { type: GFOX_STORE_DATA, data };
 };
 
+//ilk yüklenen datayı korumak için
+export const updateStoreInitialData = initialData => {
+  return { type: GFOX_STORE_INITIAL_DATA, initialData };
+};
 
 export const updateErrorStatus = (error) => {
   return {type: GFOX_ERROR, error}
@@ -40,3 +45,7 @@ export const updateStoreURL = (url) => {
   return {type: GFOX_URL, url}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }
 
+// Header > Menu > Sorgula
+export const updateStoreSearchMode = (searchMode) => {
+  return {type: GFOX_SEARCH_MODE, searchMode}  //data: [{cid:1, uid:'admin@grcfox.com}]
+}

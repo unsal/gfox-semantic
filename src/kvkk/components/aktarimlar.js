@@ -1,5 +1,5 @@
 import React from "react";
-import Framework from './framework.js';
+import Framework from './_framework2.js';
 import {config} from '../../config'
 
 const template = {
@@ -7,9 +7,9 @@ const template = {
     url: { get: config.URL_AKTARIMLAR + "/get", commit: config.URL_AKTARIMLAR },
 
 
-  titles: [{ title: 'SÜREÇ', width: '10%', required: true },
-            { title: 'KV', width: '10%', required: true },
-            { title: 'KURUM', width: '10%', required: true },
+  titles: [{ title: 'SÜREÇ', width: '10%', required: true, searchable: true, field: 'surec_name' },
+            { title: 'KV', width: '10%', required: true, searchable: true, field: 'kv_name' },
+            { title: 'KURUM', width: '10%', required: true, searchable: true, field: 'kurum_name' },
             { title: 'AKTARIM AMACI', width: '10%' },
             { title: 'DAYANAKLAR', width: '10%' },
             { title: 'AKTARIM ŞEKLİ', width: '10%' },

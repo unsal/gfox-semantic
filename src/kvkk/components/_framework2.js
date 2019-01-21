@@ -7,10 +7,10 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { store } from "../../reducer";
-import {updateStoreData, updateStoreSearchMode} from "../../reducer/actions"
 
 import { config } from "../../config";
-import {LoadingStoreData, clearStoreData,  getOptions, refreshStoreData, MyMessage}  from './mycomponents'
+import {getOptions, refreshStoreData, MyMessage, clearStoreData}  from './mycomponents'
+import { updateStoreData } from "../../reducer/actions";
 
 class Framework extends PureComponent {
 
@@ -24,18 +24,30 @@ class Framework extends PureComponent {
 
     //content table properties
     singleLine: true, //content>table>tek satır kontrolü için
+    isLoading: true
+
+  }
+
+   async componentDidMount() {
+    const { fields, url } =  await this.props.template
+    const {cid} = await this.props
+
+    await refreshStoreData(store, cid, url.get)
+
+    await fields.map(async ({ field, optionsURL }) =>
+      optionsURL && this.setState({ ['options_' + field]:  getOptions(optionsURL, this.props.cid) })
+    )
+
+    const initialData = await this.props.data //arama yaparken ilk yüklenen datayı sorguda kullanmak için..
+    await this.setState({ mounted: true, initialData })
 
   }
 
 
-   componentDidMount() {
-    const {fields} = this.props.template
-    fields.map( async ({field, optionsURL})=>
-        optionsURL &&  this.setState({ ['options_'+field]: await getOptions(optionsURL, this.props.cid) })
-    )
-
-   this.setState({ mounted: true})
-
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.mounted !== this.state.mounted) {
+      this.setState({ isLoading: false });
+    }
   }
 
   componentWillUnmount() {
@@ -43,30 +55,34 @@ class Framework extends PureComponent {
   }
 
   filterData =  (name, value) => {
-    const search =  value.trim().toLowerCase()
-    let data =  this.props.initialData
+
+    const search =  value.trim().toLowerCase();
+    let data =  this.state.initialData
 
     if (search.length > 0) {
       data = data.filter(key => {
-        return key[name]?key[name].toLowerCase().match(search):false //false: null olan kayıtlar hata verdiği için false döndürdüm.
+        return key[name].toLowerCase().match(search);
       });
     }
+
     return data
+
   }
+
 
   MyInputSearch = ({ name, placeholder }) => {
     const handleChangeSearch = (event, element) => {
-            event.preventDefault()
-            const { name, value } = element
-            this.setState({ [name]: value })
-            const data = this.filterData(name, value)
-            data && store.dispatch(updateStoreData(data))
-          }
+      event.preventDefault()
+      const { name, value } = element
+      this.setState({ [name]: value })
+      const data = this.filterData(name, value)
+      data && store.dispatch(updateStoreData(data))
+  }
     return <Input name={name} placeholder={placeholder}
       type='text'
       value={this.state[name] ? this.state[name] : ''}
       onChange={handleChangeSearch}
-      onKeyDown={this.handleKeyDown}
+      onKeyDown = {this.handleKeyDown}
       style={{ width: "100%" }}
     />
   }
@@ -143,7 +159,7 @@ class Framework extends PureComponent {
 
   handleKeyDown = (event) => {
     const type= this.state.addMode?"add":"update"
-    if (event.keyCode===13 && !this.props.searchMode) {
+    if (event.keyCode===13 && type in ['add','update']) {
           this.handleCommit(type)
     } else if (event.keyCode===27) {
            this.handleVazgec()
@@ -297,9 +313,7 @@ class Framework extends PureComponent {
   }
 
   handleVazgec=(event)=>{
-    this.setState({addMode: false, editMode: false, toolsON: false, message: null, singleLine: true})
-    store.dispatch(updateStoreData(this.props.initialData))
-    store.dispatch(updateStoreSearchMode(false))
+    this.setState({addMode: false, editMode: false, searchMode: false, toolsON: false, message: null, singleLine: true})
   }
 
 
@@ -325,8 +339,7 @@ class Framework extends PureComponent {
     return  <div>
                 {this.state.addMode? <div> <EkleButon /> <VazgecButon /> </div>
                                    :this.state.editMode?<div> <GuncelleButon /><VazgecButon /><div style={styleGroup}><SilButon /></div></div>
-                                   :this.props.searchMode?<VazgecButon />
-                                   :<YeniKayitButon />
+                                                       :<div><YeniKayitButon /></div>
                 }
 
                 <div style={styleGroup}><YapistirButon /><KopyalaButon /><ResetButon /><SingleLineButon /></div>
@@ -382,14 +395,10 @@ class Framework extends PureComponent {
   }
 
   render() {
-    const {cid} = this.props
-    const url = this.props.template.url.get
     return (
       <Login>
         <KVKKLayout>
-          <LoadingStoreData cid={cid} url={url}>
               <this.Content />
-          </LoadingStoreData>
        </KVKKLayout>
       </Login>
     );
@@ -398,11 +407,5 @@ class Framework extends PureComponent {
 }
 
 
-const mapStateToProps = state => ({
-        data: state.data,
-        initialData: state.initialData,
-        searchMode: state.searchMode,
-        cid: state.cid,
-        uid: state.uid
-      });
+const mapStateToProps = state => ({ data: state.data, cid: state.cid, uid: state.uid, searchMode: state.searchMode});
 export default connect(mapStateToProps)(Framework);

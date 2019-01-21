@@ -12,9 +12,9 @@ const Component = (props) => {
     page: { title: "Veri Sorumluları", icon: "list alternate outline", color: "green" },
     url: { get: URL_GET, commit: URL_COMMIT },
     titles: [
-      { title: "ADI SOYADI", width: '40%', required: true },
-      { title: "TELEFON", width: '30%'},
-      { title: "EPOSTA", width: '30%' }
+      { title: "ADI SOYADI", width: '40%', required: true ,searchable: true, field:'name'},
+      { title: "TELEFON", width: '30%', searchable: true, field:'phone'},
+      { title: "EPOSTA", width: '30%',searchable: true, field:'email' }
     ],
     fields: [
       { field: 'name', type: 'input' },

@@ -11,8 +11,6 @@ import { Provider } from 'react-redux';
 // ******* CUSTOM ************************
 
 import { store } from './reducer'
-import KVKK from './kvkk';
-
 
 // v2
 import Anaveriler from './kvkk/components/anaveriler'
@@ -40,7 +38,6 @@ ReactDOM.render(
  <Switch>
     <Route exact path='/' component={App} />
     <Route exact path='/login' component={LoginForm} />
-    <Route exact path='/kvkk' component={KVKK} />
     {/* <Route exact path='/kvkk/tanimlar/sistemler' component={Sistemler} />
 
      {/* ANA VERİLER*/}

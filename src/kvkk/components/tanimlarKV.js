@@ -12,8 +12,8 @@ const Component = (props) => {
     page: { title: "KV", icon: "list alternate outline", color: "green" },
     url: { get: URL_GET, commit: URL_COMMIT },
     titles: [
-      { title: "Kişisel Veri", width: '30%', required: true },
-      { title: "Kategorisi", width: '30%', required: true },
+      { title: "Kişisel Veri", width: '30%', required: true, searchable: true, field:'name' },
+      { title: "Kategorisi", width: '30%', required: true, searchable: true, field:'kv_kategori_name' },
     ],
     fields: [
       { field: 'name', type:'input'},
