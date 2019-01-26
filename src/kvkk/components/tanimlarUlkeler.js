@@ -17,7 +17,7 @@ const Component = (props) => {
       { title: "GÜVENLİ", width: '10%' }
     ],
     fields: [
-      { field: 'name', type: 'input' },
+      { field: 'name' }, //readonly, değiştiremesin
       { field: 'phone_area', type: 'input' },
       { field: 'secure', type: 'checkbox' }
     ],

@@ -6,6 +6,7 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { config } from "../../../config";
+import {MyLoader} from "../mycomponents"
 
 
 class Component extends PureComponent {
@@ -14,8 +15,9 @@ class Component extends PureComponent {
   getOption = () => (
     {
 
+
       title : {
-        text: 'Süreç Bazında En Fazla İşlenen KV ',
+        text: 'Profil Bazında En Fazla İşlenen KV ',
         subtext: 'İLK 10',
         x:'center'
     },
@@ -25,7 +27,7 @@ class Component extends PureComponent {
     },
     series : [
         {
-            name: 'Süreç',
+            name: 'Profil',
             type: 'pie',
             radius : '75%',
             center: ['50%', '60%'],
@@ -43,38 +45,21 @@ class Component extends PureComponent {
   )
 
 
-  setStateData = (data) => {
-    let names = []
-    let values = []
-
-    data.map(({ name, value }) => {
-      names = names.concat(name)
-      values = values.concat(value)
-      return null
-    }
-    )
-
-    this.setState({ data, names, values })
-  }
-
-
   async componentDidMount() {
     const { cid } = this.props
     const params = { cid }
 
     try {
-      const result = await axios.post(config.URL_CHART_MAX_SURECLER, params, config.axios)
+      const result = await axios.post(config.URL_CHART_MAX_PROFILLER, params, config.axios)
       const data = await result.data ? result.data : [];
-      await this.setStateData(data)
-      // await result.data.map(({ name }) =>  titles = titles.concat(name) )
-      // await this.setState({ data, titles })
+      await this.setState({data})
     } catch (err) {
       console.log("KVChart > SQL Error...", err);
     }
   }
 
   render() {
-    return this.state.data ? <ReactEcharts option={this.getOption()} /> : <span>Chart Query Failure!</span>
+    return this.state.data ? <ReactEcharts option={this.getOption()} /> : <MyLoader />
   }
 }
 

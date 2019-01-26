@@ -30,7 +30,7 @@ class KVKKLayout extends PureComponent {
         const {cid} = this.props
         return <div>
                     <KVKKHeader />
-                    <div style={{ width:'80%', margin:'7em auto' }}>
+                    <div style={{ width:'80%', margin:'6em auto' }}>
                         {cid?this.props.children:<this.MessageNotCid />}
                     </div>
                </div>

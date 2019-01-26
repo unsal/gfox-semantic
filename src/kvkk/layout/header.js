@@ -56,9 +56,10 @@ class KVKKHeader extends PureComponent  {
           <Logo /> GFOX
         </Menu.Item>
 
-        {cid && <Menu.Item header as={Link} to='/panel'>
-                        <Icon name="chart pie" color="teal" size="large"  />Panel
+        {cid && <Menu.Item header as={Link} to='/analiz'>
+                        <Icon name="chart pie" color="teal" size="large"  />Analiz
                 </Menu.Item>}
+
 
         {cid&&<Menu.Item header as={Link} to="#" onClick={handleSearchMode} >
               {this.props.searchMode?
@@ -104,11 +105,12 @@ class KVKKHeader extends PureComponent  {
               <Dropdown.Menu style={this.style }>
                 <Dropdown.Item as={Link} to='/anaveriler'><Icon name="shield alternate" color="teal"/> Anaveriler</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/aktarimlar'><Icon name="paper plane outline" color="orange"/> Aktarımlar</Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item as={Link} to='/kisiler'><Icon name="user outline" color="green"/> Kişiler</Dropdown.Item>
                 <Dropdown.Item as={Link} to='/talepler'><Icon name="mail" color="pink"/> Talepler</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
 
-            {/* <Dropdown.Divider /> */}
 
           </Dropdown.Menu>
         </Dropdown>}

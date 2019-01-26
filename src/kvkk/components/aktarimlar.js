@@ -7,6 +7,8 @@ const template = {
     url: { get: config.URL_AKTARIMLAR + "/get", commit: config.URL_AKTARIMLAR },
 
   titles: [
+            { title: 'BİRİM',  width: '8%', searchable: true, field:'birim_name' },
+            { title: 'BÖLÜM',  width: '8%', searchable: true, field:'bolum_name' },
             { title: 'SÜREÇ', width: '10%', required: true, searchable: true, field: 'surec_name' },
             { title: 'KV', width: '10%', required: true, searchable: true, field: 'kv_name' },
             { title: 'KURUM', width: '10%', required: true, searchable: true, field: 'kurum_name' },
@@ -19,6 +21,8 @@ const template = {
             { title: 'BİLGİYİ VEREN', width: '10%' }],
 
   fields: [
+          { field: 'birim_name' },
+          { field: 'bolum_name' },
           { field: 'surec_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_SURECLER },
           { field: 'kv_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_KV },
           { field: 'kurum_pidm', type: 'dropdown', optionsURL: config.URL_OPTIONS_KURUMLAR},
@@ -33,6 +37,8 @@ const template = {
     primary: ['surec_pidm', 'kv_pidm', 'kurum_pidm'], //boş geçilemez alanların error kontrolü için
 
     view: [
+      { field: 'birim_name', type: 'text' },
+      { field: 'bolum_name', type: 'text' },
       { field: 'surec_name', type: 'text' },
       { field: 'kv_name', type: 'text' },
       { field: 'kurum_name', type: 'text' },

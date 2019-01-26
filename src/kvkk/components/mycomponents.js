@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Message, Segment, Icon, Dropdown, Button } from 'semantic-ui-react'
 import axios from "axios";
 import _ from 'lodash';
-import { updateStoreData, updateStoreInitialData, updateErrorStatus, updateStoreCID, updateStoreURL } from "../../reducer/actions";
+import { updateStoreData, updateStoreInitialData, updateErrorStatus, updateStoreCID, updateStoreCIDName, updateStoreURL } from "../../reducer/actions";
 import {config} from '../../config'
 
 import {store} from '../../reducer';
@@ -186,8 +186,10 @@ export const getOptions = async (url, cid) => {
      handleChange = async (e, data)=> {
       e.preventDefault()
       const cid = await data.value
+      const cidName = await data.options.find(key => key.value === data.value)
       await this.setState({ cid })
       await store.dispatch(updateStoreCID(cid))
+      await store.dispatch(updateStoreCIDName(cidName))
     }
 
     Loader=()=> {

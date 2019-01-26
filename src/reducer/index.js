@@ -1,6 +1,6 @@
 import {createStore} from 'redux';
 import {GFOX_STORE_DATA,GFOX_STORE_INITIAL_DATA, GFOX_SEARCH_MODE,
-        GFOX_ERROR, GFOX_CID, GFOX_UID, GFOX_TOKEN, GFOX_CID_OPTIONS, GFOX_URL} from './actions';
+        GFOX_ERROR, GFOX_CID, GFOX_CID_NAME, GFOX_CID_OPTIONS, GFOX_UID, GFOX_TOKEN, GFOX_URL} from './actions';
 
 const initialState = {data: [],  mode: 'DEFAULT', error: false}
 
@@ -10,9 +10,10 @@ const reducer = (state = initialState, action) => {
        case GFOX_STORE_INITIAL_DATA : return {...state, initialData: action.initialData}
        case GFOX_ERROR  : return {...state, error: action.error}
        case GFOX_CID  : return {...state, cid: action.cid}
+       case GFOX_CID_NAME  : return {...state, cidName: action.cidName}
+       case GFOX_CID_OPTIONS  : return {...state, cidOptions: action.cidOptions}
        case GFOX_UID  : return {...state, uid: action.uid}
        case GFOX_TOKEN  : return {...state, token: action.token}
-       case GFOX_CID_OPTIONS  : return {...state, cidOptions: action.cidOptions}
        case GFOX_URL  : return {...state, url: action.url}
        case GFOX_SEARCH_MODE  : return {...state, searchMode: action.searchMode}
        default: return state;

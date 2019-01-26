@@ -15,6 +15,7 @@ import { store } from './reducer'
 // v2
 import Anaveriler from './kvkk/components/anaveriler'
 import Aktarimlar from './kvkk/components/aktarimlar'
+import Kisiler from './kvkk/components/kisiler'
 
 import Talepler from './kvkk/components/talepler'
 
@@ -28,7 +29,7 @@ import Ulkeler from './kvkk/components/tanimlarUlkeler'
 import Sistemler from './kvkk/components/tanimlarSistemler'
 import Birimler from './kvkk/components/tanimlarBirimler'
 import Sorumlular from './kvkk/components/tanimlarSorumlular'
-import Panel from './kvkk/components/panel'
+import Analiz from './kvkk/components/chart'
 
 import LoginForm from './auth/loginform'
 
@@ -43,9 +44,11 @@ ReactDOM.render(
      {/* ANA VERİLER*/}
     <Route exact path='/anaveriler' component={Anaveriler} />
     <Route exact path='/aktarimlar' component={Aktarimlar} />
+    <Route exact path='/kisiler' component={Kisiler} />
 
      {/* TALEPLER */}
     <Route exact path='/talepler' component={Talepler} />
+
 
      {/* TANIMLAR */}
      <Route exact path='/profiller' component={Profiller} />
@@ -67,7 +70,7 @@ ReactDOM.render(
      <Route exact path='/sistemler' component={Sistemler} />
      <Route exact path='/sorumlular' component={Sorumlular} />
 
-     <Route exact path='/panel' component={Panel} />
+     <Route exact path='/analiz' component={Analiz} />
 
 
  </Switch>

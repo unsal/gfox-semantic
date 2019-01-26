@@ -78,10 +78,10 @@ class Framework extends PureComponent {
 
     return <Table.Header>
       <Table.Row>
-         {titles.map(({title, width, required, searchable, field}, index)=>
+         {titles.map(({title, required, searchable, field}, index)=>
             (this.props.searchMode && searchable) ?
-            <Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} > <this.MyInputSearch name={field} placeholder={title} /></Table.HeaderCell>
-            :<Table.HeaderCell key={index} style={{ width: {width}, verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} onClick={enableSearchMode}> {title} {required && <Required />}</Table.HeaderCell>
+            <Table.HeaderCell key={index} style={{ width: "auto", verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} > <this.MyInputSearch name={field} placeholder={title} /></Table.HeaderCell>
+            :<Table.HeaderCell key={index} style={{ width: "auto", verticalAlign: "TOP", backgroundColor:"#f0f0f0" }} onClick={enableSearchMode}> {title} {required && <Required />}</Table.HeaderCell>
           )}
       </Table.Row>
     </Table.Header>

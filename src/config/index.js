@@ -60,6 +60,9 @@ export const config = {
   URL_AKTARIMLAR: apiHost+'/aktarimlar',
    //TALEPLER
   URL_TALEPLER: apiHost+'/talepler',
+  //KİŞİLER
+  URL_KISILER: apiHost+'/kisiler',
+
 
    //TANIMLAR
   URL_TANIMLAR: apiHost+'/tanimlar',
@@ -77,6 +80,10 @@ export const config = {
   URL_CHART_MAX_PROFILLER: apiHost+'/chart/03',
   URL_CHART_MAX_SURECLER: apiHost+'/chart/04',
   URL_CHART_TALEPLER: apiHost+'/chart/05',
+  URL_CHART_TREE_BIRIMKV: apiHost+'/chart/06',
+  URL_CHART_TREE_PROFILKV: apiHost+'/chart/07',
+  URL_CHART_TREE_BIRIMKURUM: apiHost+'/chart/08',
+  URL_CHART_MAP: apiHost+'/chart/09',
 
 
 }

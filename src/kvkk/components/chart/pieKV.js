@@ -6,6 +6,7 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { config } from "../../../config";
+import {MyLoader} from "../mycomponents"
 
 
 class Component extends PureComponent {
@@ -35,26 +36,12 @@ class Component extends PureComponent {
                       shadowOffsetX: 0,
                       shadowColor: 'rgba(0, 0, 0, 0.5)'
                   }
-              }
+              },
+
           }
       ]
   }
 )
-
-
-  setStateData = (data)=>{
-    let names = []
-    let values = []
-
-    data.map( ({name, value}) => {
-      names = names.concat(name)
-      values = values.concat(value)
-      return null
-    }
-  )
-
-    this.setState({data, names, values})
-  }
 
 
   async componentDidMount() {
@@ -64,16 +51,14 @@ class Component extends PureComponent {
     try {
       const result = await axios.post(config.URL_CHART_MAX_KV, params, config.axios)
       const data = await result.data ? result.data : [];
-      await this.setStateData(data)
-      // await result.data.map(({ name }) =>  titles = titles.concat(name) )
-      // await this.setState({ data, titles })
+      await this.setState({data})
     } catch (err) {
       console.log("KVChart > SQL Error...", err);
     }
   }
 
   render() {
-    return this.state.data? <ReactEcharts option={this.getOption()} />:<span>Chart Query Failure!</span>
+    return this.state.data? <ReactEcharts option={this.getOption()} />:<MyLoader />
   }
 }
 

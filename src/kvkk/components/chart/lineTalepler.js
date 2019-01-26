@@ -6,7 +6,7 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { config } from "../../../config";
-
+import {MyLoader} from "../mycomponents"
 
 class Component extends PureComponent {
   state = {}
@@ -52,7 +52,7 @@ class Component extends PureComponent {
     }
     )
 
-    this.setState({ data, names, values })
+    this.setState({ data, names, values})
   }
 
 
@@ -72,7 +72,7 @@ class Component extends PureComponent {
   }
 
   render() {
-    return this.state.data ? <ReactEcharts option={this.getOption()} /> : <span>Chart Query Failure!</span>
+    return this.state.data ? <ReactEcharts option={this.getOption()} /> : <MyLoader />
   }
 }
 
