@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Homepage from './homepage'
 import registerServiceWorker from './registerServiceWorker';
 import 'semantic-ui-css/semantic.min.css';
 import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -13,33 +13,33 @@ import { Provider } from 'react-redux';
 import { store } from './reducer'
 
 // v2
-import Anaveriler from './kvkk/components/anaveriler'
-import Aktarimlar from './kvkk/components/aktarimlar'
-import Kisiler from './kvkk/components/kisiler'
+import Anaveriler from './pages/anaveriler'
+import Aktarimlar from './pages/aktarimlar'
+import Kisiler from './pages/kisiler'
 
-import Talepler from './kvkk/components/talepler'
+import Talepler from './pages/talepler'
 
 import {Profiller,Dayanaklar, KVKategoriler, IslemeAmaclari, Kanallar, Ortamlar,
-   Kurumlar, Sureler, PaylasimAmaclari, PaylasimSekilleri, Tedbirler} from './kvkk/components/tanimlar'
+   Kurumlar, Sureler, PaylasimAmaclari, PaylasimSekilleri, Tedbirler} from './pages/tanimlar'
 
-import Bolumler from './kvkk/components/tanimlarBolumler'
-import Surecler from './kvkk/components/tanimlarSurecler'
-import KV from './kvkk/components/tanimlarKV'
-import Ulkeler from './kvkk/components/tanimlarUlkeler'
-import Sistemler from './kvkk/components/tanimlarSistemler'
-import Birimler from './kvkk/components/tanimlarBirimler'
-import Sorumlular from './kvkk/components/tanimlarSorumlular'
-import Analiz from './kvkk/components/chart'
+import Bolumler from './pages/tanimlarBolumler'
+import Surecler from './pages/tanimlarSurecler'
+import KV from './pages/tanimlarKV'
+import Ulkeler from './pages/tanimlarUlkeler'
+import Sistemler from './pages/tanimlarSistemler'
+import Birimler from './pages/tanimlarBirimler'
+import Sorumlular from './pages/tanimlarSorumlular'
+import Analiz from './pages/chart'
 
-import LoginForm from './auth/loginform'
+import LoginForm from './pages/auth/loginform'
 
 ReactDOM.render(
 <Provider store = {store}>
 <Router>
  <Switch>
-    <Route exact path='/' component={App} />
+    <Route exact path='/' component={Homepage} />
     <Route exact path='/login' component={LoginForm} />
-    {/* <Route exact path='/kvkk/tanimlar/sistemler' component={Sistemler} />
+    {/* <Route exact path='/tanimlar/sistemler' component={Sistemler} />
 
      {/* ANA VERİLER*/}
     <Route exact path='/anaveriler' component={Anaveriler} />
