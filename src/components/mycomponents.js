@@ -115,14 +115,14 @@ export const clearStoreData = (store) => {
   }
 }
 
-export const refreshStoreData = async (store, cid, URL_GET) => {
-  const params  = {cid}
+export const refreshStoreData = async (store, cid, uid, url) => {
+  const params  = {cid, uid}
     try {
-      const result = await axios.post(URL_GET, params, config.axios)
-      const data = await  _.size(result.data)>0?result.data:[];
+      const result = await axios.post(url, params, config.axios)
+      const data = await  result.data?result.data:[];
       await store.dispatch(updateStoreData(data)) //store data güncelle
       await store.dispatch(updateStoreInitialData(data)) //store data güncelle
-      await store.dispatch(updateStoreURL(URL_GET))
+      await store.dispatch(updateStoreURL(url))
     } catch (err) {
           console.log("mycomponents>refreshstoredata() hatası..",err);
     }
@@ -139,16 +139,21 @@ export const updateStoreError = (errorStatus, store) => {
 }
 
 
-export const getOptions = async (url, cid) => {
+export const getOptions = async (url, cid, type) => {
 //{pidm:, text:, value:} for Semantic Dropdown Component. cid=> her kurum için ayrı ayrı
 //python > framework.py > getOptions
-  const params  = {cid}
+// type: array / json... array free format giriş sürümü için, jon eski tanımlardan gelen sürüm için
+  const params  = {cid};
   let options =[]
 
   try {
     const result = await axios.post(url, params, config.axios)
     const data = await result.data?result.data:[];
-    await data.map( ({pidm, name}) =>  options = options.concat({'key':pidm, 'text':name, 'value':pidm}) )
+    await data.map( ({pidm, name}) =>
+            (type==="array") ?
+                  options = options.concat(name) //yeni yöntemle getir
+                  : options = options.concat({'key':pidm, 'text':name, 'value':pidm})
+    )
 
   } catch (err) {
         console.log("myComponents->getOptions() hatası..",err);
@@ -161,15 +166,14 @@ export const getOptions = async (url, cid) => {
 }
 
    // Change Cid Dropbox for using everywhere
-   export class CIDDropbox extends PureComponent {
+   export class SelectCID extends PureComponent {
     state = {
       isLoading: true,
       mounted: false
     }
 
      async componentDidMount() {
-       const {cid, cidOptions} = await this.props
-       await this.setState({ cidOptions, cid, mounted: true })
+       await this.setState({ mounted: true })
      }
     //  async componentDidMount() {
     //    const {cid, uid} = await this.props
@@ -198,9 +202,10 @@ export const getOptions = async (url, cid) => {
     }
 
     render() {
-        const {cidOptions, cid, isLoading} = this.state
+        const {cidOptions, cid, color } = this.props
+        const {isLoading} = this.state
         // console.log('options: ',options)
-        return isLoading?<this.Loader />:<Button.Group color='black'>
+        return isLoading?<this.Loader />:<Button.Group color={color}>
                 <Dropdown
                     value={cid}
                     options={cidOptions}
@@ -217,8 +222,8 @@ export const getOptions = async (url, cid) => {
     state = {isLoading: true, mounted: false}
 
     async componentDidMount() {
-      const {cid, url} =  this.props
-      await refreshStoreData(store, cid, url)
+      const {cid, uid, url} =  this.props
+      await refreshStoreData(store, cid, uid, url)
       this.setState({ mounted: true})
     }
 

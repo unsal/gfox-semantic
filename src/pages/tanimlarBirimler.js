@@ -1,5 +1,5 @@
 import React from "react";
-import Framework from '../components/framework.js';
+import Framework from '../components/frameworkTanimlar';
 import {config} from '../config'
 
 const template = {

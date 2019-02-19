@@ -13,9 +13,10 @@ import { Provider } from 'react-redux';
 import { store } from './reducer'
 
 // v2
-import Anaveriler from './pages/anaveriler'
-import Aktarimlar from './pages/aktarimlar'
-import Kisiler from './pages/kisiler'
+import Anaveriler from './pages/envanterAnaveriler'
+import Aktarimlar from './pages/envanterAktarimlar'
+
+// import Kisiler from './pages/kisiler'
 
 import Talepler from './pages/talepler'
 
@@ -44,7 +45,7 @@ ReactDOM.render(
      {/* ANA VERİLER*/}
     <Route exact path='/anaveriler' component={Anaveriler} />
     <Route exact path='/aktarimlar' component={Aktarimlar} />
-    <Route exact path='/kisiler' component={Kisiler} />
+    {/* <Route exact path='/kisiler' component={Kisiler} /> */}
 
      {/* TALEPLER */}
     <Route exact path='/talepler' component={Talepler} />
@@ -54,14 +55,14 @@ ReactDOM.render(
      <Route exact path='/profiller' component={Profiller} />
      <Route exact path='/birimler' component={Birimler} />
      <Route exact path='/dayanaklar' component={Dayanaklar} />
-     <Route exact path='/kvkategoriler' component={KVKategoriler} />
-     <Route exact path='/islemeamaclari' component={IslemeAmaclari} />
+     <Route exact path='/kv_kategoriler' component={KVKategoriler} />
+     <Route exact path='/isleme_amaclari' component={IslemeAmaclari} />
      <Route exact path='/kanallar' component={Kanallar} />
      <Route exact path='/ortamlar' component={Ortamlar} />
      <Route exact path='/kurumlar' component={Kurumlar} />
      <Route exact path='/sureler' component={Sureler} />
-     <Route exact path='/paylasimamaclari' component={PaylasimAmaclari} />
-     <Route exact path='/paylasimsekilleri' component={PaylasimSekilleri} />
+     <Route exact path='/paylasim_amaclari' component={PaylasimAmaclari} />
+     <Route exact path='/paylasim_sekilleri' component={PaylasimSekilleri} />
      <Route exact path='/tedbirler' component={Tedbirler} />
      <Route exact path='/bolumler' component={Bolumler} />
      <Route exact path='/surecler' component={Surecler} />

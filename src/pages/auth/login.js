@@ -17,7 +17,7 @@ class Login extends PureComponent {
         }
 
         MessageFailed() {
-                return <Message color='red' style={{ margin:'3em', width:'600px'}}>
+                return <Message color='red' style={{ margin:'3em', width:'600px', height:'150px'}}>
                             <Message.Header>Güvenlik Uyarısı</Message.Header>
                             <p>İzinsiz erişiminiz kayıt altına alınmıştır!<br />
                             Yetkili kullanıcı olarak bu hatayı alıyorsanız lütfen uygulamayı tarayıcınızdan "Refresh" yapmadan, sadece menüler üzerinde gezinerek kullanın.<br />

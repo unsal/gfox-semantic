@@ -14,11 +14,8 @@ import {
   Segment,
   Sidebar,
   Visibility,
-  Modal,
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import ImageBanner from "./assets/img/cid.jpg"
-import {CIDDropbox} from './components/mycomponents'
 import { connect } from 'react-redux';
 import ImageBackground from "./assets/img/bground.jpg" //1125 x 630px
 import Logo from './assets/img/logo2.png'
@@ -94,21 +91,7 @@ class DesktopContainer extends PureComponent {
   showFixedMenu = () => this.setState({ fixed: true })
 
 
- SelectCID = (props) => (
-      <Modal trigger={<Button inverted >{props.children}</Button>} centered={false} closeIcon>
-        <Modal.Header>KVKK Envanter Yönetimi için Şirketinizi Seçin</Modal.Header>
-        <Modal.Content image>
-        <Image wrapped size='medium' src={ImageBanner} />
-          <Modal.Description>
-            <Header>Şirket</Header>
-            <p>Tüm işlemleriniz seçmiş olduğunuz şirket üzerinden gerçekleştirilecektir.</p>
-            <p>Uygulama ekranlarından dilediğiniz zaman seçiminizi değiştirebilirsiniz</p>
-            <CIDDropbox cid={this.props.cid} uid={this.props.uid} />
-            {/* <Button style={{display: 'block', marginTop:'60px'}} basic content='Devam' /> */}
-          </Modal.Description>
-        </Modal.Content>
-      </Modal>
-    )
+
 
   render() {
     const { children } = this.props
@@ -142,7 +125,6 @@ class DesktopContainer extends PureComponent {
                 <Menu.Item as='a'>Hizmetlerimiz</Menu.Item>
                 <Menu.Item as='a'>İletişim</Menu.Item>
                 <Menu.Item position='right'>
-                  {/* <this.SelectCID> Giriş</this.SelectCID> */}
                   <Button as={Link} to='/login' inverted>Giriş</Button>
                 </Menu.Item>
               </Container>

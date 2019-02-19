@@ -1,5 +1,5 @@
 import React from "react";
-import Framework from '../components/framework.js';
+import Framework from '../components/frameworkTanimlar';
 import {config} from '../config'
 
 
@@ -24,14 +24,14 @@ const TanimlarBase = (props) => {
 export const Profiller = () => <TanimlarBase id="profiller" />
 // export const Birimler = () => <TanimlarBase id="birimler" />
 export const Dayanaklar = () => <TanimlarBase id="dayanaklar" />
-export const KVKategoriler = () => <TanimlarBase id="kvkategoriler" />
-export const IslemeAmaclari = () => <TanimlarBase id="islemeamaclari" />
+export const KVKategoriler = () => <TanimlarBase id="kv_kategoriler" />
+export const IslemeAmaclari = () => <TanimlarBase id="isleme_amaclari" />
 export const Kanallar = () => <TanimlarBase id="kanallar" />
 export const Ortamlar = () => <TanimlarBase id="ortamlar" />
 export const Kurumlar = () => <TanimlarBase id="kurumlar" />
 export const Sureler = () => <TanimlarBase id="sureler" />
-export const PaylasimAmaclari = () => <TanimlarBase id="paylasimamaclari" />
-export const PaylasimSekilleri = () => <TanimlarBase id="paylasimsekilleri" />
+export const PaylasimAmaclari = () => <TanimlarBase id="paylasim_amaclari" />
+export const PaylasimSekilleri = () => <TanimlarBase id="paylasim_sekilleri" />
 export const Tedbirler = () => <TanimlarBase id="tedbirler" />
 
 

@@ -9,3 +9,4 @@ npm install --save axios
 npm install openpyxl --save
 npm install --save echarts-for-react
 npm install --save echarts
+npm install react-autosuggest --save
