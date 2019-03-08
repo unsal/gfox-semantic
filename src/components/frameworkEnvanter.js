@@ -12,7 +12,7 @@ import {
   Sticky,
   Segment
 } from "semantic-ui-react";
-import KVKKLayout from "../pages/layout";
+import Layout from "../pages/layout";
 import Login from "../pages/auth/login";
 import axios from "axios";
 
@@ -95,7 +95,7 @@ class Component extends PureComponent {
     // 4. tekilleştir
     return this.distinct(options1);
   } catch (err)  {
-    console.log("framework2.js->concatOptions->HATA!");
+    console.log("frameworkEnvanter.js->concatOptions->HATA!");
     return []
   }
   };
@@ -235,6 +235,7 @@ class Component extends PureComponent {
         return (
           <div key={index} style={style}>
             <Label
+              // circular
               content={content}
               color={color}
               onClick={() => this.handleEdit(row)}
@@ -429,8 +430,8 @@ class Component extends PureComponent {
   // Check if exist entry. boş kayıt atmaması için kontrol fonksiyonu
   validEntry=()=>{
     var arr = []
-    this.props.template.fields.map(({ field, type }) =>
-        ((type === 'text') && (this.state[field].length > 0)) ? arr = arr.concat('1'): null
+    this.props.template.fields.map(({ field, required }) =>
+        (required && (this.state[field].length > 0)) ? arr = arr.concat('1'): null
     );
     // console.log('ARR: ', arr.includes('1'))
     return arr.includes('1')
@@ -475,7 +476,7 @@ class Component extends PureComponent {
       await refreshStoreData(store, cid, uid, this.props.template.url.get);
     } catch (err) {
       this.setState({
-        message: "Kırmızı ile işaretlenmiş zorunlu alanları girmelisiniz!"
+        message: "Zorunlu alanları girmelisiniz!"
       });
       setTimeout(() => {
         this.setState({ message: null });
@@ -523,6 +524,7 @@ class Component extends PureComponent {
     const EkleButon = () => (
       <Button
         style={style}
+        // circular
         color="blue"
         size="mini"
         onClick={() => this.handleCommit("add")}
@@ -535,6 +537,7 @@ class Component extends PureComponent {
         style={style}
         color={color}
         size="mini"
+        // circular
         onClick={() => this.handleCommit("update")}
       >
         GÜNCELLE{" "}
@@ -546,6 +549,7 @@ class Component extends PureComponent {
       <Button
         style={style}
         size="mini"
+        // circular
         content="VAZGEÇ"
         onClick={this.handleVazgec}
       />
@@ -555,6 +559,7 @@ class Component extends PureComponent {
         style={style}
         color={color}
         size="mini"
+        // circular
         content="YENİ KAYIT"
         onClick={this.handleAdd}
       />
@@ -563,12 +568,14 @@ class Component extends PureComponent {
     const DuplicateButton = () =>
       this.state.toolsON && (
         <Button
+          basic
           style={style}
-          color='olive'
+          // color='grey'
           circular
           icon="copy outline"
           size="mini"
           onClick={this.handleDuplicate}
+          content = "KLONLA"
         />
       );
 
@@ -577,10 +584,11 @@ class Component extends PureComponent {
         style={style}
         basic
         circular
-        color={color}
+        // color={color}
         icon={this.state.singleLine ? "eye" : "eye slash outline"}
         size="mini"
         onClick={() => this.setState({ singleLine: !this.state.singleLine })}
+        content = "DETAY"
       />
     );
 
@@ -634,6 +642,7 @@ class Component extends PureComponent {
           icon="trash alternate"
           size="mini"
           onClick={show}
+          content="SİL"
         />
 
         {/* <Button style={style} size="mini" color="red" onClick={show}>
@@ -656,7 +665,7 @@ class Component extends PureComponent {
 
   handleContextRef = contextRef => this.setState({ contextRef })
 
-  Content = () => {
+  Body = () => {
     const { data } = this.props; //data > from reducer
     const { title, color } = this.props.template.page;
     const { contextRef } = this.state
@@ -664,7 +673,7 @@ class Component extends PureComponent {
     return (
       <div ref={this.handleContextRef}>
 
-       <Sticky context={contextRef} offset={62}>
+       <Sticky context={contextRef} offset={70}>
         <Segment basic style={{display: "inline-block", width:'100%', height:'50px', backgroundColor:"#fff"}}>
             <Header size="large" style={{ float: "left", width: "20%"}}>
               {title}
@@ -706,11 +715,11 @@ class Component extends PureComponent {
   render() {
     return (
       <Login>
-        <KVKKLayout>
+        <Layout>
           <this.LoadingSpinner>
-            <this.Content />
+            <this.Body />
           </this.LoadingSpinner>
-        </KVKKLayout>
+        </Layout>
       </Login>
     );
   }

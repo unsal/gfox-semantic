@@ -3,11 +3,11 @@ import { Segment, Grid } from "semantic-ui-react";
 
 import {MyLoader} from "../../components/mycomponents"
 
-import ChartMaxKV from './pieKV'
-import ChartMaxKurumlar from './barKurumlar'
-import ChartMaxProfiller from './pieProfiller'
-import ChartMaxSurecler from './pieSurecler'
-import ChartTalepler from './lineTalepler'
+// import ChartMaxKV from './pieKV'
+// import ChartTalepler from './lineTalepler'
+
+import PieChart from './pieChart'
+
 
 export default class Component extends PureComponent {
   state = {
@@ -25,17 +25,33 @@ export default class Component extends PureComponent {
     }
   }
 
+  PieChartKV = () =>  <PieChart title="Max KV" name="kv" />
+  PieChartProfil = () =>  <PieChart title="Profil" name="profil" />
+  PieChartBirim = () =>  <PieChart title="Birim ->> KV" name="birim"  />
+  PieChartBolum = () =>  <PieChart title="Bölüm ->> KV" name="bolum" />
+  PieChartSurec = () =>  <PieChart title="Süreç ->> KV" name="surec"  />
+  PieChartKurumlar = () =>  <PieChart title="Kurumlar ->> KV" name="kurumlar_data"  />
+  PieChartSistemler = () =>  <PieChart title="Sistemler ->> KV" name="sistemler_data"  />
+  PieChartOrtamlar = () =>  <PieChart title="Ortamlar ->> KV" name="ortamlar_data"  />
+  PieChartUlkeler = () =>  <PieChart title="Ülkeler ->> KV" name="ulkeler_data"  />
+
+
   ShowCharts = () =>
   <Segment basic style={{marginTop:'1em'}}>
     <Grid divided>
-      <Grid.Row columns={3}>
-        <Grid.Column><ChartMaxKV /></Grid.Column>
-        <Grid.Column><ChartMaxProfiller /></Grid.Column>
-        <Grid.Column><ChartMaxSurecler /></Grid.Column>
+      <Grid.Row columns={5}>
+        <Grid.Column><this.PieChartKV /></Grid.Column>
+        <Grid.Column><this.PieChartProfil /></Grid.Column>
+        <Grid.Column><this.PieChartBirim /></Grid.Column>
+        <Grid.Column><this.PieChartBolum /></Grid.Column>
+        <Grid.Column><this.PieChartSurec /></Grid.Column>
       </Grid.Row>
-      <Grid.Row columns={2}>
-        <Grid.Column><ChartMaxKurumlar /></Grid.Column>
-        <Grid.Column><ChartTalepler /></Grid.Column>
+      <Grid.Row columns={4}>
+        <Grid.Column><this.PieChartKurumlar /></Grid.Column>
+        <Grid.Column><this.PieChartSistemler /></Grid.Column>
+        <Grid.Column><this.PieChartUlkeler /></Grid.Column>
+        <Grid.Column><this.PieChartOrtamlar /></Grid.Column>
+        {/* <Grid.Column><ChartTalepler /></Grid.Column> */}
       </Grid.Row>
     </Grid>
 </Segment>

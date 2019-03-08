@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Icon, Dropdown, Button } from 'semantic-ui-react'
-import { updateStoreCID, updateStoreCIDName } from "../../reducer/actions";
+import { updateStoreCID, updateStoreCIDName, updateStoreCIDChanged } from "../../reducer/actions";
 import { store } from '../../reducer';
 import { connect } from 'react-redux';
 
@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 class Component extends PureComponent {
   state = {
     isLoading: true,
-    mounted: false
+    mounted: false,
+    cidChanged: false
   }
 
   async componentDidMount() {
@@ -23,11 +24,12 @@ class Component extends PureComponent {
 
   handleChange = async (e, data) => {
     e.preventDefault()
+    const cidChanged = true
     const cid = await data.value
-    const cidName = await data.options.find(key => key.value === data.value)
-    await this.setState({ cid })
+    const cidName = await data.options.find(key => key.value === data.value).text
     await store.dispatch(updateStoreCID(cid))
     await store.dispatch(updateStoreCIDName(cidName))
+    await store.dispatch(updateStoreCIDChanged(cidChanged))
   }
 
   Loader = () => {
@@ -53,4 +55,5 @@ class Component extends PureComponent {
 
 const mapStateToProps = (state) => ({ cid: state.cid, cidOptions: state.cidOptions })
 export default connect(mapStateToProps)(Component)
+
 

@@ -10,7 +10,7 @@ import {
   Input,
   Checkbox
 } from "semantic-ui-react";
-import KVKKLayout from "../pages/layout";
+import Layout from "../pages/layout";
 import Login from "../pages/auth/login";
 import axios from "axios";
 
@@ -584,7 +584,7 @@ class Component extends PureComponent {
       <div>
         <div>
           <Header size="large" style={{ float: "left", width: "20%" }}>
-            <Icon name={this.props.template.page.icon} color={color} />
+            {/* <Icon name={this.props.template.page.icon} color={color} /> */}
             {title}
           </Header>
           <div style={{ float: "right", width: "80%" }}>
@@ -620,11 +620,11 @@ class Component extends PureComponent {
     const url = this.props.template.url.get;
     return (
       <Login>
-        <KVKKLayout>
+        <Layout>
           <LoadingStoreData cid={cid} uid={uid} url={url}>
             <this.Content />
           </LoadingStoreData>
-        </KVKKLayout>
+        </Layout>
       </Login>
     );
   }

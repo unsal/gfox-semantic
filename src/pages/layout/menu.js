@@ -7,11 +7,12 @@ import SelectCID from './selectcid'
 import { ExportButton } from '../../components/export'
 import { store } from "../../reducer"
 import { updateStoreSearchMode } from '../../reducer/actions'
+import { settings } from '../../config'
 
 
 class Component extends PureComponent {
   state = {
-    color: {adminMenu: 'black', regularMenu:'blue', icon:'teal'}
+    color: {adminMenu: 'black', regularMenu:'teal', icon:null}
   }
 
   style = {
@@ -28,11 +29,11 @@ class Component extends PureComponent {
                       <this.Logo /> GFOX
                   </Menu.Item>
 
-  MenuAyarlar = () => {
+  MenuSecenekler = () => {
     const TanimlarIcon = () => <Icon name="sticky note outline" color={this.state.color.icon} />
 
 
-    return <Dropdown item simple text="Ayarlar">
+    return <Dropdown item simple text="Seçenekler">
       <Dropdown.Menu style={this.style}>
         {/* TANIMLAR */}
         <Dropdown.Item> <i className="dropdown icon" />{" "} <span className="text">Ön Tanımlar</span>
@@ -69,9 +70,6 @@ class Component extends PureComponent {
       {/* <Dropdown.Item as={Link} to='/anaveriler'><Icon name="shield alternate" color="teal" /> Anaveriler</Dropdown.Item> */}
       <Dropdown.Item as={Link} to='/anaveriler'><Icon name="gem outline" color={this.state.color.regularMenu} /> Anaveriler</Dropdown.Item>
       <Dropdown.Item as={Link} to='/aktarimlar'><Icon name="globe" color={this.state.color.regularMenu} /> Aktarımlar</Dropdown.Item>
-      <Dropdown.Divider />
-      {/* <Dropdown.Item as={Link} to='/kisiler'><Icon name="user outline"  /> Kişiler</Dropdown.Item> */}
-      <Dropdown.Item as={Link} to='/talepler'><Icon name="mail"  /> Talepler</Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
 
@@ -96,7 +94,8 @@ class Component extends PureComponent {
     <Icon name="chart pie" color={this.state.color.icon} size="large" />Analiz
 </Menu.Item>
 
-  MenuCID = () => {
+
+MenuCID = () => {
   const {cid} = this.props
   const {adminMenu, regularMenu} = this.state.color
   const color = cid ? (cid!==1)?regularMenu:adminMenu:adminMenu
@@ -104,6 +103,7 @@ class Component extends PureComponent {
     <SelectCID color={color} />
   </Menu.Item>
   }
+
 
   MenuExport = () => <Menu.Item header>
     {/* <Icon name="save outline" size='large' /> */}
@@ -126,12 +126,12 @@ MenuExit = () => {
     const isRegularUser = this.isRegularUser()
     return (
       <Menu fixed="top" color={isRegularUser?this.state.color.regularMenu:this.state.color.adminMenu} inverted >
-        <Container style={{ width: '80%' }}>
+        <Container style={{ width: settings.display.width, height: settings.display.menuHeight}}>
           <this.MenuLogo />
           {isRegularUser && <this.MenuAnaliz />}
-          {isRegularUser && <this.MenuSorgula />}
+          {/* {isRegularUser && <this.MenuSorgula />} */}
           {isRegularUser && <this.MenuTalepler />}
-          {this.props.cid && <this.MenuAyarlar />}
+          {this.props.cid && <this.MenuSecenekler />}
           {isRegularUser && <this.MenuEnvanter />}
           <this.MenuCID />
           {isRegularUser && <this.MenuExport />}

@@ -15,7 +15,7 @@ class Component extends PureComponent {
   getOption = () => (
     {
       title: {
-        text: 'En Fazla KV Aktarılan Kurumlar ',
+        text: 'Kurum ->> KV ',
         subtext: 'İLK 10',
         x: 'center'
       },
@@ -65,7 +65,7 @@ class Component extends PureComponent {
     const params = { cid }
 
     try {
-      const result = await axios.post(config.URL_CHART_MAX_KURUMLAR, params, config.axios)
+      const result = await axios.post(config.URL_CHART_KV_KURUM, params, config.axios)
       const data = await result.data ? result.data : [];
       await this.setStateData(data)
     } catch (err) {

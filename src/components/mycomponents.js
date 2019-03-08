@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
-import { Message, Segment, Icon, Dropdown, Button } from 'semantic-ui-react'
+import { Message, Segment, Icon } from 'semantic-ui-react'
 import axios from "axios";
 import _ from 'lodash';
-import { updateStoreData, updateStoreInitialData, updateErrorStatus, updateStoreCID, updateStoreCIDName, updateStoreURL } from "../reducer/actions";
+import { updateStoreData, updateStoreInitialData, updateErrorStatus, updateStoreURL } from "../reducer/actions";
 import {config} from '../config'
 
 import {store} from '../reducer';
@@ -164,58 +164,6 @@ export const getOptions = async (url, cid, type) => {
 
   return options
 }
-
-   // Change Cid Dropbox for using everywhere
-   export class SelectCID extends PureComponent {
-    state = {
-      isLoading: true,
-      mounted: false
-    }
-
-     async componentDidMount() {
-       await this.setState({ mounted: true })
-     }
-    //  async componentDidMount() {
-    //    const {cid, uid} = await this.props
-    //    const options = await createCIDOptions(uid)
-    //    await this.setState({ options, cid, mounted: true })
-    //  }
-
-     componentDidUpdate(prevProps, prevState) {
-      if (prevState.mounted !== this.state.mounted) {
-        this.setState({ isLoading: false });
-      }
-     }
-
-     handleChange = async (e, data)=> {
-      e.preventDefault()
-      const cid = await data.value
-      const cidName = await data.options.find(key => key.value === data.value)
-      await this.setState({ cid })
-      await store.dispatch(updateStoreCID(cid))
-      await store.dispatch(updateStoreCIDName(cidName))
-    }
-
-    Loader=()=> {
-      return <Icon loading name={spinnerIcon} size="large" />
-    //   return <span>yükleniyor...</span>
-    }
-
-    render() {
-        const {cidOptions, cid, color } = this.props
-        const {isLoading} = this.state
-        // console.log('options: ',options)
-        return isLoading?<this.Loader />:<Button.Group color={color}>
-                <Dropdown
-                    value={cid}
-                    options={cidOptions}
-                    onChange={this.handleChange}
-                    button
-                    placeholder='Firma seçiminiz?'
-                />
-                </Button.Group>
-          }
-  }
 
   //Loading Data with Spinner
   export class LoadingStoreData extends PureComponent {

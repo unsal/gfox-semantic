@@ -2,8 +2,8 @@
 // API URL Settings
 
 const urlRoot = window.location.origin.toString()
-// const apiHost = urlRoot+'/service' // nginx > gunicorn local
-export const apiHost = 'http://127.0.0.1:8000' // nginx gunicorn local
+// export const apiHost = 'http://bt.ozyegin.edu.tr:8000/api'  //server ubuntu > /etc/nginx/config.d>virtual.conf> 8000 içerde 8001'e yönlendiriyor.. 8000 olarak karşılıyor, değiştirme!!!
+export const apiHost = "http://0.0.0.0:8001" // local
 
 // Python API configs
 export const config = {
@@ -79,23 +79,31 @@ export const config = {
   URL_TANIMLAR_SORUMLULAR: apiHost + '/sorumlular',
 
   // CHARTS
-  URL_CHART_MAX_KV: apiHost + '/chart/01',
-  URL_CHART_MAX_KURUMLAR: apiHost + '/chart/02',
-  URL_CHART_MAX_PROFILLER: apiHost + '/chart/03',
-  URL_CHART_MAX_SURECLER: apiHost + '/chart/04',
+  URL_CHART: apiHost + '/chart',
+  URL_CHART_KV_KV: apiHost + '/chart/01',
+  URL_CHART_KV_KURUM: apiHost + '/chart/02',
+  URL_CHART_KV_PROFIL: apiHost + '/chart/03',
+  URL_CHART_KV_BIRIM: apiHost + '/chart/10',
+  URL_CHART_KV_SUREC: apiHost + '/chart/04',
   URL_CHART_TALEPLER: apiHost + '/chart/05',
   URL_CHART_TREE_BIRIMKV: apiHost + '/chart/06',
   URL_CHART_TREE_PROFILKV: apiHost + '/chart/07',
   URL_CHART_TREE_BIRIMKURUM: apiHost + '/chart/08',
-  URL_CHART_MAP: apiHost + '/chart/09',
-
+  URL_CHART_MAP: apiHost + '/chart/09'
 }
 
 
 // React App Settings
 export const settings = {
   urlRoot: urlRoot,
-  urlLogin: urlRoot + '/login'
+  urlLogin: urlRoot + '/login',
+  display : {
+    width: '80%',
+    marginTop:'6em',
+    menuHeight: '5em'
+  }
 }
+
+
 
 

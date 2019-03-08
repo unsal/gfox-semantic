@@ -49,10 +49,11 @@ class Component extends PureComponent {
 
   async componentDidMount() {
     const { cid } = this.props
-    const params = { cid }
+    const name = "map"
+    const params = { cid , name}
 
     try {
-      const result = await axios.post(config.URL_CHART_MAP, params, config.axios)
+      const result = await axios.post(config.URL_CHART, params, config.axios)
       const data = await result.data ? result.data : [];
       // [{"name", "value", "maxvalue"}]
 

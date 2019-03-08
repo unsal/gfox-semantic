@@ -10,8 +10,8 @@ const template = {
             { title: 'BİRİM',  width: '8%', required: true,searchable: true, field:'birim' },
             { title: 'BÖLÜM',  width: '8%', required: true,searchable: true, field:'bolum' },
             { title: 'SÜREÇ', width: '10%', required: true, searchable: true, field: 'surec' },
-            { title: 'KV', width: '10%', required: true, searchable: true, field: 'kv' },
             { title: 'KURUMLAR', width: '10%' },
+            { title: 'KV', width: '10%'},
             { title: 'AKTARIM AMACI', width: '10%' },
             { title: 'DAYANAKLAR', width: '10%' },
             { title: 'AKTARIM ŞEKLİ', width: '10%' },
@@ -21,11 +21,11 @@ const template = {
             { title: 'BİLGİYİ VEREN', width: '10%' }],
 
   fields: [
-          { field: 'birim', type:'text', component: 'dropdown' },
-          { field: 'bolum', type:'text',component: 'dropdown' },
-          { field: 'surec', type:'text', component: 'dropdown'},
-          { field: 'kv', type:'text',component: 'dropdown'},
+          { field: 'birim', type:'text', component: 'dropdown', required: true },
+          { field: 'bolum', type:'text',component: 'dropdown', required: true },
+          { field: 'surec', type:'text', component: 'dropdown', required: true},
           { field: 'kurumlar_data', type:'json', component: 'dropdown'},
+          { field: 'kv_data', type:'json',component: 'dropdown'},
           { field: 'paylasim_amaclari_data', type:'json', component: 'dropdown'},
           { field: 'dayanaklar_data', type:'json', component: 'dropdown' },
           { field: 'paylasim_sekilleri_data', type:'json', component: 'dropdown' },
@@ -34,18 +34,18 @@ const template = {
           { field: 'aciklama', type:'json', component: 'input' },
           { field: 'bilgiveren', type:'json', component: 'input' }],
 
-    primary: ['birim','bolum','surec','kv'], //boş geçilemez alanların error kontrolü için
+    primary: ['birim','bolum','surec'], //boş geçilemez alanların error kontrolü için
 
     view: [
       { field: 'birim', type: 'text' },
       { field: 'bolum', type: 'text' },
       { field: 'surec', type: 'text' },
-      { field: 'kv', type: 'text' },
-      { field: 'kurumlar_data', type: 'json', color: 'blue' },
-      { field: 'paylasim_amaclari_data', type: 'json', color: 'orange' },
-      { field: 'dayanaklar_data', type: 'json', color: 'yellow' },
+      { field: 'kurumlar_data', type: 'json', color: 'orange' },
+      { field: 'kv_data', type: 'json', color:'blue' },
+      { field: 'paylasim_amaclari_data', type: 'json', color: 'teal' },
+      { field: 'dayanaklar_data', type: 'json', color: 'green' },
       { field: 'paylasim_sekilleri_data', type: 'json', color: 'olive' },
-      { field: 'ulkeler_data', type: 'json', color: 'green' },
+      { field: 'ulkeler_data', type: 'json', color: 'yellow' },
       { field: 'ulkeler_data', type: 'bool' }, //yurtdisi için ulkeler_data alanı dolu mu diye bakmak için
       { field: 'aciklama', type: 'text' },
       { field: 'bilgiveren', type: 'text' }],

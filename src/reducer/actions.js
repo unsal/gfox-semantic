@@ -3,6 +3,7 @@ export const GFOX_STORE_INITIAL_DATA = "GFOX_STORE_INITIAL_DATA"
 export const GFOX_ERROR = "GFOX_ERROR"
 export const GFOX_CID = "GFOX_CID"
 export const GFOX_CID_NAME = "GFOX_CID_NAME"
+export const GFOX_CID_CHANGED = "GFOX_CID_CHANGED"
 export const GFOX_CID_OPTIONS = "GFOX_CID_OPTIONS"
 export const GFOX_UID = "GFOX_UID"
 export const GFOX_TOKEN = "GFOX_TOKEN"
@@ -31,6 +32,10 @@ export const updateStoreCIDName = (cidName) => {
   return {type: GFOX_CID_NAME, cidName}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }
 
+export const updateStoreCIDChanged = (cidChanged) => {
+  return {type: GFOX_CID_CHANGED, cidChanged}  //data: [{cid:1, uid:'admin@grcfox.com}]
+}
+
 export const updateStoreUID = (uid) => {
   return {type: GFOX_UID, uid}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }
@@ -40,7 +45,7 @@ export const updateStoreToken = (token) => {
 }
 
 //Headerdaki seçilen CID'leri yüklemek için...
-// Her sayfada KVKKLayout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi
+// Her sayfada Layout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi
 export const updateStoreCIDOptions = (cidOptions) => {
   return {type: GFOX_CID_OPTIONS, cidOptions}  //data: [{cid:1, uid:'admin@grcfox.com}]
 }

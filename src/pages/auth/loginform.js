@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import {updateStoreToken, updateStoreUID, updateStoreCIDOptions} from '../../reducer/actions'
 import {store} from "../../reducer"
 import {spinnerIcon} from "../../components/mycomponents"
-import Panel from "../chart"
+import BlankPage from "./blank"
 import './loginform.css'
 
 class LoginForm extends PureComponent {
@@ -67,7 +67,7 @@ class LoginForm extends PureComponent {
                 await store.dispatch(updateStoreUID(uid))
 
                 //Headerda, CID optionsı yüklemek için...
-                // Her sayfada KVKKLayout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi
+                // Her sayfada Layout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi
                 let cidOptions = await this.createCIDOptions(uid)
                 // cidOptions = await JSON.stringify(cidOptions)
                 await store.dispatch(updateStoreCIDOptions(cidOptions))
@@ -105,7 +105,7 @@ class LoginForm extends PureComponent {
             <Grid.Row>
               <Grid.Column style={{ maxWidth: 450 }}>
                 <Header as='h2' color='black' textAlign='center'>
-                <div><Icon name='user circle' size='large' color='teal' />GFox Giriş</div>
+                <div><Icon name='lock' size='large' color='teal' />GFox</div>
 
                 </Header>
                 <Form size='large' onSubmit={this.handleSubmit}>
@@ -149,7 +149,7 @@ class LoginForm extends PureComponent {
         )
 
         render() {
-          return this.state.authenticated?<Panel />:<this.RenderLoginForm />
+          return this.state.authenticated? <BlankPage /> :<this.RenderLoginForm />
           }
 }
 

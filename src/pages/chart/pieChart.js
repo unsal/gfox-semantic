@@ -12,12 +12,11 @@ import {MyLoader} from "../../components/mycomponents"
 class Component extends PureComponent {
   state = {}
 
-  getOption = () => (
+  getOption = (text, name) => (
     {
 
-
       title : {
-        text: 'Profil Bazında En Fazla İşlenen KV ',
+        text,
         subtext: 'İLK 10',
         x:'center'
     },
@@ -27,7 +26,7 @@ class Component extends PureComponent {
     },
     series : [
         {
-            name: 'Profil',
+            name,
             type: 'pie',
             radius : '75%',
             center: ['50%', '60%'],
@@ -46,20 +45,24 @@ class Component extends PureComponent {
 
 
   async componentDidMount() {
-    const { cid } = this.props
-    const params = { cid }
+    const { cid, name } = this.props
+    const url = config.URL_CHART
+    const params = { cid, name }
 
     try {
-      const result = await axios.post(config.URL_CHART_MAX_PROFILLER, params, config.axios)
+      const result = await axios.post(url, params, config.axios)
       const data = await result.data ? result.data : [];
-      await this.setState({data})
+      await this.setState({data, mount: true})
     } catch (err) {
-      console.log("KVChart > SQL Error...", err);
+      console.log("!! Axios URL Error !! ", err);
     }
   }
 
+
+
   render() {
-    return this.state.data ? <ReactEcharts option={this.getOption()} /> : <MyLoader />
+    const {title,name} = this.props;
+    return this.state.data ? <ReactEcharts option={this.getOption(title, name)} /> : <MyLoader />
   }
 }
 
