@@ -14,10 +14,10 @@ import {MyLoader} from "../../components/mycomponents"
 class Component extends PureComponent {
   state = { maxValue: 1000  } //default
 
-  getOption = () => (
+  getOption = (text, name) => (
     {
       title: {
-        text: 'KV Aktarılan Ülkeler',
+        text,
         left: 'center',
         top: 'top'
     },
@@ -33,7 +33,7 @@ class Component extends PureComponent {
     },
     series: [
         {
-            name: 'KV Aktarılan Ülkeler',
+            name,
             type: 'map',
             mapType: 'world',
             roam: true,
@@ -49,8 +49,8 @@ class Component extends PureComponent {
 
   async componentDidMount() {
     const { cid } = this.props
-    const name = "map"
-    const params = { cid , name}
+    const type = "map"
+    const params = { cid , type}
 
     try {
       const result = await axios.post(config.URL_CHART, params, config.axios)
@@ -63,12 +63,13 @@ class Component extends PureComponent {
 
       await this.setState({data, maxValue})
     } catch (err) {
-      console.log("KVChart > SQL Error...", err);
+      console.log("MapChart Axios Error !!", err);
     }
   }
 
   render() {
-    return this.state.data? <ReactEcharts option={this.getOption()} style={{height:'600px'}}/>:<MyLoader />
+    const {title,name} = this.props;
+    return this.state.data? <ReactEcharts option={this.getOption(title, name)} style={{height:'600px'}}/>:<MyLoader />
   }
 }
 

@@ -30,7 +30,6 @@ import {
   getOptions
 } from "./mycomponents";
 
-
 class Component extends PureComponent {
   state = {
     mount: false,
@@ -68,38 +67,38 @@ class Component extends PureComponent {
     return options;
   };
 
-
   // Tanımlar ve mevcut tablodaki tüm optionalrı bir listede toplar
   concatOptions = async (field, type) => {
-  try {
-    const { cid, data } = await this.props;
-    const isMultiple = (type==='json')
-    const id = await isMultiple ? field.substring(0,field.length-5): field; //_data kısmını kaldırır
-    const url = await apiHost+"/options/"+id;
+    try {
+      const { cid, data } = await this.props;
+      const isMultiple = type === "json";
+      const id = (await isMultiple)
+        ? field.substring(0, field.length - 5)
+        : field; //_data kısmını kaldırır
+      const url = (await apiHost) + "/options/" + id;
 
-    //1. Tanımardan optionsları getir
-    const options2 = await getOptions(url, cid, "array")
-    var options1 = [];
-    //2. veritabanındaki bütün optionları bir arrayde topla.. [x,y,z,x,z]
-    data  &&
-    await data.map(
-       (row, index) =>
-      row[field] &&  isMultiple ? row[field].map(item => (options1 = options1.concat(item)))
-                              : options1 = options1.concat(row[field])
-      );
+      //1. Tanımardan optionsları getir
+      const options2 = await getOptions(url, cid, "array");
+      var options1 = [];
+      //2. veritabanındaki bütün optionları bir arrayde topla.. [x,y,z,x,z]
+      data &&
+        (await data.map((row, index) =>
+          row[field] && isMultiple
+            ? row[field].map(item => (options1 = options1.concat(item)))
+            : (options1 = options1.concat(row[field]))
+        ));
 
-    // 3. bir ve ikiyi birleştir..
-    await options1.push(...options2);
-    // console.log('ID*****', id)
+      // 3. bir ve ikiyi birleştir..
+      await options1.push(...options2);
+      // console.log('ID*****', id)
 
-    // 4. tekilleştir
-    return this.distinct(options1);
-  } catch (err)  {
-    console.log("frameworkEnvanter.js->concatOptions->HATA!");
-    return []
-  }
+      // 4. tekilleştir
+      return this.distinct(options1);
+    } catch (err) {
+      console.log("frameworkEnvanter.js->concatOptions->HATA!");
+      return [];
+    }
   };
-
 
   loadOptions = async () => {
     try {
@@ -108,14 +107,14 @@ class Component extends PureComponent {
       await fields.map(
         async ({ field, type, component }) =>
           component === "dropdown" &&
-              this.setState({ ["options_" + field]: await this.concatOptions(field, type) })
+          this.setState({
+            ["options_" + field]: await this.concatOptions(field, type)
+          })
       );
-
     } catch (error) {
       return false;
     }
   };
-
 
   async componentDidMount() {
     await this.loadData();
@@ -167,19 +166,19 @@ class Component extends PureComponent {
   };
 
   TableHeader = () => {
-    const Required = ({children}) => <Label basic>{children}</Label>
+    const Required = ({ children }) => <Label basic>{children}</Label>;
     const { titles } = this.props.template;
     const enableSearchMode = () => store.dispatch(updateStoreSearchMode(true));
 
     return (
       <Table.Header>
         <Table.Row>
-          {titles.map(({ title, required, searchable, field }, index) =>
+          {titles.map(({ title, width, required, searchable, field }, index) =>
             this.props.searchMode && searchable ? (
               <Table.HeaderCell
                 key={index}
                 style={{
-                  width: "auto",
+                  width,
                   verticalAlign: "TOP",
                   backgroundColor: "#f0f0f0"
                 }}
@@ -191,14 +190,14 @@ class Component extends PureComponent {
               <Table.HeaderCell
                 key={index}
                 style={{
-                  width: "auto",
+                  width,
                   verticalAlign: "TOP",
                   backgroundColor: "#f0f0f0"
                 }}
                 onClick={enableSearchMode}
               >
                 {" "}
-                {required ? <Required>{title}</Required>:title}
+                {required ? <Required>{title}</Required> : title}
               </Table.HeaderCell>
             )
           )}
@@ -214,38 +213,42 @@ class Component extends PureComponent {
     this.loadOptions();
 
     this.setState({ editMode: true, addMode: false, toolsON: true, pidm });
-    fields.map(({ field }) => this.setState({ [field]: row[field] }) );
+    fields.map(({ field }) => this.setState({ [field]: row[field] }));
   };
 
   DataTitle = props => {
-   const color = (props.row.pidm === this.state.maxPidm) ? 'green' : 'black'
-   return  <Header as="h5" onClick={() => this.handleEdit(props.row)}   color = {color}>
-      {props.children}
-    </Header>
+    const color = props.row.pidm === this.state.maxPidm ? "green" : "black";
+    return (
+      <Header as="h5" onClick={() => this.handleEdit(props.row)} color={color}>
+        {props.children}
+      </Header>
+    );
   };
 
   //id-> selected data id (ortamlar, tedbirler), aktarim pidm->silmek için, data
   DataTitles = ({ row, data, color }) => {
     const style = { display: "block", marginTop: "2px", marginLeft: "3px" };
-    return (
-      data &&
-      data.map((item, index) => {
-        const content = item ? item : <Icon name="ellipsis horizontal" />;
-        // row.name && console.log(JSON.stringify(data))
-        return (
-          <div key={index} style={style}>
-            <Label
-              // circular
-              content={content}
-              color={color}
-              onClick={() => this.handleEdit(row)}
-            />
-          </div>
-        );
-      })
-    );
+    const size = data.length;
+    const limit = data && this.state.singleLine ? 1 : size;
+    const isMultiple = size > 1;
+    const showAsCircular = isMultiple && this.state.singleLine;
+    //slice ile map'ten sadece bir satır getirilir..
+    return data.slice(0, limit).map((item, index) => {
+      const content = item ? item : <Icon name="ellipsis horizontal" />;
+      // row.name && console.log(JSON.stringify(data))
+      return (
+        <div key={index} style={style}>
+          <Label
+            circular={showAsCircular}
+            color={color}
+            onClick={() => this.handleEdit(row)}
+          >
+            {showAsCircular ? "  +" + size : content}
+          </Label>
+        </div>
+      );
+    });
   };
-
 
   handleChange = (event, element) => {
     event.preventDefault();
@@ -272,7 +275,6 @@ class Component extends PureComponent {
     }
   };
 
-
   handleAddition = (event, element) => {
     event.preventDefault();
     const { name, value } = element;
@@ -282,12 +284,11 @@ class Component extends PureComponent {
     });
   };
 
-
   MyDropdown = ({ name, type, error }) => {
     const isPrimary = this.props.template.primary.indexOf(name) > -1;
-    const option = this.state["options_"+name]
-    const options = option ? option:[]
-    const multiple = (type==='json')
+    const option = this.state["options_" + name];
+    const options = option ? option : [];
+    const multiple = type === "json";
 
     return (
       <Dropdown
@@ -317,7 +318,7 @@ class Component extends PureComponent {
         onKeyDown={this.handleKeyDown}
         error={isPrimary && error}
         style={{ width: "100%" }}
-        placeholder = {name}
+        placeholder={name}
       />
     );
   };
@@ -336,7 +337,7 @@ class Component extends PureComponent {
       case "input":
         return <this.MyInput name={name} error={error} />;
       case "dropdown":
-        return <this.MyDropdown name={name} type={type} error={error} />; //single ve multi dropdown kontrolü
+        return <this.MyDropdown name={name} type={type} error={error} />; //single ve multi dropdown kontrolü
       case "checkbox":
         return <this.MyCheckbox name={name} />;
       default:
@@ -351,7 +352,6 @@ class Component extends PureComponent {
     padding: "2px"
   };
 
-
   TableEdit = () => (
     <Table.Row>
       {this.props.template.fields.map(({ field, type, component }, index) => (
@@ -364,12 +364,12 @@ class Component extends PureComponent {
 
   styleView = { verticalAlign: "top", margin: "0px" };
 
-   TableRow = ({ row,rowIndex  }) => {
+  TableRow = ({ row, rowIndex }) => {
     const { DataTitle, DataTitles } = this;
     const { view } = this.props.template;
 
     return (
-      <Table.Row positive={rowIndex===0}>
+      <Table.Row warning={rowIndex === 0}>
         {view.map(({ field, type, color }, index) =>
           type === "text" ? (
             <Table.Cell key={index} style={this.styleView}>
@@ -383,7 +383,9 @@ class Component extends PureComponent {
             type === "bool" && (
               <Table.Cell key={index} style={this.styleView}>
                 <DataTitle row={row}>
-                  {(row[field] && (row[field].length >0)) && <Icon name="flag checkered" color="green" />}
+                  {row[field] && row[field].length > 0 && (
+                    <Icon name="flag checkered" color="green" />
+                  )}
                 </DataTitle>
               </Table.Cell>
             )
@@ -410,7 +412,12 @@ class Component extends PureComponent {
     <Table.Row key="0">
       {this.props.template.fields.map(({ field, type, component }, index) => (
         <Table.Cell key={index} style={this.styleEdit}>
-          <this.MyField name={field} type={type} component={component} error={this.state.message} />{" "}
+          <this.MyField
+            name={field}
+            type={type}
+            component={component}
+            error={this.state.message}
+          />{" "}
         </Table.Cell>
       ))}
     </Table.Row>
@@ -422,20 +429,20 @@ class Component extends PureComponent {
 
   handleReset = () =>
     this.props.template.fields.map(({ field, type }) =>
-      (type === 'json')
+      type === "json"
         ? this.setState({ [field]: [] })
         : this.setState({ [field]: null })
     );
 
   // Check if exist entry. boş kayıt atmaması için kontrol fonksiyonu
-  validEntry=()=>{
-    var arr = []
+  validEntry = () => {
+    var arr = [];
     this.props.template.fields.map(({ field, required }) =>
-        (required && (this.state[field].length > 0)) ? arr = arr.concat('1'): null
+      required && this.state[field].length > 0 ? (arr = arr.concat("1")) : null
     );
     // console.log('ARR: ', arr.includes('1'))
-    return arr.includes('1')
-  }
+    return arr.includes("1");
+  };
 
   handleCommit = async commitType => {
     //type = add, update
@@ -452,17 +459,15 @@ class Component extends PureComponent {
     }
 
     // sadece viewde bulunan post ederken gitmemesi gereken alanlar için type kontrolü yapılıyor. çünkü fields -> type boş geçiliyor şablonda
-    const data = {}
-    fields.map(
-      ({ field, type }) => type && (data[field] = this.state[field])
-    );
-    params["data"] = data
+    const data = {};
+    fields.map(({ field, type }) => type && (data[field] = this.state[field]));
+    params["data"] = data;
 
     try {
       const URL_COMMIT = this.props.template.url.commit + "/" + commitType; // /add or /update
       // console.log('yurtdışı: ',yurtdisi)
 
-      this.validEntry() && await axios.post(URL_COMMIT, params, config.axios);
+      this.validEntry() && (await axios.post(URL_COMMIT, params, config.axios));
 
       await this.setState({
         addMode: false,
@@ -501,7 +506,7 @@ class Component extends PureComponent {
   handleDuplicate = async event => {
     event.preventDefault();
     // edit moduna geçtiğinde seçilen satırın field değerleri state'e kopyalandığından 'add' ile eklem e ypaılabilir.
-    this.handleCommit('add')
+    this.handleCommit("add");
   };
 
   handleVazgec = event => {
@@ -533,7 +538,7 @@ class Component extends PureComponent {
       </Button>
     );
     const GuncelleButon = () => (
-    <Button
+      <Button
         style={style}
         color={color}
         size="mini"
@@ -575,7 +580,7 @@ class Component extends PureComponent {
           icon="copy outline"
           size="mini"
           onClick={this.handleDuplicate}
-          content = "KLONLA"
+          content="KLONLA"
         />
       );
 
@@ -588,7 +593,7 @@ class Component extends PureComponent {
         icon={this.state.singleLine ? "eye" : "eye slash outline"}
         size="mini"
         onClick={() => this.setState({ singleLine: !this.state.singleLine })}
-        content = "DETAY"
+        content="DETAY"
       />
     );
 
@@ -633,11 +638,10 @@ class Component extends PureComponent {
 
     return (
       <div>
-
         <Button
           style={style}
           // basic
-          color='red'
+          color="red"
           circular
           icon="trash alternate"
           size="mini"
@@ -649,7 +653,12 @@ class Component extends PureComponent {
           SİL
         </Button> */}
 
-        <Modal style={{height: '200px'}} size="mini" open={this.state.open} onClose={this.close}>
+        <Modal
+          style={{ height: "200px" }}
+          size="mini"
+          open={this.state.open}
+          onClose={this.close}
+        >
           <Modal.Header>Silme Onayı</Modal.Header>
           <Modal.Content>
             <p>İşaretli kaydı silmek istediğinizden emin misiniz?</p>
@@ -663,26 +672,33 @@ class Component extends PureComponent {
     );
   };
 
-  handleContextRef = contextRef => this.setState({ contextRef })
+  handleContextRef = contextRef => this.setState({ contextRef });
 
   Body = () => {
     const { data } = this.props; //data > from reducer
-    const { title, color } = this.props.template.page;
-    const { contextRef } = this.state
+    const { title } = this.props.template.page;
+    const { contextRef } = this.state;
 
     return (
       <div ref={this.handleContextRef}>
-
-       <Sticky context={contextRef} offset={70}>
-        <Segment basic style={{display: "inline-block", width:'100%', height:'50px', backgroundColor:"#fff"}}>
-            <Header size="large" style={{ float: "left", width: "20%"}}>
+        <Sticky context={contextRef} offset={70}>
+          <Segment
+            basic
+            style={{
+              display: "inline-block",
+              width: "100%",
+              height: "50px",
+              backgroundColor: "#fff"
+            }}
+          >
+            <Header size="large" style={{ float: "left", width: "20%" }}>
               {title}
             </Header>
 
-          <div style={{ float: "right", width: "80%" }}>
-            <this.Buttons />
-          </div>
-        </Segment>
+            <div style={{ float: "right", width: "80%" }}>
+              <this.Buttons />
+            </div>
+          </Segment>
         </Sticky>
 
         <div>
@@ -692,8 +708,6 @@ class Component extends PureComponent {
         </div>
         <Table
           celled
-          striped
-          color={color}
           fixed
           stackable
           selectable
@@ -710,7 +724,8 @@ class Component extends PureComponent {
   };
 
   //Render içine aldığında zaman form input MyLoader yüzünden focusu kaybediyor.. state değiştiğinde render edildiğ için..
-  LoadingSpinner = ({ children }) => (this.state.loadingSpinner ? <MyLoader /> : children);
+  LoadingSpinner = ({ children }) =>
+    this.state.loadingSpinner ? <MyLoader /> : children;
 
   render() {
     return (

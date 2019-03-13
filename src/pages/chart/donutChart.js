@@ -19,22 +19,33 @@ class Component extends PureComponent {
     },
     tooltip: {
       trigger: "item",
-      formatter: "{a} <br/>{b} : {c} ({d}%)"
+      formatter: "{a} <br/>{b}: {c} ({d}%)"
     },
     series: [
       {
         name,
         type: "pie",
-        radius: "75%",
-        center: ["50%", "60%"],
-        data: this.state.data,
-        itemStyle: {
+        radius: ["50%", "70%"],
+        avoidLabelOverlap: false,
+        label: {
+          normal: {
+            show: true,
+            position: "left"
+          },
           emphasis: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: "rgba(0, 0, 0, 0.5)"
+            show: true,
+            textStyle: {
+              fontSize: "30",
+              fontWeight: "bold"
+            }
           }
-        }
+        },
+        labelLine: {
+          normal: {
+            show: true
+          }
+        },
+        data: this.state.data
       }
     ]
   });

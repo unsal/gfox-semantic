@@ -26,7 +26,7 @@ export default class Component extends PureComponent {
   }
 
   PieChartKV = () =>  <PieChart title="Max KV" name="kv" />
-  PieChartProfil = () =>  <PieChart title="Profil" name="profil" />
+  PieChartProfil = () =>  <PieChart title="Profil ->> KV" name="profil" />
   PieChartBirim = () =>  <PieChart title="Birim ->> KV" name="birim"  />
   PieChartBolum = () =>  <PieChart title="Bölüm ->> KV" name="bolum" />
   PieChartSurec = () =>  <PieChart title="Süreç ->> KV" name="surec"  />

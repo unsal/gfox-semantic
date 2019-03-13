@@ -11,55 +11,71 @@ import { MyLoader } from "../../components/mycomponents";
 class Component extends PureComponent {
   state = {};
 
-  getOption = (text, name) => ({
-    title: {
-      text,
-      subtext: "",
-      x: "center"
-    },
+  getOption = (name, dataX, dataY) => ({
+    color: ["#3398DB"],
     tooltip: {
-      trigger: "item",
-      formatter: "{a} <br/>{b} : {c} ({d}%)"
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow"
+      }
     },
+    grid: {
+      left: "10%",
+      right: "10%",
+      bottom: "5%",
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: "category",
+        data: dataX, //["xxx","yyy",...] döner
+        axisTick: {
+          alignWithLabel: true
+        }
+      }
+    ],
+    yAxis: [
+      {
+        type: "value"
+      }
+    ],
     series: [
       {
         name,
-        type: "pie",
-        radius: "75%",
-        center: ["50%", "60%"],
-        data: this.state.data,
-        itemStyle: {
-          emphasis: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: "rgba(0, 0, 0, 0.5)"
-          }
-        }
+        type: "bar",
+        barWidth: "60%",
+        data: dataY // [1,2,4,5,2,..] döner
       }
     ]
   });
 
   async componentDidMount() {
     const { cid, name } = this.props;
-    const type = "pie";
+    const type = "bar";
     const url = config.URL_CHART;
     const params = { cid, name, type };
 
     try {
       const result = await axios.post(url, params, config.axios);
       const data = (await result.data) ? result.data : [];
-      await this.setState({ data, mount: true });
+      await data.map(row =>
+        this.setState({
+          dataX: row.name,
+          dataY: row.value,
+          mount: true
+        })
+      );
     } catch (err) {
       console.log("!! Axios URL Error !! ", err);
     }
   }
 
   render() {
-    const { title, name } = this.props;
-    return this.state.data ? (
+    const { name } = this.props;
+    return this.state.dataX ? (
       <ReactEcharts
-        style={{ height: "500px" }}
-        option={this.getOption(title, name)}
+        style={{ width: "600px", height: "500px" }}
+        option={this.getOption(name, this.state.dataX, this.state.dataY)}
       />
     ) : (
       <MyLoader />
