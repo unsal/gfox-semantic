@@ -6,7 +6,7 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { config } from "../../config";
-import { MyLoader } from "../../components/mycomponents";
+import { MyLoader } from "../../components/gfox";
 
 class Component extends PureComponent {
   state = {};

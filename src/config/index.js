@@ -6,6 +6,9 @@ export const apiHost = "http://0.0.0.0:8001"; // local
 
 // Python API configs
 export const config = {
+  urlRoot,
+  urlLogin: urlRoot + "/login",
+
   //axios GET, OST header için config
   axios: {
     headers: {
@@ -88,15 +91,4 @@ export const config = {
   URL_CHART_TREE_PROFILKV: apiHost + "/chart/07",
   URL_CHART_TREE_BIRIMKURUM: apiHost + "/chart/08",
   URL_CHART_MAP: apiHost + "/chart/09"
-};
-
-// React App Settings
-export const settings = {
-  urlRoot: urlRoot,
-  urlLogin: urlRoot + "/login",
-  display: {
-    width: "80%",
-    marginTop: "6em",
-    menuHeight: "5em"
-  }
 };

@@ -13,7 +13,7 @@ const exportFile = async (cid) => {
       await FileSaver.saveAs(blob, "gfox.xlsx");
       // return data
     } catch (err) {
-          console.log("mycomponents>refreshstoredata() hatası..",err);
+          console.log("gfox>refreshstoredata() hatası..",err);
           // return []
     }
 }

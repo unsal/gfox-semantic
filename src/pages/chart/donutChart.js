@@ -6,7 +6,7 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { config } from "../../config";
-import { MyLoader } from "../../components/mycomponents";
+import { MyLoader } from "../../components/gfox";
 
 class Component extends PureComponent {
   state = {};
@@ -14,7 +14,7 @@ class Component extends PureComponent {
   getOption = (text, name) => ({
     title: {
       text,
-      subtext: "",
+      subtext: "ILK 20",
       x: "center"
     },
     tooltip: {

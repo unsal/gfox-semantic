@@ -1,5 +1,5 @@
-import React, { PureComponent } from "react";
-import { Icon, Label, Segment, Grid } from "semantic-ui-react";
+import React, { PureComponent, createRef } from "react";
+import { Menu, Icon } from "semantic-ui-react";
 
 import Layout from "../layout";
 import Login from "../auth/login";
@@ -7,98 +7,94 @@ import TreeChart from "./treeChart";
 import MapChart from "./mapChart";
 import PieChart from "./pieChart";
 import DonutChart from "./donutChart";
-import BarChart from "./barChart";
+
+// import "./index.css";
+import "./index.css";
 
 const menuitems = [
   {
     title: "KV",
     name: "kv",
-    type: "piebar",
-    color: "red",
-    icon: "chart bar",
+    type: "pie",
+    icon: "chart pie",
     active: true
   },
   { title: "Kv Harita", name: "map", type: "map", color: "red", icon: "world" },
   {
-    title: "Profil Kv Ağacı",
+    title: "Profil - Kv",
     name: "profil",
     type: "tree",
-    color: "orange",
     icon: "sitemap"
   },
   {
-    title: "Birim Kv Ağacı",
+    title: "Birim - Kv",
     name: "birim",
     type: "tree",
-    color: "orange",
     icon: "sitemap"
   },
   {
-    title: "Bölüm Kv Ağacı",
+    title: "Bölüm - Kv",
     name: "bolum",
     type: "tree",
-    color: "orange",
     icon: "sitemap",
     layout: "radial"
   },
   {
-    title: "Süreç Kv Ağacı",
+    title: "Süreç - Kv ",
     name: "surec",
     type: "tree",
-    color: "orange",
     icon: "sitemap"
   },
   {
-    title: "Kv Profil Oranı",
+    title: "Profil - Kv",
     name: "profil",
     type: "donut",
-    color: "yellow",
-    icon: "circle outline"
+    icon: "life ring"
   },
   {
-    title: "Kv Birim Oranı",
+    title: "Birim - Kv",
     name: "birim",
     type: "donut",
     color: "yellow",
-    icon: "circle outline"
+    icon: "life ring"
   },
   {
-    title: "Kv Bölüm Oranı",
+    title: "Bölüm - Kv",
     name: "bolum",
     type: "donut",
     color: "yellow",
-    icon: "circle outline"
+    icon: "life ring"
   },
   {
-    title: "Kv Süreç Oranı",
+    title: "Süreç - Kv",
     name: "surec",
     type: "donut",
     color: "yellow",
-    icon: "circle outline"
+    icon: "life ring"
   },
   {
-    title: "Kv Kullanan Kurumlar",
+    title: "Aktarım Yapılan Kurumlar",
     name: "kurumlar_data",
     type: "pie",
     color: "olive",
     icon: "chart pie"
   },
   {
-    title: "Kv Kullanılan Sistemler",
+    title: "Sistemler - Kv",
     name: "sistemler_data",
     type: "pie",
     color: "olive",
     icon: "chart pie"
   },
   {
-    title: "Kv Bulundurulan Ortamlar",
+    title: "Ortamlar - Kv",
     name: "ortamlar_data",
     type: "pie",
     color: "olive",
     icon: "chart pie"
   },
   {
-    title: "Kv Aktarılan Ülkeler",
+    title: "Ülkeler - Kv",
     name: "ulkeler_data",
     type: "pie",
     color: "olive",
@@ -106,66 +102,65 @@ const menuitems = [
   }
 ];
 
-export default class Component extends PureComponent {
+export default class Analiz extends PureComponent {
   componentDidMount() {
     menuitems.map(
       ({ active, title, name, type, layout }) =>
-        active && this.setState({ activeItem: { title, name, type, layout } })
+        active &&
+        this.setState({
+          activeMenu: {
+            title,
+            name,
+            type,
+            layout
+          }
+        })
     );
   }
 
-  MenuBar = () => {
+  ChartMenu = () => {
     const handleClick = (e, { title, name, type, layout }) =>
-      this.setState({ activeItem: { title, name, type, layout } });
+      this.setState({
+        activeMenu: { title, name, type, layout }
+      });
 
-    return menuitems.map((row, index) => (
-      <Label
-        key={index}
-        as="a"
-        title={row.title} //handleClick'te state'e atmak için
-        name={row.name} //handleClick'te state'e atmak için
-        type={row.type} //handleClick'te state'e atmak için
-        layout={row.layout} //handleClick'te state'e atmak için
-        style={{ marginTop: "3px" }}
-        color={row.color}
-        active={this.state.activeItem.name === row.name}
-        onClick={handleClick}
-      >
-        {row.title}
-        <Icon name={row.icon} style={{ marginLeft: "5px" }} />
-      </Label>
-    ));
+    const { activeMenu } = this.state;
+
+    return (
+      <div className="chart-menu">
+        <Menu text vertical>
+          {menuitems.map((row, index) => (
+            <Menu.Item
+              name={row.name}
+              key={index}
+              title={row.title} //handleClick'te state'e atmak için
+              type={row.type} //handleClick'te state'e atmak için
+              layout={row.layout} //handleClick'te state'e atmak için
+              active={activeMenu.name === row.name}
+              onClick={handleClick}
+            >
+              <Icon name={row.icon} color="teal" />
+              {row.title}
+            </Menu.Item>
+          ))}
+        </Menu>
+      </div>
+    );
   };
 
-  Content = () => {
-    const { title, name, type, layout } = this.state.activeItem;
+  ChartCanvas = () => {
+    const { title, name, type, layout } = this.state.activeMenu;
     // Dışardan çağrılan objelerin kopyası yaratılıyor.
     // Böyle yapmazsan Pie'dan Pie tıklayarak geçiş yaptığında değişiklik olmuyor.
-    const Bar = () => <BarChart name={name} />;
     const Pie = () => <PieChart title={title} name={name} />;
     const Tree = () => <TreeChart title={title} name={name} layout={layout} />;
     const Map = () => <MapChart title={title} name={name} />;
     const Donut = () => <DonutChart title={title} name={name} />;
 
-    const PieBar = () => (
-      <Grid divided="vertically">
-        <Grid.Row columns={2}>
-          <Grid.Column>
-            <Pie />
-          </Grid.Column>
-          <Grid.Column>
-            <Bar />
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    );
-
     return (
-      <Segment basic style={{ marginTop: "1em" }}>
+      <div className="chart-canvas">
         {type === "pie" ? (
           <Pie />
-        ) : type === "piebar" ? (
-          <PieBar />
         ) : type === "tree" ? (
           <Tree />
         ) : type === "map" ? (
@@ -173,16 +168,20 @@ export default class Component extends PureComponent {
         ) : type === "donut" ? (
           <Donut />
         ) : null}
-      </Segment>
+      </div>
     );
   };
+
+  contextRef = createRef();
 
   render() {
     return (
       <Login>
-        <Layout>
-          <this.MenuBar />
-          <this.Content />
+        <Layout showLeftMenu={true}>
+          <div className="chart-container">
+            <this.ChartMenu />
+            <this.ChartCanvas />
+          </div>
         </Layout>
       </Login>
     );

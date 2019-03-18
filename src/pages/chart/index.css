@@ -1,0 +1,35 @@
+:root {
+  --top-menu-height: 70px;
+  --left-menu-width: 70px;
+  --container-width: 1550px;
+  --container-left: calc(var(--chart-menu-width) + 20px);
+  --container-top: 40px;
+  --chart-menu-width: 180px;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: var(--top-menu-height);
+  margin-left: var(--left-menu-width);
+  width: var(--container-width);
+}
+
+.chart-menu {
+  display: flex;
+  position: fixed;
+  width: var(--chart-menu-width);
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: var(--container-top);
+  height: 100%;
+  background-color: #f5f5f5;
+}
+
+.chart-canvas {
+  width: calc(var(--container-width) - var(--chart-menu-width));
+  margin-top: var(--container-top);
+  margin-left: var(--container-left);
+  padding-bottom: 50px;
+  overflow: auto;
+}

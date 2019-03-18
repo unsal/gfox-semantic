@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import ReactEcharts from "echarts-for-react";
 import { Header, Segment } from "semantic-ui-react";
-import { MyLoader } from "../../components/mycomponents";
+import { MyLoader } from "../../components/gfox";
 
 import axios from "axios";
 

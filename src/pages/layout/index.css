@@ -1,0 +1,85 @@
+:root {
+  --top-menu-height: 70px;
+  --left-menu-width: 70px;
+  --container-width: 1550px;
+  --container-padding-left: 30px;
+  --container-margin-top: var(--top-menu-height);
+  --container-margin-left: var(--left-menu-width);
+  --container-padding-bottom: 50px;
+  --container-header-top: calc(var(--top-menu-height));
+  --container-left: calc(var(--left-menu-width) + 30px);
+  --container-header-height: 70px;
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: calc(var(--container-margin-top));
+  margin-left: var(--left-menu-width);
+  padding-left: var(--container-padding-left);
+  width: var(--container-width);
+  height: 100%;
+}
+
+.layout-container-header {
+  position: fixed;
+  width: var(--container-width);
+  height: var(--container-header-height);
+  overflow: hidden;
+  background-color: #fff;
+  padding-top: 30px;
+}
+
+.layout-container-body {
+  margin-top: calc(var(--container-header-height) + 10px);
+  padding-bottom: var(--container-padding-bottom);
+  width: var(--container-width);
+  overflow: auto;
+}
+
+.layout-topmenu {
+  height: var(--top-menu-height);
+  margin-left: 0px;
+  width: 100% !important;
+}
+
+.layout-leftmenu {
+  width: var(--left-menu-width);
+  height: 100% !important;
+  float: "left";
+  margin-top: var(--top-menu-height);
+  padding-top: 40px;
+  background-color: #141415;
+  position: fixed;
+  /* background-color: #efefef; */
+}
+
+.layout-logo {
+  width: var(--left-menu-width);
+  float: left;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-homemenu {
+  margin-top: calc(var(--container-margin-top) + 30px);
+  margin-left: var(--left-menu-width);
+  width: 900px;
+  float: "left";
+}
+
+.menu-envanter {
+  width: var(--left-menu-width) !important;
+}
+
+.menu-envanter-item {
+  text-transform: capitalize;
+}

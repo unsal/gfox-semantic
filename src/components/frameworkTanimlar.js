@@ -26,7 +26,9 @@ import {
   getOptions,
   refreshStoreData,
   MyMessage
-} from "./mycomponents";
+} from "./gfox";
+
+import "../pages/layout/index.css";
 
 class Component extends PureComponent {
   state = {
@@ -578,11 +580,11 @@ class Component extends PureComponent {
 
   Content = () => {
     const { data } = this.props; //data > from reducer
-    const { title, color } = this.props.template.page;
+    const { title } = this.props.template.page;
 
     return (
-      <div>
-        <div>
+      <div className="layout-container">
+        <div className="layout-container-header">
           <Header size="large" style={{ float: "left", width: "20%" }}>
             {/* <Icon name={this.props.template.page.icon} color={color} /> */}
             {title}
@@ -596,21 +598,22 @@ class Component extends PureComponent {
             <MyMessage error content={this.state.message} />
           )}
         </div>
-        <Table
-          celled
-          striped
-          color={color}
-          fixed
-          stackable
-          selectable
-          singleLine={this.state.singleLine}
-        >
-          <this.TableHeader />
-          <Table.Body>
-            {this.state.addMode && <this.TableForm />}
-            <this.TableRows data={data} />
-          </Table.Body>
-        </Table>
+        <div className="layout-container-body">
+          <Table
+            celled
+            striped
+            fixed
+            stackable
+            selectable
+            singleLine={this.state.singleLine}
+          >
+            <this.TableHeader />
+            <Table.Body>
+              {this.state.addMode && <this.TableForm />}
+              <this.TableRows data={data} />
+            </Table.Body>
+          </Table>
+        </div>
       </div>
     );
   };
@@ -620,7 +623,7 @@ class Component extends PureComponent {
     const url = this.props.template.url.get;
     return (
       <Login>
-        <Layout>
+        <Layout showLeftMenu={true}>
           <LoadingStoreData cid={cid} uid={uid} url={url}>
             <this.Content />
           </LoadingStoreData>

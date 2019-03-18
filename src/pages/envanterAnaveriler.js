@@ -3,7 +3,7 @@ import Framework from "../components/frameworkEnvanter";
 import { config } from "../config";
 
 const template = {
-  page: { title: "Ana Veriler", color: "orange" },
+  page: { title: "Ana Veriler", color: "blue" },
   url: {
     get: config.URL_ENVANTER + "/anaveriler/get",
     commit: config.URL_ENVANTER + "/anaveriler"
@@ -39,13 +39,43 @@ const template = {
       searchable: true,
       field: "profil"
     }, //field header arama içindir..
-    { title: "KV", width: "8%" },
-    { title: "İŞL.AMAÇLARI", width: "8%" },
-    { title: "DAYANAKLAR", width: "8%" },
-    { title: "KANALLAR", width: "8%" },
-    { title: "TEDBİRLER", width: "8%" },
-    { title: "SİSTEMLER", width: "8%" },
-    { title: "ORTAMLAR", width: "8%" },
+    { title: "KV", width: "5%", searchable: true, field: "kv_data" },
+    {
+      title: "İŞL.AMAÇLARI",
+      width: "5%",
+      searchable: true,
+      field: "isleme_amaclari_data"
+    },
+    {
+      title: "DAYANAKLAR",
+      width: "5%",
+      searchable: true,
+      field: "dayanaklar_data"
+    },
+    {
+      title: "KANALLAR",
+      width: "5%",
+      searchable: true,
+      field: "kanallar_data"
+    },
+    {
+      title: "TEDBİRLER",
+      width: "5%",
+      searchable: true,
+      field: "tedbirler_data"
+    },
+    {
+      title: "SİSTEMLER",
+      width: "5%",
+      searchable: true,
+      field: "sistemler_data"
+    },
+    {
+      title: "ORTAMLAR",
+      width: "5%",
+      searchable: true,
+      field: "ortamlar_data"
+    },
     { title: "SÜRE", width: "5%" }
   ],
 
@@ -84,8 +114,8 @@ const template = {
   ]
 };
 
-const Component = () => {
+const Anaveriler = () => {
   return <Framework template={template} />;
 };
 
-export default Component;
+export default Anaveriler;

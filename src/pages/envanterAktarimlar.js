@@ -3,7 +3,7 @@ import Framework from "../components/frameworkEnvanter";
 import { config } from "../config";
 
 const template = {
-  page: { title: "Aktarımlar", color: "orange" },
+  page: { title: "Aktarımlar", color: "blue" },
   url: {
     get: config.URL_ENVANTER + "/aktarimlar/get",
     commit: config.URL_ENVANTER + "/aktarimlar"
@@ -13,35 +13,60 @@ const template = {
     { title: "No", width: "4%" },
     {
       title: "BİRİM",
-      width: "10%",
+      width: "7%",
       required: true,
       searchable: true,
       field: "birim"
     },
     {
       title: "BÖLÜM",
-      width: "8%",
+      width: "7%",
       required: true,
       searchable: true,
       field: "bolum"
     },
     {
       title: "SÜREÇ",
-      width: "8%",
+      width: "7%",
       required: true,
       searchable: true,
       field: "surec"
     },
-    { title: "KURUMLAR", width: "8%" },
-    { title: "KV", width: "8%" },
-    { title: "AKTARIM AMACI", width: "8%" },
-    { title: "DAYANAKLAR", width: "8%" },
-    { title: "PROFILLER", width: "8%" },
-    { title: "AKTARIM ŞEKLİ", width: "8%" },
-    { title: "ÜLKELER", width: "8%" },
-    { title: "YURTDIŞI", width: "3%" },
-    { title: "AÇIKLAMA", width: "8%" },
-    { title: "BİLGİYİ VEREN", width: "5%" }
+    {
+      title: "KURUMLAR",
+      width: "5%",
+      searchable: true,
+      field: "kurumlar_data"
+    },
+    { title: "KV", width: "5%", searchable: true, field: "kv_data" },
+    {
+      title: "AKTARIM AMACI",
+      width: "5%",
+      searchable: true,
+      field: "paylasim_amaclari_data"
+    },
+    {
+      title: "DAYANAKLAR",
+      width: "5%",
+      searchable: true,
+      field: "dayanaklar_data"
+    },
+    {
+      title: "PROFILLER",
+      width: "5%",
+      searchable: true,
+      field: "profiller_data"
+    },
+    {
+      title: "AKTARIM ŞEKLİ",
+      width: "5%",
+      searchable: true,
+      field: "paylasim_sekilleri_data"
+    },
+    { title: "ÜLKELER", width: "5%", searchable: true, field: "ulkeler_data" },
+    // { title: "YURTDIŞI", width: "3%" },
+    { title: "AÇIKLAMA", width: "15%" },
+    { title: "DPO NOTU", width: "25%" }
   ],
 
   fields: [
@@ -56,7 +81,7 @@ const template = {
     { field: "profiller_data", type: "json", component: "dropdown" },
     { field: "paylasim_sekilleri_data", type: "json", component: "dropdown" },
     { field: "ulkeler_data", type: "json", component: "dropdown" },
-    { field: "yurtdisi" }, // giriş yaparken sıralama bozulmasın diye konu mankani
+    // { field: "yurtdisi" }, // giriş yaparken sıralama bozulmasın diye konu mankani
     { field: "aciklama", type: "json", component: "input" },
     { field: "bilgiveren", type: "json", component: "input" }
   ],
@@ -74,15 +99,15 @@ const template = {
     { field: "dayanaklar_data", type: "json", color: "green" },
     { field: "profiller_data", type: "json", color: "olive" },
     { field: "paylasim_sekilleri_data", type: "json", color: "yellow" },
-    { field: "ulkeler_data", type: "json", color: "yellow" },
-    { field: "ulkeler_data", type: "bool" }, //yurtdisi için ulkeler_data alanı dolu mu diye bakmak için
+    { field: "ulkeler_data", type: "json", color: "yellow", flag: true },
+    // // { field: "ulkeler_data", type: "bool" }, //yurtdisi için ulkeler_data alanı dolu mu diye bakmak için
     { field: "aciklama", type: "text" },
     { field: "bilgiveren", type: "text" }
   ]
 };
 
-const Component = () => {
+const Aktarimlar = () => {
   return <Framework template={template} />;
 };
 
-export default Component;
+export default Aktarimlar;

@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { Segment, Grid } from "semantic-ui-react";
 
-import {MyLoader} from "../../components/mycomponents"
+import {MyLoader} from "../../components/gfox"
 
 // import ChartMaxKV from './pieKV'
 // import ChartTalepler from './lineTalepler'

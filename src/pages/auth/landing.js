@@ -7,7 +7,7 @@ export default class Component extends PureComponent {
   render() {
     return (
       <Login>
-        <Layout>
+        <Layout showLeftMenu={false}>
           <span>Lütfen firma seçiminizi yapınız...</span>
         </Layout>
       </Login>

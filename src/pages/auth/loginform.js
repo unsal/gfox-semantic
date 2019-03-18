@@ -9,7 +9,7 @@ import {
   updateStoreCIDOptions
 } from "../../reducer/actions";
 import { store } from "../../reducer";
-import { spinnerIcon } from "../../components/mycomponents";
+import { spinnerIcon } from "../../components/gfox";
 import LandingPage from "./landing";
 import "./loginform.css";
 
