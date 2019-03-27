@@ -7,7 +7,7 @@ import { updateStoreActiveMenu } from "../../reducer/actions";
 import { store } from "../../reducer";
 import { connect } from "react-redux";
 
-import "./index.css";
+import "./layout.css";
 
 class LayoutLeft extends PureComponent {
   state = { activeMenu: this.props.activeMenu && this.props.activeMenu };
@@ -67,8 +67,7 @@ class LayoutLeft extends PureComponent {
     const ShowLeftMenu = () =>
       regularUser ? (
         <div className="layout-leftmenu">
-          {/* <Menu inverted pointing vertical className="menu-envanter"> */}
-          <Menu icon inverted pointing vertical className="menu-envanter">
+          <Menu icon inverted pointing vertical>
             <MenuEnvanter />
           </Menu>
         </div>

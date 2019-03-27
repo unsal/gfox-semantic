@@ -173,6 +173,7 @@ export const getOptions = async (url, cid, type) => {
   } catch (err) {
     console.log("myComponents->getOptions() hatası..", err);
     options = [];
+
   }
 
   // if (url.indexOf('/options/sureler') >-1) { console.log('Options:', options) }

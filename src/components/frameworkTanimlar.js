@@ -28,7 +28,7 @@ import {
   MyMessage
 } from "./gfox";
 
-import "../pages/layout/index.css";
+import "../pages/layout/layout.css";
 
 class Component extends PureComponent {
   state = {
@@ -298,7 +298,10 @@ class Component extends PureComponent {
             type === "bool" && (
               <Table.Cell key={index} style={this.styleView}>
                 <DataTitle row={row}>
-                  {row[field] && <Icon name="flag checkered" color="green" />}
+                  <Icon
+                    name="flag checkered"
+                    color={row[field] ? "green" : "red"}
+                  />
                 </DataTitle>
               </Table.Cell>
             )

@@ -34,20 +34,20 @@ const template = {
     },
     {
       title: "KURUMLAR",
-      width: "5%",
+      width: "6%",
       searchable: true,
       field: "kurumlar_data"
     },
     { title: "KV", width: "5%", searchable: true, field: "kv_data" },
     {
       title: "AKTARIM AMACI",
-      width: "5%",
+      width: "7%",
       searchable: true,
       field: "paylasim_amaclari_data"
     },
     {
       title: "DAYANAKLAR",
-      width: "5%",
+      width: "8%",
       searchable: true,
       field: "dayanaklar_data"
     },
@@ -59,14 +59,14 @@ const template = {
     },
     {
       title: "AKTARIM ŞEKLİ",
-      width: "5%",
+      width: "7%",
       searchable: true,
       field: "paylasim_sekilleri_data"
     },
     { title: "ÜLKELER", width: "5%", searchable: true, field: "ulkeler_data" },
     // { title: "YURTDIŞI", width: "3%" },
-    { title: "AÇIKLAMA", width: "15%" },
-    { title: "DPO NOTU", width: "25%" }
+    { title: "AÇIKLAMA", width: "12%" },
+    { title: "DPO NOTU", width: "20%" }
   ],
 
   fields: [

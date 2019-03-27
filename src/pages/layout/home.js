@@ -3,7 +3,7 @@ import React, { PureComponent } from "react";
 import LayoutHeader from "./layoutHeader";
 import Login from "../auth/login";
 import HomeMenu from "./homeMenu";
-import "./index.css";
+import "./layout.css";
 
 // Store Reducer
 import { updateStoreActiveMenu } from "../../reducer/actions";

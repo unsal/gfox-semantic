@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
-import ReactEcharts from "echarts-for-react";
+import Chart from 'react-google-charts';
+import { Header, Segment } from "semantic-ui-react";
 
 import axios from "axios";
 
@@ -10,34 +11,6 @@ import { MyLoader } from "../../components/gfox";
 
 class Component extends PureComponent {
   state = {};
-
-  getOption = (text, name) => ({
-    title: {
-      text,
-      subtext: "ILK 20",
-      x: "center"
-    },
-    tooltip: {
-      trigger: "item",
-      formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    series: [
-      {
-        name,
-        type: "pie",
-        radius: "75%",
-        center: ["50%", "60%"],
-        data: this.state.data,
-        itemStyle: {
-          emphasis: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: "rgba(0, 0, 0, 0.5)"
-          }
-        }
-      }
-    ]
-  });
 
   async componentDidMount() {
     const { cid, name } = this.props;
@@ -54,16 +27,26 @@ class Component extends PureComponent {
     }
   }
 
+  PieGoogle = () => <Chart
+  chartType="PieChart"
+  loader={<div>Yükleniyor...</div>}
+  data={this.state.data}
+  options={{
+    is3D: true,
+    width: "900px",
+    height: "500px",
+    slices: {  0: {offset: 0.2}}
+  }}
+  // rootProps={{ 'data-testid': '1' }}
+/>
+
   render() {
-    const { title, name } = this.props;
-    return this.state.data ? (
-      <ReactEcharts
-        style={{ height: "500px" }}
-        option={this.getOption(title, name)}
-      />
-    ) : (
-      <MyLoader />
-    );
+    return (
+    <Segment basic>
+    <Header>{this.props.title}</Header>
+    {this.state.data ? <this.PieGoogle /> : <MyLoader />}
+    </Segment>
+    )
   }
 }
 

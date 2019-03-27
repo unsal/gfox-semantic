@@ -10,6 +10,7 @@ export const GFOX_TOKEN = "GFOX_TOKEN";
 export const GFOX_URL = "GFOX_URL";
 export const GFOX_SEARCH_MODE = "GFOX_SEARCH_MODE";
 export const GFOX_ACTIVE_MENU = "GFOX_ACTIVE_MENU";
+export const GFOX_BIRIM = "GFOX_BIRIM"; // kullanıcı birimini sorgularda pass etmek için.
 
 export const updateStoreData = data => {
   return { type: GFOX_STORE_DATA, data };
@@ -63,4 +64,9 @@ export const updateStoreSearchMode = searchMode => {
 // Left Menu Name seçildiğinde store'da ismini kaydeder -böylece actif menu sçeilmiş olur-
 export const updateStoreActiveMenu = activeMenu => {
   return { type: GFOX_ACTIVE_MENU, activeMenu }; //data: [{cid:1, uid:'admin@grcfox.com}]
+};
+
+// Kullanıcı birimini sorgularda pass etmek için.
+export const updateStoreBirim = birim => {
+  return { type: GFOX_BIRIM, birim };
 };

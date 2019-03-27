@@ -11,7 +11,8 @@ import {
   GFOX_UID,
   GFOX_TOKEN,
   GFOX_URL,
-  GFOX_ACTIVE_MENU
+  GFOX_ACTIVE_MENU,
+  GFOX_BIRIM
 } from "./actions";
 
 const initialState = { data: [], mode: "DEFAULT", error: false };
@@ -42,6 +43,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, searchMode: action.searchMode };
     case GFOX_ACTIVE_MENU:
       return { ...state, activeMenu: action.activeMenu };
+    case GFOX_BIRIM:
+      return { ...state, birim: action.birim };
     default:
       return state;
   }

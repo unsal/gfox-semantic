@@ -28,7 +28,7 @@ import {
   getOptions
 } from "./gfox";
 
-import "../pages/layout/index.css";
+import "../pages/layout/layout.css";
 
 class Component extends PureComponent {
   state = {
@@ -205,7 +205,7 @@ class Component extends PureComponent {
                 onClick={enableSearchMode}
               >
                 {" "}
-                {required ? <Required>{title}</Required> : title}
+                {required ? <Required>{title}</Required> :<span className="table-header">{title}</span> }
               </Table.HeaderCell>
             )
           )}
@@ -227,9 +227,9 @@ class Component extends PureComponent {
   DataTitle = props => {
     const color = props.row.pidm === this.state.maxPidm ? "green" : "black";
     return (
-      <Header as="h5" onClick={() => this.handleEdit(props.row)} color={color}>
+      <span onClick={() => this.handleEdit(props.row)} color={color} className="table-label">
         {props.children}
-      </Header>
+      </span>
     );
   };
 
@@ -724,6 +724,7 @@ class Component extends PureComponent {
         </div>
         <div className="layout-container-body">
           <Table
+            compact
             celled
             fixed
             stackable

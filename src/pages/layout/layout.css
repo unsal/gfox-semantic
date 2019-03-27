@@ -1,6 +1,6 @@
 :root {
   --top-menu-height: 70px;
-  --left-menu-width: 70px;
+  --left-menu-width: 57px !important;
   --container-width: 1550px;
   --container-padding-left: 30px;
   --container-margin-top: var(--top-menu-height);
@@ -57,7 +57,21 @@
 .layout-logo {
   width: var(--left-menu-width);
   float: left;
+  padding: 0px !important;
+  margin: 0px !important;
 }
+
+.logo {
+  width: 45px !important;
+  height: 45px !important;
+  margin: auto;
+}
+
+/* .logo-title {
+  float: left;
+  padding-left: 10px;
+  color: #fff;
+} */
 
 .flex-row {
   display: flex;
@@ -76,10 +90,17 @@
   float: "left";
 }
 
-.menu-envanter {
-  width: var(--left-menu-width) !important;
+
+.table-header {
+  vertical-align: TOP;
+  background-color: #f0f0f0;
+  font-size: 13px;
+  font-family: "Arial Narrow";
+  text-transform: uppercase !important;
 }
 
-.menu-envanter-item {
-  text-transform: capitalize;
+.table-label {
+  font-size:14px !important;
+  text-transform: lowercase !important;
+  font-family: "Arial Narrow";
 }

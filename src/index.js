@@ -40,7 +40,7 @@ import Ulkeler from "./pages/tanimlarUlkeler";
 import Sistemler from "./pages/tanimlarSistemler";
 import Birimler from "./pages/tanimlarBirimler";
 import Sorumlular from "./pages/tanimlarSorumlular";
-import Analiz from "./pages/chart";
+import Analiz from "./pages/analiz/charts";
 
 import LoginForm from "./pages/auth/loginform";
 import Home from "./pages/layout/home";

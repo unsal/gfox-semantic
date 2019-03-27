@@ -6,7 +6,8 @@ import { connect } from "react-redux";
 import {
   updateStoreToken,
   updateStoreUID,
-  updateStoreCIDOptions
+  updateStoreCIDOptions,
+  updateStoreBirim
 } from "../../reducer/actions";
 import { store } from "../../reducer";
 import { spinnerIcon } from "../../components/gfox";
@@ -65,15 +66,21 @@ class LoginForm extends PureComponent {
 
     try {
       let token = null;
+      let birim = "";
       const row = await axios.post(config.URL_LOGIN, params, config.axios);
       const data = row.data ? row.data : [];
-      await data.map(item => (token = item.token));
+      await data.map(
+        item => (token = item.token)
+        // birim = record.birim;
+        // return null;
+      );
 
       if (token) {
         await store.dispatch(updateStoreToken(token));
         await setLocalToken(token);
 
         await store.dispatch(updateStoreUID(uid));
+        await store.dispatch(updateStoreBirim(birim));
 
         //Headerda, CID optionsı yüklemek için...
         // Her sayfada Layout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi

@@ -4,7 +4,7 @@
   --container-width: 1550px;
   --container-left: calc(var(--chart-menu-width) + 20px);
   --container-top: 40px;
-  --chart-menu-width: 180px;
+  --chart-menu-width: 270px;
 }
 
 .chart-container {
@@ -23,7 +23,6 @@
   padding-right: 30px;
   padding-top: var(--container-top);
   height: 100%;
-  background-color: #f5f5f5;
 }
 
 .chart-canvas {

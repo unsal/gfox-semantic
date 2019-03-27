@@ -1,10 +1,11 @@
 import React, { PureComponent } from "react";
 import { Container, Image, Menu, Dropdown } from "semantic-ui-react";
-import logo from "../../assets/img/logo2.png";
 import { Link } from "react-router-dom";
 import SelectCID from "./selectcid";
 import { ExportButton } from "../../components/export";
 import { connect } from "react-redux";
+
+import logo from "../../assets/img/logo-fox.png";
 
 class LayoutHeader extends PureComponent {
   state = {
@@ -17,11 +18,7 @@ class LayoutHeader extends PureComponent {
 
   isRegularUser = () => (this.props.cid ? this.props.cid !== 1 : false);
 
-  MenuLogo = () => (
-    <Menu.Item header as={Link} to="/home" className="layout-logo">
-      <Image size="mini" src={logo} style={{ marginRight: "1.5em" }} />
-    </Menu.Item>
-  );
+
 
   MenuCID = () => {
     const { cid } = this.props;
@@ -92,6 +89,15 @@ class LayoutHeader extends PureComponent {
     );
   };
 
+
+  Logo = () => (
+    <Menu.Item header as={Link} to="/home" className="layout-logo">
+      <Image src={logo} className="logo" />
+    </Menu.Item>
+  );
+
+  // LogoTitle = () => <h1 className="logo-title">Gfox</h1>
+
   render() {
     const isRegularUser = this.isRegularUser();
     return (
@@ -105,7 +111,8 @@ class LayoutHeader extends PureComponent {
         }
       >
         <Container className="layout-topmenu">
-          <this.MenuLogo />
+          <this.Logo />
+          {/* <this.LogoTitle /> */}
           <this.MenuCID />
           {isRegularUser && <this.MenuExport />}
           {this.props.cid && <this.MenuUser />}

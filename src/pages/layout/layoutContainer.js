@@ -1,4 +1,4 @@
-import "./index.css";
+import "./layout.css";
 
 import HomeMenu from "./homeMenu";
 // import KVKKFooter from './footer'

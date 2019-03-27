@@ -13,12 +13,10 @@ import ImgTalepler from "../../assets/img/menutalepler.png";
 class HomeMenu extends PureComponent {
   GridColCard = ({ img, title, route }) => (
     <Grid.Column>
-      <Card>
+      <Card as={Link} to={route}>
         <Image src={img} />
         <Card.Content>
-          <Card.Header as={Link} to={route} textAlign="center">
-            {title}
-          </Card.Header>
+          <Card.Header textAlign="center">{title}</Card.Header>
         </Card.Content>
       </Card>
     </Grid.Column>
@@ -29,7 +27,7 @@ class HomeMenu extends PureComponent {
     return this.props.cid !== 1 ? (
       <div className="layout-homemenu">
         <Grid>
-          <Grid.Row columns={4}>
+          <Grid.Row columns={4} >
             <GridColCard
               img={ImgAnaveriler}
               title="ANAVERİLER"

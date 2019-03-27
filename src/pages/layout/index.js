@@ -1,6 +1,6 @@
 import LayoutHeader from "./layoutHeader";
 import LayoutLeft from "./layoutLeft";
-import "./index.css";
+import "./layout.css";
 
 import React, { PureComponent } from "react";
 import LayoutContainer from "./layoutContainer";

@@ -1,7 +1,8 @@
 // API URL Settings
 
 const urlRoot = window.location.origin.toString();
-// export const apiHost = "http://bt.ozyegin.edu.tr:8000/api"; //server ubuntu > /etc/nginx/config.d>virtual.conf> 8000 içerde 8001'e yönlendiriyor.. 8000 olarak karşılıyor, değiştirme!!!
+//server ubuntu > /etc/nginx/config.d>virtual.conf> 8000 içerde 8001'e yönlendiriyor.. 8000 olarak karşılıyor, değiştirme!!!
+// export const apiHost = "http://bt.ozyegin.edu.tr:8000/api";
 export const apiHost = "http://0.0.0.0:8001"; // local
 
 // Python API configs

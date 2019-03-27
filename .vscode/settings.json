@@ -1,41 +1,45 @@
 {
- "favorites.sortDirection": "ASC",
- "favorites.groupsFirst": true,
- "favorites.root": [
-  {
-   "type": "Directory",
-   "name": "/Users/unsal/github/gfox/gfox-semantic/src/config",
-   "parent_id": null,
-   "workspacePath": "src/config",
-   "id": "ckxIwiWMvf6a4yYN"
-  },
-  {
-   "type": "Directory",
-   "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/components/myComponents",
-   "parent_id": null,
-   "workspacePath": "src/kvkk/components/myComponents",
-   "id": "5ndVpRoFIhKDbrNx"
-  },
-  {
-   "type": "File",
-   "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/kvkk.css",
-   "parent_id": null,
-   "workspacePath": "src/kvkk/kvkk.css",
-   "id": "y4CBOs7qEn1xKfP8"
-  },
-  {
-   "type": "File",
-   "name": "/Users/unsal/github/gfox/gfox-semantic/src/index.js",
-   "parent_id": null,
-   "workspacePath": "src/index.js",
-   "id": "Vte5CDA7bjydSr1f"
-  },
-  {
-   "type": "Directory",
-   "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/layout",
-   "parent_id": null,
-   "workspacePath": "src/kvkk/layout",
-   "id": "JObLyWoctZHq4QBl"
-  }
- ]
+  "favorites.sortDirection": "ASC",
+  "favorites.groupsFirst": true,
+  "favorites.root": [{
+      "type": "Directory",
+      "name": "/Users/unsal/github/gfox/gfox-semantic/src/config",
+      "parent_id": null,
+      "workspacePath": "src/config",
+      "id": "ckxIwiWMvf6a4yYN"
+    },
+    {
+      "type": "Directory",
+      "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/components/myComponents",
+      "parent_id": null,
+      "workspacePath": "src/kvkk/components/myComponents",
+      "id": "5ndVpRoFIhKDbrNx"
+    },
+    {
+      "type": "File",
+      "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/kvkk.css",
+      "parent_id": null,
+      "workspacePath": "src/kvkk/kvkk.css",
+      "id": "y4CBOs7qEn1xKfP8"
+    },
+    {
+      "type": "File",
+      "name": "/Users/unsal/github/gfox/gfox-semantic/src/index.js",
+      "parent_id": null,
+      "workspacePath": "src/index.js",
+      "id": "Vte5CDA7bjydSr1f"
+    },
+    {
+      "type": "Directory",
+      "name": "/Users/unsal/github/gfox/gfox-semantic/src/kvkk/layout",
+      "parent_id": null,
+      "workspacePath": "src/kvkk/layout",
+      "id": "JObLyWoctZHq4QBl"
+    }
+  ],
+  "python.linting.enabled": false,
+  "materialTheme.accent": "Teal",
+  "material-icon-theme.activeIconPack": "react",
+  "workbench.colorTheme": "dark-plus-syntax",
+  "workbench.iconTheme": "vscode-icons",
 }

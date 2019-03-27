@@ -18,7 +18,7 @@ import {
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ImageBackground from "./assets/img/bground.jpg" //1125 x 630px
-import Logo from './assets/img/logo2.png'
+import Logo from './assets/img/logo-fox.png'
 
 
 // const Logo = () => <Image src={logo} size='small' />
@@ -45,14 +45,12 @@ const HomepageHeading = ({ mobile }) => (
             color:'#fff',
             fontSize: mobile ? '2em' : '4em',
             fontWeight: 'normal',
-            // marginBottom: 0,
-            // marginTop: mobile ? '1.5em' : '3em',
           }}
         />
      </div>
     <Header
       as='h2'
-      content='KVKK İşletim Sistemi'
+      content='KV İşletim Sistemi'
       // inverted
       style={{
         color:'#fff',
@@ -231,7 +229,7 @@ const Homepage = () => (
         <Grid.Row>
           <Grid.Column width={16}>
             <Header as='h3' style={{ fontSize: '2em' }}>
-             Neden GFox?
+             Neden Gfox?
             </Header>
             <p style={{ fontSize: '1.33em' }}>
             6698 Sayılı Kişisel Verilerin Korunması Kanunu (KVKK) ile kişisel verilerin işlenmesinde
@@ -243,13 +241,13 @@ const Homepage = () => (
             Türkiye'de ilk ve tek KVKK işletim sistemi olan GFox'u öneriyoruz.
             </p>
             <Header as='h3' style={{ fontSize: '2em' }}>
-            GDPR ile uyumlu musunuz?
+            KVKK ile uyumlu musunuz?
             </Header>
             <p style={{ fontSize: '1.33em' }}>
-            GDPR (Genel Veri Koruma Yönetmeliği), 25 Mayıs 2018 tarihinde yürürlüğe girecek olan Avrupa
+            KVKK (Genel Veri Koruma Yönetmeliği), 25 Mayıs 2018 tarihinde yürürlüğe girecek olan Avrupa
             Birliği merkezli veri koruma düzenlemesidir. AB vatandaşlarının kişisel verilerini işleyen tüm kuruluşları
             kapsamaktadır. Bu, AB ülkeleri dışında faaliyet gösteren şirketlerin de etkileneceği anlamına
-            gelmektedir. GDPR, şu ana dek hazırlanmış en katı ve kapsamlı veri koruma düzenlemesidir.
+            gelmektedir. KVKK, şu ana dek hazırlanmış en katı ve kapsamlı veri koruma düzenlemesidir.
             </p>
           </Grid.Column>
           <Grid.Column floated='right' width={6}>
@@ -264,7 +262,7 @@ const Homepage = () => (
         <Grid.Row textAlign='center'>
           <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
             <Header as='h3' style={{ fontSize: '2em' }}>
-              "GDPR kapsamındaki en kritik değişiklikler neler?"
+              "KVKK kapsamındaki en kritik değişiklikler neler?"
             </Header>
             <List bulleted style={{ fontSize: '1.33em', textAlign:'left', paddingLeft:'70px' }}>
               <List.Item >Yıllık cironun %4'ü kadar, 20 milyon Euro'ya varan yüksek para cezaları.</List.Item>
@@ -295,7 +293,7 @@ const Homepage = () => (
     <Segment style={{ padding: '8em 0em' }} vertical>
       <Container text>
         <Header as='h3' style={{ fontSize: '2em' }}>
-          GDPR uyumluluğu için verilerinizi nasıl güvende tutabilirsiniz?
+          KVKK uyumluluğu için verilerinizi nasıl güvende tutabilirsiniz?
         </Header>
         <List bulleted style={{ fontSize: '1.33em', textAlign:'left', paddingLeft:'70px' }}>
               <List.Item ><strong>1) Veri Denetimi: </strong>Şirketinizin sahip olduğu tüm verilerin nasıl kullanıldığını bilmek zorundasınız. Hassas içeriğe sahip
@@ -336,12 +334,7 @@ const Homepage = () => (
             </Grid.Column>
             <Grid.Column width={3}>
               <Header inverted as='h4' content='Hizmetlerimiz' />
-              <List link inverted>
-                <List.Item as='a'>Gfox Uygulama</List.Item>
-                <List.Item as='a'>KVKK Danışmanlık</List.Item>
-                <List.Item as='a'>XRM Danışmanlık</List.Item>
-                <List.Item as='a'>BPM Danışmanlık</List.Item>
-              </List>
+
             </Grid.Column>
             <Grid.Column width={7}>
               <Header as='h4' inverted>
