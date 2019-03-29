@@ -5,7 +5,7 @@ import HomeMenu from "./homeMenu";
 
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import { updateStoreCIDChanged } from "../../reducer/actions";
+import { updateStoreAuth } from "../../reducer/actions";
 import { store } from "../../reducer";
 
 // Header ve Footer şablonu için kullanılır..
@@ -15,18 +15,21 @@ class LayoutContainer extends PureComponent {
   componentDidMount() {
     // CID değiştiirtldiğinde Redux->CIDChanged=true yapılıyor.. her layout yüklemesinde başlangıçta false olarak set etmek gerekiyor
     // ki süreli true olarak kalmasın
-    store.dispatch(updateStoreCIDChanged(false));
+    const cidChanged = false;
+    const cids = {...this.props.auth.cids, cidChanged}
+    const auth = {...this.props.auth, cids}
+    store.dispatch(updateStoreAuth(auth));
     this.setState({ mounted: true });
   }
 
   render() {
-    const { cid, cidChanged, children } = this.props;
+    const { children } = this.props;
+    const { cid, cidChanged } = this.props.auth.cids;
     return cid && cidChanged ? <HomeMenu /> : children;
   }
 }
 
 const mapStateToProps = state => ({
-  cid: state.cid,
-  cidChanged: state.cidChanged
+  auth: state.auth
 });
 export default connect(mapStateToProps)(LayoutContainer);

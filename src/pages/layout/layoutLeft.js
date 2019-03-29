@@ -60,9 +60,10 @@ class LayoutLeft extends PureComponent {
   };
 
   render() {
+    const { cid, cidChanged } = this.props.auth.cids;
     const { MenuEnvanter } = this;
-    const regularUser = this.props.cid !== 1;
-    const onSelectedNewCid = this.props.cidChanged;
+    const regularUser = cid !== 1;
+    const onSelectedNewCid = cidChanged;
     const showBlankContainer = null;
     const ShowLeftMenu = () =>
       regularUser ? (
@@ -81,9 +82,7 @@ class LayoutLeft extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  cid: state.cid,
-  cidChanged: state.cidChanged,
-  activeMenu: state.activeMenu,
-  cidName: state.cidName
+  auth: state.auth,
+  activeMenu: state.activeMenu
 });
 export default connect(mapStateToProps)(LayoutLeft);

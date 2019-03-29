@@ -5,7 +5,6 @@ import _ from "lodash";
 import {
   updateStoreData,
   updateStoreInitialData,
-  updateErrorStatus,
   updateStoreURL
 } from "../reducer/actions";
 import { config } from "../config";
@@ -143,15 +142,6 @@ export const refreshStoreData = async (store, cid, uid, url) => {
     await store.dispatch(updateStoreURL(url));
   } catch (err) {
     console.log("gfox>refreshstoredata() hatası..", err);
-  }
-};
-
-//Hata durumunu store'a atar..
-export const updateStoreError = (errorStatus, store) => {
-  try {
-    store.dispatch(updateErrorStatus(errorStatus));
-  } catch (err) {
-    console.log(err);
   }
 };
 

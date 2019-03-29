@@ -13,7 +13,8 @@ class Component extends PureComponent {
   state = {};
 
   async componentDidMount() {
-    const { cid, name } = this.props;
+    const { cid } = this.props.auth.cids
+    const { name } = this.props;
     const type = "pie";
     const url = config.URL_CHART;
     const params = { cid, name, type };
@@ -50,5 +51,5 @@ class Component extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({ cid: state.cid });
+const mapStateToProps = state => ({ auth: state.auth });
 export default connect(mapStateToProps)(Component);

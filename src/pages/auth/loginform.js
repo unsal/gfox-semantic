@@ -2,11 +2,7 @@ import React, { PureComponent } from "react";
 import { Button, Form, Grid, Header, Segment, Icon } from "semantic-ui-react";
 import axios from "axios";
 import { config } from "../../config";
-import {
-  updateStoreToken,
-  updateStoreCIDOptions,
-  updateStoreAuth
-} from "../../reducer/actions";
+import { updateStoreAuth } from "../../reducer/actions";
 import { store } from "../../reducer";
 import { spinnerIcon } from "../../components/gfox";
 import LandingPage from "./landing";
@@ -63,6 +59,8 @@ export default class LoginForm extends PureComponent {
       let auth = {}
       const row = await axios.post(config.URL_AUTH, params, config.axios);
       const data = row.data ? row.data : [];
+      let cidOptions = await this.createCIDOptions(uid);
+
       await data.map(
         item => (
           auth = {
@@ -70,21 +68,13 @@ export default class LoginForm extends PureComponent {
                   "token": item.token,
                   "dpo": item.dpo,
                   "admin": item.admin,
-                  "cid": null
+                  "cids": { cid: null, cidName: null, cidChanged: false, cidOptions}
                 } )
       );
 
       if (auth.token) {
-        await store.dispatch(updateStoreToken(auth.token));
-        await setLocalToken(auth.token);
-
+        await setLocalToken(auth.token); //data: [{cid:1, uid:'admin@grcfox.com}]
         await store.dispatch(updateStoreAuth(auth));
-
-        //Headerda, CID optionsı yüklemek için...
-        // Her sayfada Layout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi
-        let cidOptions = await this.createCIDOptions(uid);
-        // cidOptions = await JSON.stringify(cidOptions)
-        await store.dispatch(updateStoreCIDOptions(cidOptions));
 
         this.setState({ authenticated: true });
       } else {
@@ -105,7 +95,6 @@ export default class LoginForm extends PureComponent {
   };
 
   logout() {
-    store.dispatch(updateStoreToken(null));
     store.dispatch(updateStoreAuth(null));
     removeLocalToken();
     this.setState({ submitted: false });

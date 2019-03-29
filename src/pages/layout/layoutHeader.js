@@ -10,7 +10,10 @@ import logo from "../../assets/img/logo-fox.png";
 class LayoutHeader extends PureComponent {
   state = {};
 
-  isRegularUser = () => (this.props.cid ? this.props.cid !== 1 : false);
+  isRegularUser = () => {
+    const { cid } = this.props.auth.cids
+    return cid ? cid !== 1 : false
+  };
 
   menuColor = () => {
     const { auth } = this.props;
@@ -32,7 +35,7 @@ class LayoutHeader extends PureComponent {
   MenuExport = () => (
     <Menu.Item header>
       {/* <Icon name="save outline" size='large' /> */}
-      <ExportButton cid={this.props.cid} />
+      <ExportButton cid={this.props.auth.cids.cid} />
     </Menu.Item>
   );
 
@@ -102,6 +105,7 @@ class LayoutHeader extends PureComponent {
   render() {
     const isRegularUser = this.isRegularUser();
     const color = this.menuColor()
+    const { cid } = this.props.auth.cids
     return (
       <Menu
         inverted
@@ -112,7 +116,7 @@ class LayoutHeader extends PureComponent {
           <this.Logo />
           <this.MenuCID />
           {isRegularUser && <this.MenuExport />}
-          {this.props.cid && <this.MenuUser />}
+          {cid && <this.MenuUser />}
         </Container>
       </Menu>
     );
@@ -120,9 +124,6 @@ class LayoutHeader extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  cid: state.cid,
-  cidOptions: state.cidOptions,
-  cidChanged: state.cidChanged,
   auth: state.auth
 });
 export default connect(mapStateToProps)(LayoutHeader);

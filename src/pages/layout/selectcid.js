@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Icon, Dropdown, Button } from 'semantic-ui-react'
-import { updateStoreCID, updateStoreCIDName, updateStoreCIDChanged, updateStoreAuth } from "../../reducer/actions";
+import { updateStoreAuth } from "../../reducer/actions";
 import { store } from '../../reducer';
 import { connect } from 'react-redux';
 
@@ -24,17 +24,16 @@ class Component extends PureComponent {
 
   handleChange = async (e, data) => {
     e.preventDefault()
-    const cidChanged = true
     const cid = await data.value
     const cidName = await data.options.find(key => key.value === data.value).text
-    const auth = {...this.props.auth, cid}
+    const cidChanged = true
+    const { cidOptions } = this.props.auth.cids;
 
-    await store.dispatch(updateStoreCID(cid))
-    await store.dispatch(updateStoreCIDName(cidName))
-    await store.dispatch(updateStoreCIDChanged(cidChanged))
+    const cids = { cid, cidName, cidChanged, cidOptions }
+    const auth = {...this.props.auth, cids }
     await store.dispatch(updateStoreAuth(auth))
 
-    console.log('auth: ', auth)
+    // console.log('auth: ', auth)
   }
 
   Loader = () => {
@@ -43,8 +42,10 @@ class Component extends PureComponent {
   }
 
   render() {
-    const { cidOptions, cid, color } = this.props
+    const { color } = this.props
+    const { cid, cidOptions } = this.props.auth.cids
     const { isLoading } = this.state
+
     // console.log('options: ',options)
     return isLoading ? <this.Loader /> : <Button.Group color={color}>
       <Dropdown
@@ -58,7 +59,7 @@ class Component extends PureComponent {
   }
 }
 
-const mapStateToProps = (state) => ({ cid: state.cid, cidOptions: state.cidOptions, auth: state.auth })
+const mapStateToProps = (state) => ({ auth: state.auth })
 export default connect(mapStateToProps)(Component)
 
 

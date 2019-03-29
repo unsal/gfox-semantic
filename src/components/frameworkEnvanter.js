@@ -49,7 +49,9 @@ class Component extends PureComponent {
   loadData = () => {
     try {
       // const { cid } = this.props;
-      const { uid, cid } = this.props.auth;
+      const { uid } = this.props.auth;
+      const { cid } = this.props.auth.cids
+
       const url = this.props.template.url.get;
       refreshStoreData(store, cid, uid, url);
       return true;
@@ -72,7 +74,7 @@ class Component extends PureComponent {
   concatOptions = async (field, type) => {
     try {
       const { data } = await this.props;
-      const { cid } = this.props.auth
+      const { cid } = this.props.auth.cids
       const isMultiple = type === "json";
       const id = (await isMultiple)
         ? field.substring(0, field.length - 5)
@@ -480,7 +482,8 @@ class Component extends PureComponent {
     //type = add, update
 
     const { pidm } = this.state;
-    const { uid, cid } = this.props.auth;
+    const { uid } = this.props.auth;
+    const { cid } = this.props.auth.cids
     const { fields } = this.props.template;
 
     let params = { cid, uid };

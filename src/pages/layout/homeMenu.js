@@ -24,7 +24,8 @@ class HomeMenu extends PureComponent {
 
   render() {
     const { GridColCard } = this;
-    return this.props.cid !== 1 ? (
+    const { cid } = this.props.auth.cids;
+    return cid !== 1 ? (
       <div className="layout-homemenu">
         <Grid>
           <Grid.Row columns={4} >
@@ -48,6 +49,6 @@ class HomeMenu extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  cid: state.cid
+  auth: state.auth
 });
 export default connect(mapStateToProps)(HomeMenu);

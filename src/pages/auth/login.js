@@ -8,7 +8,7 @@ class Login extends PureComponent {
   state = {};
 
   componentDidMount() {
-    const { token } = this.props;
+    const { token } = this.props.auth;
     const tokenLocal = localStorage.getItem("gfox_token");
     const authenticated = token === tokenLocal;
 
@@ -45,5 +45,5 @@ class Login extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({ token: state.token });
+const mapStateToProps = state => ({ auth: state.auth });
 export default connect(mapStateToProps)(Login);

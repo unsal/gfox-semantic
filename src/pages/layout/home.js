@@ -18,11 +18,12 @@ class Home extends PureComponent {
   }
 
   render() {
+    const { cid } = this.props.auth.cids;
     return (
       <Login>
         <div className="layout-row">
           <LayoutHeader />
-          {this.props.cid !== 1 && <HomeMenu />}
+          { cid !== 1 && <HomeMenu />}
         </div>
       </Login>
     );
@@ -30,6 +31,6 @@ class Home extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  cid: state.cid
+  auth: state.auth
 });
 export default connect(mapStateToProps)(Home);

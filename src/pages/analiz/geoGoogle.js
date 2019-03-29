@@ -14,7 +14,7 @@ class Component extends PureComponent {
   state = { maxValue: 1000  } //default
 
   async componentDidMount() {
-    const { cid } = this.props
+    const { cid } = this.props.auth.cids;
     const type = "geo"
     const params = { cid , type}
 
@@ -50,7 +50,7 @@ class Component extends PureComponent {
 }
 
 
-const mapStateToProps = state => ({ cid: state.cid });
+const mapStateToProps = state => ({ auth: state.auth });
 export default connect(mapStateToProps)(Component);
 
 

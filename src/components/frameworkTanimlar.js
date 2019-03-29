@@ -44,11 +44,13 @@ class Component extends PureComponent {
 
   componentDidMount() {
     const { fields } = this.props.template;
+    const {cid} = this.props.auth.cids
+
     fields.map(
       async ({ field, optionsURL }) =>
         optionsURL &&
         this.setState({
-          ["options_" + field]: await getOptions(optionsURL, this.props.cid)
+          ["options_" + field]: await getOptions(optionsURL, cid)
         })
     );
 
@@ -349,8 +351,8 @@ class Component extends PureComponent {
     //type = add, update
 
     const { pidm } = this.state;
-    const { cid } = this.props;
     const { uid } = this.props.auth;
+    const { cid } = this.props.auth.cids
     const { fields } = this.props.template;
 
     let params = { cid, uid };
@@ -623,8 +625,8 @@ class Component extends PureComponent {
   };
 
   render() {
-    const { cid } = this.props;
     const { uid } = this.props.auth;
+    const { cid } = this.props.auth.cids;
     const url = this.props.template.url.get;
     return (
       <Login>
@@ -642,7 +644,6 @@ const mapStateToProps = state => ({
   data: state.data,
   initialData: state.initialData,
   searchMode: state.searchMode,
-  cid: state.cid,
   auth: state.auth
 });
 export default connect(mapStateToProps)(Component);
