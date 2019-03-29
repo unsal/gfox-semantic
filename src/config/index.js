@@ -54,8 +54,8 @@ export const config = {
   URL_OPTIONS_ULKELER: apiHost + "/tanimlar/ulkeler/get",
 
   //************* AUTH ************************
+  URL_AUTH: apiHost + "/auth/login",
   URL_AUTH_CIDS: apiHost + "/auth/cids",
-  URL_LOGIN: apiHost + "/auth/login",
 
   //export excel download
   URL_EXPORT: apiHost + "/download",

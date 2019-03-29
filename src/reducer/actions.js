@@ -10,7 +10,7 @@ export const GFOX_TOKEN = "GFOX_TOKEN";
 export const GFOX_URL = "GFOX_URL";
 export const GFOX_SEARCH_MODE = "GFOX_SEARCH_MODE";
 export const GFOX_ACTIVE_MENU = "GFOX_ACTIVE_MENU";
-export const GFOX_BIRIM = "GFOX_BIRIM"; // kullanıcı birimini sorgularda pass etmek için.
+export const GFOX_AUTH = "GFOX_AUTH"; // dpo, admin bilsini json olarak döner
 
 export const updateStoreData = data => {
   return { type: GFOX_STORE_DATA, data };
@@ -35,10 +35,6 @@ export const updateStoreCIDName = cidName => {
 
 export const updateStoreCIDChanged = cidChanged => {
   return { type: GFOX_CID_CHANGED, cidChanged }; //data: [{cid:1, uid:'admin@grcfox.com}]
-};
-
-export const updateStoreUID = uid => {
-  return { type: GFOX_UID, uid }; //data: [{cid:1, uid:'admin@grcfox.com}]
 };
 
 export const updateStoreToken = token => {
@@ -66,7 +62,8 @@ export const updateStoreActiveMenu = activeMenu => {
   return { type: GFOX_ACTIVE_MENU, activeMenu }; //data: [{cid:1, uid:'admin@grcfox.com}]
 };
 
-// Kullanıcı birimini sorgularda pass etmek için.
-export const updateStoreBirim = birim => {
-  return { type: GFOX_BIRIM, birim };
+
+// Auth
+export const updateStoreAuth = auth => {
+  return { type: GFOX_AUTH, auth };
 };

@@ -349,7 +349,8 @@ class Component extends PureComponent {
     //type = add, update
 
     const { pidm } = this.state;
-    const { cid, uid } = this.props;
+    const { cid } = this.props;
+    const { uid } = this.props.auth;
     const { fields } = this.props.template;
 
     let params = { cid, uid };
@@ -622,7 +623,8 @@ class Component extends PureComponent {
   };
 
   render() {
-    const { cid, uid } = this.props;
+    const { cid } = this.props;
+    const { uid } = this.props.auth;
     const url = this.props.template.url.get;
     return (
       <Login>
@@ -641,6 +643,6 @@ const mapStateToProps = state => ({
   initialData: state.initialData,
   searchMode: state.searchMode,
   cid: state.cid,
-  uid: state.uid
+  auth: state.auth
 });
 export default connect(mapStateToProps)(Component);

@@ -8,22 +8,20 @@ import { connect } from "react-redux";
 import logo from "../../assets/img/logo-fox.png";
 
 class LayoutHeader extends PureComponent {
-  state = {
-    color: { adminMenu: "black", regularMenu: "teal", icon: null }
-  };
-
-  style = {
-    backgroundColor: "#E8E8E8"
-  };
+  state = {};
 
   isRegularUser = () => (this.props.cid ? this.props.cid !== 1 : false);
 
-
+  menuColor = () => {
+    const { auth } = this.props;
+    const color = auth.admin ? "orange" : auth.dpo ? "teal" : "blue";
+    return color;
+  }
 
   MenuCID = () => {
-    const { cid } = this.props;
-    const { adminMenu, regularMenu } = this.state.color;
-    const color = cid ? (cid !== 1 ? regularMenu : adminMenu) : adminMenu;
+
+    const color = this.menuColor();
+
     return (
       <Menu.Item header position="right">
         <SelectCID color={color} />
@@ -72,15 +70,19 @@ class LayoutHeader extends PureComponent {
       </Dropdown>
     );
 
+
+
+    const authTanimlar = () => (this.props.auth.dpo || this.props.auth.admin )
+
     return (
       <Dropdown
         item
-        text={this.props.uid}
+        text={this.props.auth.uid}
         icon="user"
         style={{ marginRight: "20px" }}
       >
         <Dropdown.Menu>
-          <DropdownTanimlar />
+          {authTanimlar()  && <DropdownTanimlar />}
           <Dropdown.Item as={Link} to="/">
             Çıkış
           </Dropdown.Item>
@@ -96,23 +98,18 @@ class LayoutHeader extends PureComponent {
     </Menu.Item>
   );
 
-  // LogoTitle = () => <h1 className="logo-title">Gfox</h1>
 
   render() {
     const isRegularUser = this.isRegularUser();
+    const color = this.menuColor()
     return (
       <Menu
         inverted
         fixed="top"
-        color={
-          isRegularUser
-            ? this.state.color.regularMenu
-            : this.state.color.adminMenu
-        }
+        color={color}
       >
         <Container className="layout-topmenu">
           <this.Logo />
-          {/* <this.LogoTitle /> */}
           <this.MenuCID />
           {isRegularUser && <this.MenuExport />}
           {this.props.cid && <this.MenuUser />}
@@ -126,6 +123,6 @@ const mapStateToProps = state => ({
   cid: state.cid,
   cidOptions: state.cidOptions,
   cidChanged: state.cidChanged,
-  uid: state.uid
+  auth: state.auth
 });
 export default connect(mapStateToProps)(LayoutHeader);

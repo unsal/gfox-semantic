@@ -48,7 +48,8 @@ class Component extends PureComponent {
 
   loadData = () => {
     try {
-      const { cid, uid } = this.props;
+      // const { cid } = this.props;
+      const { uid, cid } = this.props.auth;
       const url = this.props.template.url.get;
       refreshStoreData(store, cid, uid, url);
       return true;
@@ -70,7 +71,8 @@ class Component extends PureComponent {
   // Tanımlar ve mevcut tablodaki tüm optionalrı bir listede toplar
   concatOptions = async (field, type) => {
     try {
-      const { cid, data } = await this.props;
+      const { data } = await this.props;
+      const { cid } = this.props.auth
       const isMultiple = type === "json";
       const id = (await isMultiple)
         ? field.substring(0, field.length - 5)
@@ -241,6 +243,7 @@ class Component extends PureComponent {
     const isMultiple = size >= 1;
     const showAsCount = isMultiple && this.state.singleLine;
     const ShowCount = () => (
+      // <Label circular={true} color={color} onClick={() => this.handleEdit(row)}>
       <Label circular={true} color={color} onClick={() => this.handleEdit(row)}>
         {" +" + size}
       </Label>
@@ -477,7 +480,7 @@ class Component extends PureComponent {
     //type = add, update
 
     const { pidm } = this.state;
-    const { cid, uid } = this.props;
+    const { uid, cid } = this.props.auth;
     const { fields } = this.props.template;
 
     let params = { cid, uid };
@@ -763,7 +766,6 @@ const mapStateToProps = state => ({
   data: state.data,
   initialData: state.initialData,
   searchMode: state.searchMode,
-  cid: state.cid,
-  uid: state.uid
+  auth: state.auth
 });
 export default connect(mapStateToProps)(Component);

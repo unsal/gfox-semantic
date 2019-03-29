@@ -16,7 +16,6 @@ import {
   Visibility,
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import ImageBackground from "./assets/img/bground.jpg" //1125 x 630px
 import Logo from './assets/img/logo-fox.png'
 
@@ -351,8 +350,5 @@ const Homepage = () => (
   </ResponsiveContainer>
 )
 
-
-const mapStateToProps = (state) => ({ cid: state.cid, uid: state.uid})
-connect(mapStateToProps)(DesktopContainer)
 
 export default Homepage

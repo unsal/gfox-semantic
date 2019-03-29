@@ -2,19 +2,17 @@ import React, { PureComponent } from "react";
 import { Button, Form, Grid, Header, Segment, Icon } from "semantic-ui-react";
 import axios from "axios";
 import { config } from "../../config";
-import { connect } from "react-redux";
 import {
   updateStoreToken,
-  updateStoreUID,
   updateStoreCIDOptions,
-  updateStoreBirim
+  updateStoreAuth
 } from "../../reducer/actions";
 import { store } from "../../reducer";
 import { spinnerIcon } from "../../components/gfox";
 import LandingPage from "./landing";
 import "./loginform.css";
 
-class LoginForm extends PureComponent {
+export default class LoginForm extends PureComponent {
   state = {
     authenticated: false,
     loginFailed: false,
@@ -43,44 +41,44 @@ class LoginForm extends PureComponent {
     let options = [];
 
     try {
-      const result = await axios.post(
-        config.URL_AUTH_CIDS,
-        params,
-        config.axios
-      );
+      const result = await axios.post( config.URL_AUTH_CIDS, params, config.axios );
       const data = (await result.data) ? result.data : [];
       await data.map(
         ({ cid, name }) =>
           (options = options.concat({ key: cid, text: name, value: cid }))
       );
     } catch (err) {
-      console.log("myComponents->createCIDOptions() hatası..", err);
+      console.log("myComponents->() hatası..", err);
       options = [];
     }
     return options;
   };
+
 
   submit = async () => {
     const { uid, pwd } = this.state;
     const params = { uid, pwd };
 
     try {
-      let token = null;
-      let birim = "";
-      const row = await axios.post(config.URL_LOGIN, params, config.axios);
+      let auth = {}
+      const row = await axios.post(config.URL_AUTH, params, config.axios);
       const data = row.data ? row.data : [];
       await data.map(
-        item => (token = item.token)
-        // birim = record.birim;
-        // return null;
+        item => (
+          auth = {
+                  "uid": item.uid,
+                  "token": item.token,
+                  "dpo": item.dpo,
+                  "admin": item.admin,
+                  "cid": null
+                } )
       );
 
-      if (token) {
-        await store.dispatch(updateStoreToken(token));
-        await setLocalToken(token);
+      if (auth.token) {
+        await store.dispatch(updateStoreToken(auth.token));
+        await setLocalToken(auth.token);
 
-        await store.dispatch(updateStoreUID(uid));
-        await store.dispatch(updateStoreBirim(birim));
+        await store.dispatch(updateStoreAuth(auth));
 
         //Headerda, CID optionsı yüklemek için...
         // Her sayfada Layout çağrıldığı için headerda tekrar tekrar yüklendiği için storea yüklendi
@@ -108,7 +106,7 @@ class LoginForm extends PureComponent {
 
   logout() {
     store.dispatch(updateStoreToken(null));
-    store.dispatch(updateStoreUID(null));
+    store.dispatch(updateStoreAuth(null));
     removeLocalToken();
     this.setState({ submitted: false });
   }
@@ -190,5 +188,3 @@ const removeLocalToken = () => {
   localStorage.removeItem("gfox_token");
 };
 
-const mapStateToProps = state => ({ cid: state.cid, uid: state.uid });
-export default connect(mapStateToProps)(LoginForm);

@@ -8,11 +8,10 @@ import {
   GFOX_CID_NAME,
   GFOX_CID_CHANGED,
   GFOX_CID_OPTIONS,
-  GFOX_UID,
   GFOX_TOKEN,
   GFOX_URL,
   GFOX_ACTIVE_MENU,
-  GFOX_BIRIM
+  GFOX_AUTH,
 } from "./actions";
 
 const initialState = { data: [], mode: "DEFAULT", error: false };
@@ -33,8 +32,6 @@ const reducer = (state = initialState, action) => {
       return { ...state, cidChanged: action.cidChanged };
     case GFOX_CID_OPTIONS:
       return { ...state, cidOptions: action.cidOptions };
-    case GFOX_UID:
-      return { ...state, uid: action.uid };
     case GFOX_TOKEN:
       return { ...state, token: action.token };
     case GFOX_URL:
@@ -43,8 +40,9 @@ const reducer = (state = initialState, action) => {
       return { ...state, searchMode: action.searchMode };
     case GFOX_ACTIVE_MENU:
       return { ...state, activeMenu: action.activeMenu };
-    case GFOX_BIRIM:
-      return { ...state, birim: action.birim };
+    case GFOX_AUTH:
+      return { ...state, auth: action.auth };
+      // auth: {uid, dpo, admin}
     default:
       return state;
   }
