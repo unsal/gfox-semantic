@@ -40,6 +40,7 @@
   "python.linting.enabled": false,
   "materialTheme.accent": "Teal",
   "material-icon-theme.activeIconPack": "react",
-  "workbench.colorTheme": "dark-plus-syntax",
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.colorTheme": "★★★★★ NORD DARK ★★★★★",
+  "workbench.iconTheme": "vs-nomo-dark",
+  "workbench.fontAliasing": "antialiased",
 }

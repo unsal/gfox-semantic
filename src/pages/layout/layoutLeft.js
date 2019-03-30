@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { useState } from "react";
 import { Menu, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
@@ -9,77 +9,76 @@ import { connect } from "react-redux";
 
 import "./layout.css";
 
-class LayoutLeft extends PureComponent {
-  state = { activeMenu: this.props.activeMenu && this.props.activeMenu };
+function LayoutLeft(props) {
+  const initial = props.activeMenu && props.activeMenu;
+  const [activeMenu, setActiveMenu] = useState(initial);
+  
+  const MenuEnvanter = () => {
 
-  handleClick = (event, { name }) => {
-    store.dispatch(updateStoreActiveMenu(name));
-    this.setState({ activeMenu: name });
-    // console.log("clicked: ", name);
+        const handleClick = (event, { name }) => {
+          store.dispatch(updateStoreActiveMenu(name));
+          setActiveMenu(name)
+        };
+
+        const menuItems = [
+          {
+            title: "anaveriler",
+            route: "/anaveriler",
+            icon: "user",
+            className: "outline"
+          },
+          {
+            title: "aktarimlar",
+            route: "/aktarimlar",
+            icon: "paper plane",
+            className: "outline"
+          },
+          {
+            title: "talepler",
+            route: "/talepler",
+            icon: "mail",
+            className: "outline"
+          },
+          { title: "analiz", route: "/analiz", icon: "chart pie" }
+        ];
+
+        return menuItems.map(({ title, icon, route, className }) => (
+          <Menu.Item
+            key={title}
+            name={title}
+            active={activeMenu === title}
+            onClick={handleClick}
+            as={Link}
+            to={route}
+          >
+            <Icon name={icon} className={className} size="large" />
+          </Menu.Item>
+        ));
   };
 
-  MenuEnvanter = () => {
-    const menuItems = [
-      {
-        title: "anaveriler",
-        route: "/anaveriler",
-        icon: "user",
-        className: "outline"
-      },
-      {
-        title: "aktarimlar",
-        route: "/aktarimlar",
-        icon: "paper plane",
-        className: "outline"
-      },
-      {
-        title: "talepler",
-        route: "/talepler",
-        icon: "mail",
-        className: "outline"
-      },
-      { title: "analiz", route: "/analiz", icon: "chart pie" }
-    ];
-    // const Capitilaze = ({ title }) => (
-    //   <span className="menu-envanter-item">{title}</span>
-    // );
 
-    return menuItems.map(({ title, icon, route, className }) => (
-      <Menu.Item
-        key={title}
-        name={title}
-        active={this.state.activeMenu === title}
-        onClick={this.handleClick}
-        as={Link}
-        to={route}
-      >
-        <Icon name={icon} className={className} size="large" />
-        {/* <Capitilaze title={title} /> */}
-      </Menu.Item>
-    ));
-  };
+  const { cid, cidChanged } = props.auth.cids;
+  const regularUser = (cid !== 1);
+  const onSelectedNewCid = cidChanged;
+  const showBlankContainer = null;
 
-  render() {
-    const { cid, cidChanged } = this.props.auth.cids;
-    const { MenuEnvanter } = this;
-    const regularUser = cid !== 1;
-    const onSelectedNewCid = cidChanged;
-    const showBlankContainer = null;
-    const ShowLeftMenu = () =>
-      regularUser ? (
-        <div className="layout-leftmenu">
-          <Menu icon inverted pointing vertical>
-            <MenuEnvanter />
-          </Menu>
-        </div>
-      ) : null;
+  const ShowLeftMenu = () => (
+    regularUser ? (
+      <div className="layout-leftmenu">
+        <Menu icon inverted pointing vertical>
+          <MenuEnvanter />
+        </Menu>
+      </div>
+    ) : null
+  )
 
-    return (
+  return (
       // do not show on cid change, because only home menu must be shown
       onSelectedNewCid ? showBlankContainer : <ShowLeftMenu />
-    );
-  }
+  );
+
 }
+
 
 const mapStateToProps = state => ({
   auth: state.auth,

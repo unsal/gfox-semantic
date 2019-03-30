@@ -32,6 +32,7 @@ export default class LoginForm extends PureComponent {
 
   //Headerda, CID optionsı yüklemek için...
   //aşağıdaki submit fonksionunda kullanıldı
+
   createCIDOptions = async uid => {
     const params = { uid };
     let options = [];

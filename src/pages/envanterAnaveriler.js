@@ -114,8 +114,7 @@ const template = {
   ]
 };
 
-const Anaveriler = () => {
-  return <Framework template={template} />;
-};
+
+const Anaveriler = () => <Framework template={template} />
 
 export default Anaveriler;

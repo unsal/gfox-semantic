@@ -12,7 +12,7 @@ class Layout extends PureComponent {
     const { showLeftMenu } = this.props;
 
     return (
-      <div className="flex-column">
+      <div className="flex-column"> 
         <LayoutHeader />
         <div className="flex-row">
           {showLeftMenu && <LayoutLeft />}

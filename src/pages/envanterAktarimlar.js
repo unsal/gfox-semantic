@@ -106,8 +106,6 @@ const template = {
   ]
 };
 
-const Aktarimlar = () => {
-  return <Framework template={template} />;
-};
+const Aktarimlar = () => <Framework template={template} />;
 
 export default Aktarimlar;

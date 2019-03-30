@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import { Card, Image, Grid } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
@@ -10,8 +10,9 @@ import ImgAktarimlar from "../../assets/img/menuaktarimlar.png";
 import ImgAnaliz from "../../assets/img/menuanaliz2.png";
 import ImgTalepler from "../../assets/img/menutalepler.png";
 
-class HomeMenu extends PureComponent {
-  GridColCard = ({ img, title, route }) => (
+
+const HomeMenu = (props) => {
+  const GridColCard = ({ img, title, route }) => (
     <Grid.Column>
       <Card as={Link} to={route}>
         <Image src={img} />
@@ -22,30 +23,31 @@ class HomeMenu extends PureComponent {
     </Grid.Column>
   );
 
-  render() {
-    const { GridColCard } = this;
-    const { cid } = this.props.auth.cids;
-    return cid !== 1 ? (
-      <div className="layout-homemenu">
-        <Grid>
-          <Grid.Row columns={4} >
-            <GridColCard
-              img={ImgAnaveriler}
-              title="ANAVERİLER"
-              route="/anaveriler"
-            />{" "}
-            <GridColCard
-              img={ImgAktarimlar}
-              title="AKTARIMLAR"
-              route="/aktarimlar"
-            />{" "}
-            <GridColCard img={ImgAnaliz} title="ANALİZ" route="/analiz" />{" "}
-            <GridColCard img={ImgTalepler} title="TALEPLER" route="/talepler" />{" "}
-          </Grid.Row>
-        </Grid>
-      </div>
-    ) : null;
-  }
+  const { cid } = props.auth.cids;
+
+  return (
+    cid !== 1 ? (
+    <div className="layout-homemenu">
+      <Grid>
+        <Grid.Row columns={4} >
+          <GridColCard
+            img={ImgAnaveriler}
+            title="ANAVERİLER"
+            route="/anaveriler"
+          />{" "}
+          <GridColCard
+            img={ImgAktarimlar}
+            title="AKTARIMLAR"
+            route="/aktarimlar"
+          />{" "}
+          <GridColCard img={ImgAnaliz} title="ANALİZ" route="/analiz" />{" "}
+          <GridColCard img={ImgTalepler} title="TALEPLER" route="/talepler" />{" "}
+        </Grid.Row>
+      </Grid>
+    </div>
+  ) : null
+  )
+
 }
 
 const mapStateToProps = state => ({

@@ -1,16 +1,15 @@
-import React, { PureComponent } from "react";
+import React from "react";
 
 import Layout from "../layout";
 import Login from "./login";
 
-export default class Component extends PureComponent {
-  render() {
-    return (
-      <Login>
-        <Layout showLeftMenu={false}>
-          <span>Lütfen firma seçiminizi yapınız...</span>
-        </Layout>
-      </Login>
-    );
-  }
-}
+
+const Landing =() => (
+    <Login>
+      <Layout showLeftMenu={false}>
+        <span>Lütfen firma seçiminizi yapınız...</span>
+      </Layout>
+    </Login>
+)
+
+export default Landing;
