@@ -1,0 +1,117 @@
+[
+    {
+      "id": "16",
+      "title": "Organizasyon Şeması", 
+      "name4chart": "org",
+      "type": "org",
+      "icon": "sitemap",
+      "active": true
+    },
+    {
+      "id": "17",
+      "title": "KV Aktarılan Ülkeler", 
+      "name4chart": "geo",
+      "type": "geo",
+      "icon": "globe"
+    },
+    {
+      "id": "01",
+      "title": "KV",
+      "name4chart": "kv",
+      "type": "pie",
+      "icon": "chart pie"
+    },
+  
+    {
+      "id": "11",
+      "title": "Kurum Bazında KV Aktarımı",
+      "name4chart": "kurumlar_data",
+      "type": "pie",
+      "color": "olive",
+      "icon": "chart pie"
+    },
+    {
+      "id": "12",
+      "title": "Kv Girilen Sistemler",
+      "name4chart": "sistemler_data",
+      "type": "pie",
+      "color": "olive",
+      "icon": "chart pie"
+    },
+    {
+      "id": "13",
+      "title": "Kv Tutulan Ortamlar",
+      "name4chart": "ortamlar_data",
+      "type": "pie",
+      "color": "olive",
+      "icon": "chart pie"
+    },
+    {
+      "id": "14",
+      "title": "Kv Aktarılan Ülkeler",
+      "name4chart": "ulkeler_data",
+      "type": "pie",
+      "color": "olive",
+      "icon": "chart pie"
+    },
+    {
+      "id": "07",
+      "title": "Profil Kv Kullanımı",
+      "name4chart": "profil",
+      "type": "pie",
+      "icon": "chart pie"
+    },
+    {
+      "id": "08",
+      "title": "Birim Kv Kullanımı",
+      "name4chart": "birim",
+      "type": "pie",
+      "color": "yellow",
+      "icon": "chart pie"
+    },
+    {
+      "id": "09",
+      "title": "Bölüm Kv Kullanımı",
+      "name4chart": "bolum",
+      "type": "pie",
+      "color": "yellow",
+      "icon": "chart pie"
+    },
+    {
+      "id": "10",
+      "title": "Süreç Kullanımı",
+      "name4chart": "surec",
+      "type": "pie",
+      "color": "yellow",
+      "icon": "chart pie"
+    },
+  
+    {
+      "id": "03",
+      "title": "Profil Kv Ağacı",
+      "name4chart": "profil",
+      "type": "tree",
+      "icon": "sitemap"
+    },
+    {
+      "id": "04",
+      "title": "Birim Kv Ağacı",
+      "name4chart": "birim",
+      "type": "tree",
+      "icon": "sitemap"
+    },
+    {
+      "id": "05",
+      "title": "Bölüm Kv Ağacı",
+      "name4chart": "bolum",
+      "type": "tree",
+      "icon": "sitemap"
+    },
+    {
+      "id": "06",
+      "title": "Süreç Kv Ağacı",
+      "name4chart": "surec",
+      "type": "tree",
+      "icon": "sitemap"
+    }
+  ]

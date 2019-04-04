@@ -43,7 +43,8 @@ import Sorumlular from "./pages/tanimlarSorumlular";
 import Analiz from "./pages/analiz/charts";
 
 import LoginForm from "./pages/auth/loginform";
-import Home from "./pages/layout/home";
+import HomeButton from "./pages/layout/homeButton";
+import Accounts from "./pages/auth/accounts";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -51,7 +52,8 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Homepage} />
         <Route exact path="/login" component={LoginForm} />
-        <Route exact path="/home" component={Home} />
+        <Route exact path="/home" component={HomeButton} />
+        <Route exact path="/accounts" component={Accounts} />
 
         {/* ANA VERİLER*/}
         <Route exact path="/anaveriler" component={Anaveriler} />

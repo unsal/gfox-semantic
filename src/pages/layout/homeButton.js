@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { useEffect } from "react";
 
 import LayoutHeader from "./layoutHeader";
 import Login from "../auth/login";
@@ -11,15 +11,16 @@ import { store } from "../../reducer";
 import { connect } from "react-redux";
 
 // Layout Top Menu -> Home Logo'ya tıklandığında gidilecek sayfa için..
-class Home extends PureComponent {
-  componentDidMount() {
-    // actif menüyü resetle -ki homeMenu'den tıklandığında yanlış bir menüyü aktif olarak getirmesin
-    store.dispatch(updateStoreActiveMenu(null));
-  }
+function HomeButton(props) {
 
-  render() {
-    const { cid } = this.props.auth.cids;
-    return (
+ //mount
+  useEffect(() => {
+    store.dispatch(updateStoreActiveMenu(null));
+  }, [])
+
+  const { cid } = props.auth.cids;
+
+  return (
       <Login>
         <div className="layout-row">
           <LayoutHeader />
@@ -27,10 +28,9 @@ class Home extends PureComponent {
         </div>
       </Login>
     );
-  }
 }
 
 const mapStateToProps = state => ({
   auth: state.auth
 });
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(HomeButton);

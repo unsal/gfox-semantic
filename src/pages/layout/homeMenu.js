@@ -6,9 +6,9 @@ import { connect } from "react-redux";
 
 import ImgAnaveriler from "../../assets/img/menuanaveriler.png";
 import ImgAktarimlar from "../../assets/img/menuaktarimlar.png";
-// import ImgTalepler from "../../assets/img/kvtalepler.jpg";
 import ImgAnaliz from "../../assets/img/menuanaliz2.png";
 import ImgTalepler from "../../assets/img/menutalepler.png";
+import ImgHesaplar from "../../assets/img/menuhesaplar.png";
 
 
 const HomeMenu = (props) => {
@@ -24,12 +24,14 @@ const HomeMenu = (props) => {
   );
 
   const { cid } = props.auth.cids;
+  const isDpo = (props.auth.dpo || props.auth.admin)
+  let columns = isDpo ? 5 : 4
 
   return (
     cid !== 1 ? (
     <div className="layout-homemenu">
       <Grid>
-        <Grid.Row columns={4} >
+        <Grid.Row columns={columns} >
           <GridColCard
             img={ImgAnaveriler}
             title="ANAVERİLER"
@@ -42,6 +44,7 @@ const HomeMenu = (props) => {
           />{" "}
           <GridColCard img={ImgAnaliz} title="ANALİZ" route="/analiz" />{" "}
           <GridColCard img={ImgTalepler} title="TALEPLER" route="/talepler" />{" "}
+          {isDpo && <GridColCard img={ImgHesaplar} title="HESAPLAR" route="/accounts" />}
         </Grid.Row>
       </Grid>
     </div>

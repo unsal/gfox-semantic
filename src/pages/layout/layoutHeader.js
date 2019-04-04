@@ -85,6 +85,9 @@ function LayoutHeader (props) {
             >
               <Dropdown.Menu>
                 {authTanimlar()  && <DropdownTanimlar />}
+                <Dropdown.Item as={Link} to="/accounts">
+                  Hesaplar
+                </Dropdown.Item>
                 <Dropdown.Item as={Link} to="/">
                   Çıkış
                 </Dropdown.Item>

@@ -39,10 +39,11 @@ function LayoutLeft(props) {
             icon: "mail",
             className: "outline"
           },
-          { title: "analiz", route: "/analiz", icon: "chart pie" }
+          { title: "analiz", route: "/analiz", icon: "chart pie" },
+          { title: "hesaplar", route: "/accounts", icon: "lock", dpo: true },
         ];
 
-        return menuItems.map(({ title, icon, route, className }) => (
+        return menuItems.map(({ title, icon, route, className, dpo }) => (
           <Menu.Item
             key={title}
             name={title}
@@ -53,6 +54,7 @@ function LayoutLeft(props) {
           >
             <Icon name={icon} className={className} size="large" />
           </Menu.Item>
+          
         ));
   };
 

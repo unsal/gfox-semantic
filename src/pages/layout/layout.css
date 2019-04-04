@@ -86,7 +86,7 @@
 .layout-homemenu {
   margin-top: calc(var(--container-margin-top) + 30px);
   margin-left: var(--left-menu-width);
-  width: 900px;
+  width: 1024px;
   float: "left";
 }
 

@@ -1,33 +1,28 @@
-import React, { PureComponent } from "react";
-import { Button, Form, Grid, Header, Segment, Icon } from "semantic-ui-react";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Grid, Header, Segment, Icon} from "semantic-ui-react";
 import axios from "axios";
 import { config } from "../../config";
 import { updateStoreAuth } from "../../reducer/actions";
 import { store } from "../../reducer";
 import { spinnerIcon } from "../../components/gfox";
 import LandingPage from "./landing";
-import "./auth.css";
-
-export default class LoginForm extends PureComponent {
-  state = {
-    authenticated: false,
-    loginFailed: false,
-    submitted: false
-  };
-
-  componentDidMount() {
-    //resetle
-    this.logout();
-  }
-
-  componentWillUnmount() {}
+import "./loginform.css";
 
 
+const LoginForm = (props) => {
+  const [values, setValues] = useState({}) // form values ... {uid, pwd}
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    logout()
+  }, [])
 
   //Headerda, CID optionsı yüklemek için...
   //aşağıdaki submit fonksionunda kullanıldı
 
-  createCIDOptions = async uid => {
+  const createCIDOptions = async uid => {
     const params = { uid };
     let options = [];
 
@@ -39,22 +34,22 @@ export default class LoginForm extends PureComponent {
           (options = options.concat({ key: cid, text: name, value: cid }))
       );
     } catch (err) {
-      console.log("myComponents->() hatası..", err);
+      console.log("createCIDOptions hatası..", err);
       options = [];
     }
     return options;
   };
 
 
-  submit = async () => {
-    const { username, password } = this.state;
-    const params = { username, password };
+  const submit = async () => {
+    const { uid, pwd } = values;
+    const params = { uid, pwd };
 
     try {
       let auth = {}
-      const row = await axios.post(config.URL_AUTH, params, config.axios);
-      const data = row.data ? row.data : [];
-      const cidOptions = await this.createCIDOptions(username);
+      const result = await axios.post(config.URL_AUTH, params, config.axios);
+      const data = result.data ? result.data : [];
+      let cidOptions = await createCIDOptions(uid);
 
       await data.map(
         item => (
@@ -68,43 +63,48 @@ export default class LoginForm extends PureComponent {
       );
 
       if (auth.token) {
-        await setLocalToken(auth.token); //data: [{cid:1, uid:'admin@grcfox.com}]
+        await addLocalToken(auth.token); //data: [{cid:1, uid:'admin@grcfox.com}]
         await store.dispatch(updateStoreAuth(auth));
 
-        this.setState({ authenticated: true });
+        setAuthenticated(true)
       } else {
         console.log("Authentication failed, wrong uid/pwd credential!");
-        this.setState({ loginFailed: true });
-        this.logout();
+        setLoginFailed(true)
+        logout();
       }
     } catch (err) {
       console.log("LoginForm API error!", err);
-      this.logout();
+      logout();
     }
   };
 
-  handleSubmit = e => {
+
+  const handleSubmit = e => {
     e.preventDefault();
-    this.setState({ submitted: true });
-    this.submit();
+    setSubmitted(true)
+    submit();
   };
 
-  logout() {
+  const logout=() => {
     store.dispatch(updateStoreAuth(null));
     removeLocalToken();
-    this.setState({ submitted: false });
+    setSubmitted(false)
   }
 
-  handleChange = e => {
-    e.preventDefault();
-    this.setState({
-      [e.target.name]: e.target.value,
-      loginFailed: false
-    });
+  const handleChange = (e) => {
+    e.persist()
+   
+    const newValues = {...values, [e.target.name]: e.target.value}
+    setValues(newValues)
+    setLoginFailed(false);
   };
 
-  RenderLoginForm = () => (
-    <div className="loginform">
+  const InputForm = () => {
+
+    console.log('values: ', values)
+    
+    return (
+      <div className="loginform">
       <Grid
         textAlign="center"
         style={{ height: "100%" }}
@@ -118,15 +118,16 @@ export default class LoginForm extends PureComponent {
                 GFox
               </div>
             </Header>
-            <Form size="large" onSubmit={this.handleSubmit}>
+            <Form size="large" onSubmit={handleSubmit}>
               <Segment>
                 <Form.Input
                   fluid
                   icon="user"
                   iconPosition="left"
                   placeholder="E-Posta adresiniz"
-                  name="username"
-                  onChange={this.handleChange}
+                  name="uid"
+                  onChange={handleChange}
+                  // value={values.uid || ''} // if values.uid not exist set it to ''
                 />
                 <Form.Input
                   fluid
@@ -134,12 +135,13 @@ export default class LoginForm extends PureComponent {
                   iconPosition="left"
                   placeholder="Şifre"
                   type="password"
-                  name="password"
-                  onChange={this.handleChange}
+                  name="pwd"
+                  onChange={handleChange}
+                  // value={values.pwd || ''}
                 />
 
                 <Button color="blue" fluid size="large">
-                  {this.state.submitted ? (
+                  {submitted ? (
                     <Icon loading name={spinnerIcon} size="large" />
                   ) : (
                     <span>Giriş</span>
@@ -152,7 +154,7 @@ export default class LoginForm extends PureComponent {
               <a href="/kvkk">geçin...</a>
             </span>
 
-            {this.state.loginFailed && (
+            {loginFailed && (
               <span style={{ display: "block", color: "#ff0000" }}>
                 Giriş başarız! Lütfen tekrar deneyin.
               </span>
@@ -161,22 +163,19 @@ export default class LoginForm extends PureComponent {
         </Grid.Row>
       </Grid>
     </div>
-  );
+    )
+  };
 
-  render() {
-    return this.state.authenticated ? (
-      <LandingPage />
-    ) : (
-      <this.RenderLoginForm />
-    );
-  }
+  return ( authenticated ) ? <LandingPage />: <InputForm />
 }
 
-const setLocalToken = token => {
+const addLocalToken = token => {
   localStorage.setItem("gfox_token", token);
 };
 
 const removeLocalToken = () => {
   localStorage.removeItem("gfox_token");
 };
+
+export default LoginForm;
 

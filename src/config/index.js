@@ -56,6 +56,7 @@ export const config = {
   //************* AUTH ************************
   URL_AUTH: apiHost + "/auth/login",
   URL_AUTH_CIDS: apiHost + "/auth/cids",
+  URL_AUTH_ACCOUNTS: apiHost + "/auth/accounts",
 
   //export excel download
   URL_EXPORT: apiHost + "/download",

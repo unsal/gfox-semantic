@@ -1,7 +1,6 @@
-import React, { PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import ReactEcharts from "echarts-for-react";
 import { Header, Segment } from "semantic-ui-react";
-import { MyLoader } from "../../components/gfox";
 
 import axios from "axios";
 
@@ -9,10 +8,10 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { config } from "../../config";
 
-class Component extends PureComponent {
-  state = {};
+function TreeChart(props) {
+  const [data, setData] = useState([]);
 
-  getOption = layout => ({
+  const getOption = (layout, data) => ({
     tooltip: {
       trigger: "item",
       triggerOn: "mousemove"
@@ -22,7 +21,7 @@ class Component extends PureComponent {
         type: "tree",
         layout,
 
-        data: [this.state.data],
+        data: [data],
 
         top: "1%",
         left: "7%",
@@ -57,39 +56,34 @@ class Component extends PureComponent {
     ]
   });
 
-  async componentDidMount() {
-    const { cid } = this.props.auth.cids
-    const { name } = this.props;
+  useEffect(() => {
+    const { cid } = props.auth.cids
+    const { name } = props;
     const type = "tree";
     const params = { cid, type, name };
 
+    const fetchData = 
+          async ()=> {
+            const result = await axios.post(config.URL_CHART, params, config.axios);
+            setData(result.data)
+          }
+
     try {
-      const result = await axios.post(config.URL_CHART, params, config.axios);
-      const data = (await result.data) ? result.data : [];
-      // console.log(JSON.stringify(data))
-      await this.setState({ data });
+      fetchData()
     } catch (err) {
       console.log("TreeChart > SQL Error...", err);
     }
-  }
-
-  render() {
-    const { layout } = this.props;
+  }, [])
+ 
+    const { layout } = props;
     return (
       <Segment basic>
-        <Header>{this.props.title}</Header>
-        {this.state.data ? (
-          <ReactEcharts
-            style={{ height: "2000px" }}
-            option={this.getOption(layout)}
-          />
-        ) : (
-          <MyLoader />
-        )}
+        <Header>{props.title}</Header>
+        {data && <ReactEcharts style={{ height: "2000px" }} option={getOption(layout, data)} /> }
       </Segment>
     );
-  }
+
 }
 
 const mapStateToProps = state => ({ auth: state.auth });
-export default connect(mapStateToProps)(Component);
+export default connect(mapStateToProps)(TreeChart);

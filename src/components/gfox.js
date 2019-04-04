@@ -128,7 +128,7 @@ export const clearStoreData = store => {
   try {
     store.dispatch(updateStoreData(null));
   } catch (err) {
-    console.log("myComponents>clearStoreData ERROR!!");
+    console.log("clearStoreData() ERROR!!", err);
   }
 };
 
@@ -144,6 +144,23 @@ export const refreshStoreData = async (store, cid, uid, url) => {
     console.log("gfox>refreshstoredata() hatası..", err);
   }
 };
+
+export const axiosData = async (url, params) => {
+
+  let data = []
+  
+  try {
+    const result = await axios.post(url, params, config.axios);
+    data = (result.data) && result.data;
+    
+  } catch (err) {
+    console.log("axiosData hatası..", err);
+  } finally  {
+    return data;
+  }
+
+};
+
 
 export const getOptions = async (url, cid, type) => {
   //{pidm:, text:, value:} for Semantic Dropdown Component. cid=> her kurum için ayrı ayrı

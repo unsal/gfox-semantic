@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import Chart from 'react-google-charts';
 import { Header, Segment } from "semantic-ui-react";
 
@@ -7,49 +7,50 @@ import axios from "axios";
 //Redux
 import { connect } from "react-redux";
 import { config } from "../../config";
-import { MyLoader } from "../../components/gfox";
 
-class Component extends PureComponent {
-  state = {};
+function PieGoogle(props) {
+  const [data, setData] = useState([]);
 
-  async componentDidMount() {
-    const { cid } = this.props.auth.cids
-    const { name } = this.props;
+  useEffect(() => {
+    const { cid } = props.auth.cids
+    const { name } = props;
     const type = "pie";
     const url = config.URL_CHART;
     const params = { cid, name, type };
 
-    try {
+    const fetchData = async () => {
       const result = await axios.post(url, params, config.axios);
-      const data = (await result.data) ? result.data : [];
-      await this.setState({ data, mount: true });
+      setData(result.data)
+    }
+
+    try {
+      fetchData()
     } catch (err) {
       console.log("!! Axios URL Error !! ", err);
     }
-  }
+  }, [])
 
-  PieGoogle = () => <Chart
-  chartType="PieChart"
-  loader={<div>Yükleniyor...</div>}
-  data={this.state.data}
-  options={{
-    is3D: true,
-    width: "900px",
-    height: "500px",
-    slices: {  0: {offset: 0.2}}
+
+  const PieGoogle = () => <Chart
+      chartType="PieChart"
+      loader={<div>Yükleniyor...</div>}
+      data={data}
+      options={{
+        is3D: true,
+        width: "900px",
+        height: "500px",
+        slices: {  0: {offset: 0.2}}
   }}
   // rootProps={{ 'data-testid': '1' }}
 />
 
-  render() {
-    return (
-    <Segment basic>
-    <Header>{this.props.title}</Header>
-    {this.state.data ? <this.PieGoogle /> : <MyLoader />}
-    </Segment>
+  return (
+        <Segment basic>
+        <Header>{props.title}</Header>
+        {data && <PieGoogle /> }
+        </Segment>
     )
-  }
 }
 
 const mapStateToProps = state => ({ auth: state.auth });
-export default connect(mapStateToProps)(Component);
+export default connect(mapStateToProps)(PieGoogle);

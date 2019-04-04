@@ -1,7 +1,6 @@
-import React, { PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import Chart from 'react-google-charts';
 import { Header, Segment } from "semantic-ui-react";
-import { MyLoader } from "../../components/gfox";
 
 import axios from "axios";
 
@@ -9,54 +8,51 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { config } from "../../config";
 
-class Component extends PureComponent {
-  state = {};
+function OrgGoogle(props) { 
+  const [data, setData] = useState([])
 
-
-
-  async componentDidMount() {
-    const {cid} = this.props.auth.cids
-    const { name } = this.props;
+  useEffect(() => {
+    const {cid} = props.auth.cids
+    const { name } = props;
     const type = "org";
     const params = { cid, type, name };
 
+    const fetchData = 
+      async () => {
+        const result = await axios.post(config.URL_CHART, params, config.axios);
+        setData(result.data)
+      }
+   
     try {
-      const result = await axios.post(config.URL_CHART, params, config.axios);
-      const data = (await result.data) ? result.data : [];
-      // console.log(JSON.stringify(data))
-      await this.setState({ data });
+      fetchData();
     } catch (err) {
       console.log("Google Org API Error ! ", err);
     }
-  }
+
+  }, [])
 
 
-  OrgChart = () => <Chart
-  width={'100%'}
-  height={'100%'}
-  chartType="OrgChart"
-  loader={<div>Yükleniyor...</div>}
-  data={this.state.data}
-  options={{
-    allowHtml: true,
-    size: "small"
-  }}
-/>
+const OrgChart = 
+      () => <Chart
+              width={'100%'}
+              height={'100%'}
+              chartType="OrgChart"
+              loader={<div>Yükleniyor...</div>}
+              data={data}
+              options={{
+                allowHtml: true,
+                size: "small"
+              }}
+            />
 
 
-  render() {
     return (
       <Segment basic>
-        <Header>{this.props.title}</Header>
-        {this.state.data ? (
-         <this.OrgChart />
-        ) : (
-          <MyLoader />
-        )}
+        <Header>{props.title}</Header>
+        {data && <OrgChart />} 
       </Segment>
     );
-  }
 }
 
 const mapStateToProps = state => ({ auth: state.auth });
-export default connect(mapStateToProps)(Component);
+export default connect(mapStateToProps)(OrgGoogle);

@@ -1,21 +1,28 @@
-import React, { PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import { Message } from "semantic-ui-react";
 import { config } from "../../config";
 import { connect } from "react-redux";
 
 // Her uygulamada login kontrol için...
-class Login extends PureComponent {
-  state = {};
+function Login(props) {
+  const [authenticated, setAuthenticated] = useState(false)
+  const [mount, setMount] = useState(false)
 
-  componentDidMount() {
-    const { token } = this.props.auth;
+  useEffect(() => {
+    const { token } = props.auth;
     const tokenLocal = localStorage.getItem("gfox_token");
     const authenticated = token === tokenLocal;
+  
+    setAuthenticated(authenticated)
 
-    this.setState({ authenticated });
-  }
+    return ()=> {
+      setMount(true)
+    }
 
-  MessageFailed() {
+  }, [])
+
+
+  const MessageFailed =()=> {
     return (
       <Message
         color="red"
@@ -36,13 +43,11 @@ class Login extends PureComponent {
     );
   }
 
-  render() {
-    return this.state.authenticated ? (
-      this.props.children
+  return authenticated ? (
+      props.children
     ) : (
-      <this.MessageFailed />
+      mount && <MessageFailed />
     );
-  }
 }
 
 const mapStateToProps = state => ({ auth: state.auth });

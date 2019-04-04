@@ -1,0 +1,21 @@
+:root {
+  --hesaplar-container-width: 1550px;
+  --hesaplar-container-top: calc(var(--top-menu-height) + 20px); 
+  --hesaplar-container-left: calc(var(--left-menu-width) + 20px); 
+}
+
+.loginform {
+  margin-top: 200px;
+}
+
+.hesaplar-container {
+  margin-top: var(--hesaplar-container-top);
+  margin-left: var(--hesaplar-container-left);
+  width: var(--hesaplar-container-width);
+}
+
+.hesaplar-table {
+  width: 700px !important;
+}
+
+

@@ -40,7 +40,7 @@
   "python.linting.enabled": false,
   "materialTheme.accent": "Teal",
   "material-icon-theme.activeIconPack": "react",
-  "workbench.colorTheme": "★★★★★ NORD DARK ★★★★★",
+  "workbench.colorTheme": "Night Owl",
   "workbench.iconTheme": "vs-nomo-dark",
   "workbench.fontAliasing": "antialiased",
 }
