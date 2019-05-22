@@ -40,7 +40,7 @@ function LayoutLeft(props) {
             className: "outline"
           },
           { title: "analiz", route: "/analiz", icon: "chart pie" },
-          { title: "hesaplar", route: "/accounts", icon: "lock", dpo: true },
+          { title: "accounts", route: "/accounts", icon: "lock", dpo: true },
         ];
 
         return menuItems.map(({ title, icon, route, className, dpo }) => (

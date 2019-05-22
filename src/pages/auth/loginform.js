@@ -7,12 +7,14 @@ import { store } from "../../reducer";
 import { spinnerIcon } from "../../components/gfox";
 import LandingPage from "./landing";
 import "./auth.css";
+import jwt_decode from "jwt-decode";
 
 export default class LoginForm extends PureComponent {
   state = {
     authenticated: false,
     loginFailed: false,
-    submitted: false
+    submitted: false,
+    message: ""
   };
 
   componentDidMount() {
@@ -22,8 +24,6 @@ export default class LoginForm extends PureComponent {
 
   componentWillUnmount() {}
 
-
-
   //Headerda, CID optionsı yüklemek için...
   //aşağıdaki submit fonksionunda kullanıldı
 
@@ -32,7 +32,11 @@ export default class LoginForm extends PureComponent {
     let options = [];
 
     try {
-      const result = await axios.post( config.URL_AUTH_CIDS, params, config.axios );
+      const result = await axios.post(
+        config.URL_AUTH_CIDS,
+        params,
+        config.axios
+      );
       const data = (await result.data) ? result.data : [];
       await data.map(
         ({ cid, name }) =>
@@ -45,61 +49,88 @@ export default class LoginForm extends PureComponent {
     return options;
   };
 
-
   submit = async () => {
     const { username, password } = this.state;
     const params = { username, password };
 
-    try {
-      let auth = {}
-      const row = await axios.post(config.URL_AUTH, params, config.axios);
-      const data = row.data ? row.data : [];
-      const cidOptions = await this.createCIDOptions(username);
-
-      await data.map(
-        item => (
-          auth = {
-                  "uid": item.uid,
-                  "token": item.token,
-                  "dpo": item.dpo,
-                  "admin": item.admin,
-                  "cids": { cid: null, cidName: null, cidChanged: false, cidOptions}
-                } )
-      );
-
-      if (auth.token) {
-        await setLocalToken(auth.token); //data: [{cid:1, uid:'admin@grcfox.com}]
-        await store.dispatch(updateStoreAuth(auth));
-
-        this.setState({ authenticated: true });
+    const onLoginFail = e => {
+      if (e === 0) {
+        this.setState({
+          message: "Geçersiz Kullanıcı Adı ve/veya Şifre girdiniz!"
+        });
       } else {
-        console.log("Authentication failed, wrong uid/pwd credential!");
-        this.setState({ loginFailed: true });
-        this.logout();
+        this.setState({
+          message:
+            "Servis Erişim Hatası! Lütfen sorunu teknik uzmana bildiriniz."
+        });
       }
-    } catch (err) {
-      console.log("LoginForm API error!", err);
+
+      //   switch (e) {
+      //     case 0: this.setState({ message: "Geçersiz Kullanıcı Adı ve/veya Şifre girdiniz!"}); break;
+      //     case 1: this.setState({ message: "Servis Erişim Hatası! Lütfen sorunu teknik uzmana bildiriniz."}); break;
+      //     default: this.setState({ message: "Bilinmeyen Hata Kodu. Lütfen sorunu teknik uzmana bildiriniz."})
+      //  }
+
+      this.setState({ loginFailed: true });
       this.logout();
+    };
+
+    try {
+            const row = await axios.post(config.URL_AUTH, params, config.axios);
+            const dataExist = row.data
+
+            const data = dataExist ? row.data : [];
+            const cidOptions = await this.createCIDOptions(username);
+            let token = {};
+            
+            await data.map(item => (token = item.token));
+            
+            let payload={}
+            try {
+              payload = jwt_decode(token)  // {uid, dpo, admin, token, exp}
+            } catch(e) {
+              payload = {}
+            }
+
+            const auth = {
+              ...payload,
+              token: token,
+              cids: { cid: null, cidName: null, cidChanged: false, cidOptions }
+            };
+
+            if (auth.uid) {
+              localStorage.setItem("gfox_token", token); //data: [{cid:1, uid:'admin@grcfox.com}]
+              await store.dispatch(updateStoreAuth(auth));
+
+              this.setState({ authenticated: true });
+            } else {
+              onLoginFail(0);
+            }
+            
+    } catch (err) {
+           console.log("err: ", err)
+           onLoginFail(1);
     }
   };
 
   handleSubmit = e => {
-    e.preventDefault();
-    this.setState({ submitted: true });
-    this.submit();
+        e.preventDefault();
+        this.setState({ submitted: true });
+        this.submit();
   };
 
   logout() {
-    store.dispatch(updateStoreAuth(null));
-    removeLocalToken();
-    this.setState({ submitted: false });
+        store.dispatch(updateStoreAuth(null));
+        localStorage.removeItem("gfox_token");
+        this.setState({ submitted: false });
   }
 
   handleChange = e => {
     e.preventDefault();
     this.setState({
       [e.target.name]: e.target.value,
-      loginFailed: false
+      loginFailed: false,
+      message: ""
     });
   };
 
@@ -154,7 +185,7 @@ export default class LoginForm extends PureComponent {
 
             {this.state.loginFailed && (
               <span style={{ display: "block", color: "#ff0000" }}>
-                Giriş başarız! Lütfen tekrar deneyin.
+                {this.state.message}
               </span>
             )}
           </Grid.Column>
@@ -171,12 +202,3 @@ export default class LoginForm extends PureComponent {
     );
   }
 }
-
-const setLocalToken = token => {
-  localStorage.setItem("gfox_token", token);
-};
-
-const removeLocalToken = () => {
-  localStorage.removeItem("gfox_token");
-};
-

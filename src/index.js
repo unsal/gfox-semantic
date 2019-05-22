@@ -44,7 +44,7 @@ import Analiz from "./pages/analiz/charts";
 
 import LoginForm from "./pages/auth/loginform";
 import HomeButton from "./pages/layout/homeButton";
-import Accounts from "./pages/auth/accounts";
+import Hesaplar from "./pages/auth/accounts";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -53,7 +53,7 @@ ReactDOM.render(
         <Route exact path="/" component={Homepage} />
         <Route exact path="/login" component={LoginForm} />
         <Route exact path="/home" component={HomeButton} />
-        <Route exact path="/accounts" component={Accounts} />
+        <Route exact path="/accounts" component={Hesaplar} />
 
         {/* ANA VERİLER*/}
         <Route exact path="/anaveriler" component={Anaveriler} />

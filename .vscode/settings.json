@@ -40,7 +40,11 @@
   "python.linting.enabled": false,
   "materialTheme.accent": "Teal",
   "material-icon-theme.activeIconPack": "react",
-  "workbench.colorTheme": "Night Owl",
-  "workbench.iconTheme": "vs-nomo-dark",
+  "workbench.colorTheme": "Dracula",
+  "workbench.iconTheme": "material-icon-theme",
   "workbench.fontAliasing": "antialiased",
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/node_modules/**": true
+}
 }

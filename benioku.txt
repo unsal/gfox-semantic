@@ -7,6 +7,11 @@ npm install --save redux //store için
 npm install --save react-redux //Provider ve connect func için
 npm install --save axios
 npm install openpyxl --save
+npm install react-autosuggest --save
+npm install react-google-charts
+npm install jwt-decode --save
+
+# iptaller
+------------
 npm install --save echarts-for-react
 npm install --save echarts
-npm install react-autosuggest --save

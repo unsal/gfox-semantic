@@ -1,21 +1,30 @@
 :root {
-  --hesaplar-container-width: 1550px;
-  --hesaplar-container-top: calc(var(--top-menu-height) + 20px); 
-  --hesaplar-container-left: calc(var(--left-menu-width) + 20px); 
+  --accounts-container-width: 1550px;
+  --accounts-container-top: calc(var(--top-menu-height) + 40px); 
+  --accounts-container-left: calc(var(--left-menu-width) + 40px); 
 }
 
 .loginform {
   margin-top: 200px;
 }
 
-.hesaplar-container {
-  margin-top: var(--hesaplar-container-top);
-  margin-left: var(--hesaplar-container-left);
-  width: var(--hesaplar-container-width);
+.accounts-container {
+  margin-top: var(--accounts-container-top);
+  margin-left: var(--accounts-container-left);
+  width: var(--accounts-container-width);
 }
 
-.hesaplar-table {
-  width: 700px !important;
+.accounts-header {
+  width: 900px;
+  height: 40px;
 }
+
+.accounts-table {
+  width: 900px !important;
+}
+
+
+
+
 
 

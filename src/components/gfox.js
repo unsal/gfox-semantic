@@ -212,3 +212,6 @@ export class LoadingStoreData extends PureComponent {
     return this.state.isLoading ? <MyLoader /> : this.props.children;
   }
 }
+
+
+export const isNull = (v) => v ? v : "";
